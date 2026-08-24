@@ -5,6 +5,30 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="google" content="notranslate">
     <title>The Leader In English | Mr.Sherif Khafagy</title>
+    
+    <!-- Firebase SDK (Modular v10 CDN) -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
+
+        const firebaseConfig = {
+          apiKey: "AIzaSyC7ei726Dp3OmopMpg0SQ21xEqUui-Puks",
+          authDomain: "the-leader-831ee.firebaseapp.com",
+          projectId: "the-leader-831ee",
+          storageBucket: "the-leader-831ee.firebasestorage.app",
+          messagingSenderId: "21521666841",
+          appId: "1:21521666841:web:b364e07660730eac722b88",
+          measurementId: "G-B7LT26S1N7"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const dbFirestore = getFirestore(app);
+
+        // إتاحة الفايربيس عامة للنطاق البرمجي في الصفحة
+        window.FB = { db: dbFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, query, where };
+        window.dispatchEvent(new Event('firebase-ready'));
+    </script>
+
     <style>
         :root[data-theme="light"] {
             --primary-color: #3b82f6;
@@ -626,7 +650,7 @@
         <div id="adminDashboard" class="hidden">
             <div class="card">
                 <h2>لوحة تحكم المستر</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">تحكم كامل في الطلاب، الامتحانات، الواجبات، والتصحيح بسهولة.</p>
+                <p style="color: var(--text-muted); font-size: 0.85rem;">تحكم كامل في الطلاب، الامتحانات، الواجبات، والتصحيح بسهولة عبر السحابة.</p>
             </div>
 
             <div class="tabs">
@@ -872,9 +896,24 @@
         const ADMIN_PHONE = "01118092036";
         let ADMIN_PASS = "12345678";
 
-        let db = {
-            users: JSON.parse(localStorage.getItem('app_users')) || [
-                {
+        let currentUser = JSON.parse(localStorage.getItem('app_current_user')) || null;
+        let activeExamTimerInterval = null;
+        let builderQuestions = [];
+
+        // متغيرات البيانات السحابية
+        let dbUsers = [];
+        let dbExams = [];
+        let dbResults = [];
+        let dbResets = [];
+        let dbAssignments = [];
+
+        window.addEventListener('firebase-ready', async () => {
+            await loadDataFromCloud();
+            
+            // تحقق من حساب المستر الافتراضي وتكوينه في قاعدة البيانات إن لم يكن موجوداً
+            const adminExists = dbUsers.find(u => u.studentId === ADMIN_PHONE);
+            if (!adminExists) {
+                const defaultAdmin = {
                     name: "Mr.Sherif Khafagy",
                     grade: "الكل",
                     studentId: ADMIN_PHONE,
@@ -882,33 +921,52 @@
                     password: ADMIN_PASS,
                     status: "approved",
                     role: "admin"
-                }
-            ],
-            exams: JSON.parse(localStorage.getItem('app_exams')) || [],
-            results: JSON.parse(localStorage.getItem('app_results')) || [],
-            resetRequests: JSON.parse(localStorage.getItem('app_resets')) || [],
-            assignments: JSON.parse(localStorage.getItem('app_assignments')) || []
-        };
+                };
+                await window.FB.setDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), defaultAdmin);
+                dbUsers.push(defaultAdmin);
+            } else {
+                ADMIN_PASS = adminExists.password;
+            }
 
-        // مزامنة كلمة مرور الآدمن من قاعدة البيانات المحلية إذا تم تحديثها مسبقاً
-        const adminRecord = db.users.find(u => u.role === 'admin');
-        if (adminRecord) {
-            ADMIN_PASS = adminRecord.password;
-        }
+            if (currentUser) {
+                // تحديث بيانات المستخدم الحالي من السيرفر
+                const updated = dbUsers.find(u => u.studentId === currentUser.studentId);
+                if (updated) currentUser = updated;
+                showLoggedInState();
+            } else {
+                showAuthPage('loginCard');
+            }
+        });
 
-        let currentUser = JSON.parse(localStorage.getItem('app_current_user')) || null;
-        let activeExamTimerInterval = null;
-        let builderQuestions = [];
-
-        function saveDB() {
+        async function loadDataFromCloud() {
             try {
-                localStorage.setItem('app_users', JSON.stringify(db.users));
-                localStorage.setItem('app_exams', JSON.stringify(db.exams));
-                localStorage.setItem('app_results', JSON.stringify(db.results));
-                localStorage.setItem('app_resets', JSON.stringify(db.resetRequests));
-                localStorage.setItem('app_assignments', JSON.stringify(db.assignments));
-            } catch (e) {
-                showAlert("مساحة التخزين المحلية ممتلئة! يرجى حذف بعض الملفات أو النتائج القديمة.", "danger");
+                // جلب المستخدمين
+                const usersSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "users"));
+                dbUsers = [];
+                usersSnap.forEach(d => dbUsers.push({ firestoreId: d.id, ...d.data() }));
+
+                // جلب الامتحانات
+                const examsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "exams"));
+                dbExams = [];
+                examsSnap.forEach(d => dbExams.push({ firestoreId: d.id, ...d.data() }));
+
+                // جلب النتائج
+                const resultsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "results"));
+                dbResults = [];
+                resultsSnap.forEach(d => dbResults.push({ firestoreId: d.id, ...d.data() }));
+
+                // جلب طلبات إعادة التعيين
+                const resetsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "resets"));
+                dbResets = [];
+                resetsSnap.forEach(d => dbResets.push({ firestoreId: d.id, ...d.data() }));
+
+                // جلب الواجبات
+                const assignSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "assignments"));
+                dbAssignments = [];
+                assignSnap.forEach(d => dbAssignments.push({ firestoreId: d.id, ...d.data() }));
+            } catch (err) {
+                console.error("Error loading data from cloud:", err);
+                showAlert("حدث خطأ في الاتصال بقاعدة بيانات السحاب.", "danger");
             }
         }
 
@@ -969,7 +1027,7 @@
             showAlert("تم تسجيل الخروج بنجاح", "info");
         }
 
-        function handleLogin(e) {
+        async function handleLogin(e) {
             e.preventDefault();
             const idInput = document.getElementById('loginId').value.trim();
             const passInput = document.getElementById('loginPassword').value.trim();
@@ -979,7 +1037,10 @@
                 return;
             }
 
-            const foundUser = db.users.find(u => (u.studentId === idInput || u.phone === idInput) && u.password === passInput);
+            // تحديث البيانات من السيرفر للتأكد
+            await loadDataFromCloud();
+
+            const foundUser = dbUsers.find(u => (u.studentId === idInput || u.phone === idInput) && u.password === passInput);
 
             if (!foundUser) {
                 showAlert("بيانات الدخول غير صحيحة!", "danger");
@@ -1002,7 +1063,7 @@
             showLoggedInState();
         }
 
-        function handleRegister(e) {
+        async function handleRegister(e) {
             e.preventDefault();
             const name = document.getElementById('regName').value.trim();
             const grade = document.getElementById('regGrade').value;
@@ -1027,7 +1088,8 @@
                 return;
             }
 
-            const exists = db.users.some(u => u.studentId === studentId);
+            await loadDataFromCloud();
+            const exists = dbUsers.some(u => u.studentId === studentId);
             if (exists) {
                 showAlert("رقم الطالب هذا مسجل بالفعل!", "danger");
                 return;
@@ -1043,15 +1105,19 @@
                 role: "student"
             };
 
-            db.users.push(newUser);
-            saveDB();
-
-            showAlert("تم إرسال طلب التسجيل بنجاح! ينتظر موافقة المستر.", "success");
-            document.getElementById('registerForm').reset();
-            showAuthPage('loginCard');
+            try {
+                await window.FB.setDoc(window.FB.doc(window.FB.db, "users", studentId), newUser);
+                dbUsers.push(newUser);
+                showAlert("تم إرسال طلب التسجيل بنجاح للسحاب! ينتظر موافقة المستر.", "success");
+                document.getElementById('registerForm').reset();
+                showAuthPage('loginCard');
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء الاتصال بقاعدة البيانات.", "danger");
+            }
         }
 
-        function handleResetRequest(e) {
+        async function handleResetRequest(e) {
             e.preventDefault();
             const studentId = document.getElementById('resetStudentId').value.trim();
             const note = document.getElementById('resetNote').value.trim();
@@ -1061,23 +1127,30 @@
                 return;
             }
 
-            const student = db.users.find(u => u.studentId === studentId && u.role === 'student');
+            await loadDataFromCloud();
+            const student = dbUsers.find(u => u.studentId === studentId && u.role === 'student');
             if (!student) {
                 showAlert("رقم الطالب غير مسجل في النظام!", "danger");
                 return;
             }
 
-            db.resetRequests.push({
+            const resetObj = {
                 studentId: studentId,
                 name: student.name,
                 note: note,
                 date: new Date().toLocaleString('ar-EG')
-            });
-            saveDB();
+            };
 
-            showAlert("تم إرسال طلب الاسترجاع للمستر بنجاح.", "success");
-            document.getElementById('resetForm').reset();
-            showAuthPage('loginCard');
+            try {
+                const docRef = await window.FB.addDoc(window.FB.collection(window.FB.db, "resets"), resetObj);
+                dbResets.push({ firestoreId: docRef.id, ...resetObj });
+                showAlert("تم إرسال طلب الاسترجاع للمستر بنجاح عبر السحاب.", "success");
+                document.getElementById('resetForm').reset();
+                showAuthPage('loginCard');
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء إرسال الطلب.", "danger");
+            }
         }
 
         function switchStudentTab(tabId, btn) {
@@ -1088,11 +1161,13 @@
             if (btn) btn.classList.add('active');
         }
 
-        function renderStudentView() {
+        async function renderStudentView() {
+            await loadDataFromCloud();
+
             document.getElementById('studentWelcomeTitle').innerText = `أهلاً بك يا ${currentUser.name}`;
             document.getElementById('studentInfoSub').innerText = `الصف الدراسي: ${currentUser.grade} | رقم الطالب: ${currentUser.studentId}`;
 
-            const myResults = db.results.filter(r => r.studentId === currentUser.studentId);
+            const myResults = dbResults.filter(r => r.studentId === currentUser.studentId);
             
             // حساب نسبة التفوق والإحصائيات
             document.getElementById('studentCompletedExamsCount').innerText = myResults.length;
@@ -1114,7 +1189,7 @@
             // الامتحانات
             const examsList = document.getElementById('studentExamsList');
             examsList.innerHTML = '';
-            const gradeExams = db.exams.filter(ex => ex.gradeTarget === currentUser.grade);
+            const gradeExams = dbExams.filter(ex => ex.gradeTarget === currentUser.grade);
 
             if (gradeExams.length === 0) {
                 examsList.innerHTML = '<p style="color: var(--text-muted);">لا توجد امتحانات مخصصة لصفك حالياً.</p>';
@@ -1123,7 +1198,7 @@
                 gradeExams.forEach(ex => {
                     const startMs = new Date(ex.startTime).getTime();
                     const endMs = new Date(ex.endTime).getTime();
-                    const hasTaken = db.results.some(r => r.examId === ex.id && r.studentId === currentUser.studentId);
+                    const hasTaken = dbResults.some(r => r.examId === ex.id && r.studentId === currentUser.studentId);
 
                     let statusBtn = '';
                     if (hasTaken) {
@@ -1206,7 +1281,7 @@
             // الواجبات والمرفقات
             const assignList = document.getElementById('studentAssignmentsList');
             assignList.innerHTML = '';
-            const gradeAssignments = db.assignments.filter(a => a.gradeTarget === currentUser.grade);
+            const gradeAssignments = dbAssignments.filter(a => a.gradeTarget === currentUser.grade);
 
             if (gradeAssignments.length === 0) {
                 assignList.innerHTML = '<p style="color: var(--text-muted);">لا توجد ملفات أو واجبات مرفوعة لصفك.</p>';
@@ -1238,7 +1313,7 @@
         let activeExamData = null;
 
         function startExam(examId) {
-            const exam = db.exams.find(e => e.id === examId);
+            const exam = dbExams.find(e => e.id === examId);
             if (!exam) return;
 
             const now = new Date().getTime();
@@ -1368,7 +1443,7 @@
             processExamSubmission(false);
         }
 
-        function processExamSubmission(autoSubmitted = false) {
+        async function processExamSubmission(autoSubmitted = false) {
             if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
 
             const session = JSON.parse(localStorage.getItem('active_exam_session'));
@@ -1461,8 +1536,13 @@
                 answersBreakdown: answersBreakdown
             };
 
-            db.results.push(newResult);
-            saveDB();
+            try {
+                const docRef = await window.FB.addDoc(window.FB.collection(window.FB.db, "results"), newResult);
+                dbResults.push({ firestoreId: docRef.id, ...newResult });
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ في حفظ النتيجة على السحاب.", "danger");
+            }
 
             localStorage.removeItem('active_exam_session');
 
@@ -1473,7 +1553,7 @@
         }
 
         function viewResultDetail(resultId) {
-            const res = db.results.find(r => r.id === resultId);
+            const res = dbResults.find(r => r.id === resultId);
             if (!res) return;
 
             document.getElementById('studentDashboard').classList.add('hidden');
@@ -1573,7 +1653,8 @@
             if (btn) btn.classList.add('active');
         }
 
-        function renderAdminView() {
+        async function renderAdminView() {
+            await loadDataFromCloud();
             renderPendingStudents();
             renderResetRequests();
             renderActiveStudents();
@@ -1587,7 +1668,7 @@
             const tbody = document.getElementById('pendingStudentsTableBody');
             tbody.innerHTML = '';
 
-            const pending = db.users.filter(u => u.status === 'pending');
+            const pending = dbUsers.filter(u => u.status === 'pending');
 
             if (pending.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد طلبات تسجيل معلقة.</td></tr>';
@@ -1612,23 +1693,33 @@
             });
         }
 
-        function approveStudent(studentId) {
-            const user = db.users.find(u => u.studentId === studentId);
+        async function approveStudent(studentId) {
+            const user = dbUsers.find(u => u.studentId === studentId);
             if (user) {
                 user.status = 'approved';
-                saveDB();
-                renderAdminView();
-                showAlert("تم قبول الطالب بنجاح.", "success");
+                try {
+                    await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", studentId), { status: 'approved' });
+                    renderAdminView();
+                    showAlert("تم قبول الطالب بنجاح على السحاب.", "success");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء تحديث حالة الطالب.", "danger");
+                }
             }
         }
 
-        function rejectStudent(studentId) {
-            const user = db.users.find(u => u.studentId === studentId);
+        async function rejectStudent(studentId) {
+            const user = dbUsers.find(u => u.studentId === studentId);
             if (user) {
                 user.status = 'rejected';
-                saveDB();
-                renderAdminView();
-                showAlert("تم رفض طلب الطالب.", "warning");
+                try {
+                    await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", studentId), { status: 'rejected' });
+                    renderAdminView();
+                    showAlert("تم رفض طلب الطالب.", "warning");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء رفض الطالب.", "danger");
+                }
             }
         }
 
@@ -1636,35 +1727,41 @@
             const tbody = document.getElementById('resetRequestsTableBody');
             tbody.innerHTML = '';
 
-            if (db.resetRequests.length === 0) {
+            if (dbResets.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">لا توجد طلبات استرجاع.</td></tr>';
                 return;
             }
 
-            db.resetRequests.forEach((req, idx) => {
+            dbResets.forEach((req, idx) => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${req.studentId} (${req.name})</td>
                     <td>${req.note || 'بدون ملاحظة'}</td>
                     <td>
-                        <button class="btn btn-warning" style="padding:4px 8px; font-size:0.8rem;" onclick="adminSetNewPassword('${req.studentId}', ${idx})">تعيين كلمة مرور جديدة</button>
+                        <button class="btn btn-warning" style="padding:4px 8px; font-size:0.8rem;" onclick="adminSetNewPassword('${req.studentId}', '${req.firestoreId}')">تعيين كلمة مرور جديدة</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function adminSetNewPassword(studentId, reqIdx) {
+        async function adminSetNewPassword(studentId, firestoreResetId) {
             const newPass = prompt("أدخل كلمة المرور الجديدة للطالب:");
             if (!newPass) return;
 
-            const user = db.users.find(u => u.studentId === studentId);
+            const user = dbUsers.find(u => u.studentId === studentId);
             if (user) {
-                user.password = newPass;
-                db.resetRequests.splice(reqIdx, 1);
-                saveDB();
-                renderAdminView();
-                showAlert("تم تغيير كلمة المرور بنجاح.", "success");
+                try {
+                    await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", studentId), { password: newPass });
+                    if (firestoreResetId) {
+                        await window.FB.deleteDoc(window.FB.doc(window.FB.db, "resets", firestoreResetId));
+                    }
+                    await renderAdminView();
+                    showAlert("تم تغيير كلمة المرور بنجاح على السحاب.", "success");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء تحديث كلمة المرور.", "danger");
+                }
             }
         }
 
@@ -1672,7 +1769,7 @@
             const tbody = document.getElementById('activeStudentsTableBody');
             tbody.innerHTML = '';
 
-            const active = db.users.filter(u => u.role === 'student' && u.status === 'approved');
+            const active = dbUsers.filter(u => u.role === 'student' && u.status === 'approved');
 
             if (active.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا يوجد طلاب مقبولون بعد.</td></tr>';
@@ -1694,20 +1791,29 @@
             });
         }
 
-        function removeStudentPrompt(studentId) {
-            const user = db.users.find(u => u.studentId === studentId);
+        async function removeStudentPrompt(studentId) {
+            const user = dbUsers.find(u => u.studentId === studentId);
             if (!user) return;
 
             const keepResults = confirm(`هل تريد الاحتفاظ بنتائج وسجلات الطالب (${user.name})؟\n- اضغط OK للحفاظ على النتائج.\n- اضغط Cancel لحذف النتائج بالكامل.`);
 
-            if (!keepResults) {
-                db.results = db.results.filter(r => r.studentId !== studentId);
-            }
+            try {
+                if (!keepResults) {
+                    const targetRes = dbResults.filter(r => r.studentId === studentId);
+                    for (let tr of targetRes) {
+                        if (tr.firestoreId) {
+                            await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", tr.firestoreId));
+                        }
+                    }
+                }
 
-            db.users = db.users.filter(u => u.studentId !== studentId);
-            saveDB();
-            renderAdminView();
-            showAlert("تم طرد الطالب وتطبيق الخيار المحدد للنتائج بنجاح.", "info");
+                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "users", studentId));
+                await renderAdminView();
+                showAlert("تم طرد الطالب وتحديث السحابة بنجاح.", "info");
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء حذف الطالب.", "danger");
+            }
         }
 
         function addQuestionToBuilder(type) {
@@ -1789,7 +1895,7 @@
             }, 50);
         }
 
-        function handleCreateExam(e) {
+        async function handleCreateExam(e) {
             e.preventDefault();
 
             if (builderQuestions.length === 0) {
@@ -1836,8 +1942,9 @@
                 }
             }
 
+            const examId = 'ex_' + Date.now();
             const newExam = {
-                id: 'ex_' + Date.now(),
+                id: examId,
                 title: title,
                 gradeTarget: gradeTarget,
                 startTime: startTime,
@@ -1846,26 +1953,30 @@
                 questions: finalQuestions
             };
 
-            db.exams.push(newExam);
-            saveDB();
-
-            showAlert("تم إنشاء الامتحان بنجاح ونشره للطلاب!", "success");
-            document.getElementById('createExamForm').reset();
-            builderQuestions = [];
-            renderBuilderQuestions();
-            renderAdminExamsList();
+            try {
+                await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", examId), newExam);
+                dbExams.push(newExam);
+                showAlert("تم إنشاء الامتحان بنجاح ونشره على السحاب للطلاب!", "success");
+                document.getElementById('createExamForm').reset();
+                builderQuestions = [];
+                renderBuilderQuestions();
+                renderAdminExamsList();
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء حفظ الامتحان.", "danger");
+            }
         }
 
         function renderAdminExamsList() {
             const list = document.getElementById('adminExamsList');
             list.innerHTML = '';
 
-            if (db.exams.length === 0) {
+            if (dbExams.length === 0) {
                 list.innerHTML = '<p style="color:var(--text-muted);">لا توجد امتحانات مضافة حتى الآن.</p>';
                 return;
             }
 
-            db.exams.forEach(ex => {
+            dbExams.forEach(ex => {
                 const div = document.createElement('div');
                 div.className = 'card';
                 div.style.marginBottom = '10px';
@@ -1877,20 +1988,33 @@
                                 الفتح: ${new Date(ex.startTime).toLocaleString('ar-EG')} | الإغلاق: ${new Date(ex.endTime).toLocaleString('ar-EG')} | المدة: ${ex.duration} د
                             </div>
                         </div>
-                        <button class="btn btn-danger" style="width:auto; padding:4px 10px;" onclick="deleteExam('${ex.id}')">حذف الامتحان</button>
+                        <button class="btn btn-danger" style="width:auto; padding:4px 10px;" onclick="deleteExam('${ex.id}', '${ex.firestoreId}')">حذف الامتحان</button>
                     </div>
                 `;
                 list.appendChild(div);
             });
         }
 
-        function deleteExam(examId) {
+        async function deleteExam(examId, firestoreId) {
             if (confirm("هل أنت تأكد من حذف هذا الامتحان؟ سيتم حذف نتائج مرتبط بها.")) {
-                db.exams = db.exams.filter(e => e.id !== examId);
-                db.results = db.results.filter(r => r.examId !== examId);
-                saveDB();
-                renderAdminView();
-                showAlert("تم حذف الامتحان ونتائجه بنجاح.", "info");
+                try {
+                    const docKey = firestoreId || examId;
+                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", docKey));
+
+                    // حذف النتائج المرتبطة
+                    const relatedRes = dbResults.filter(r => r.examId === examId);
+                    for (let r of relatedRes) {
+                        if (r.firestoreId) {
+                            await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", r.firestoreId));
+                        }
+                    }
+
+                    await renderAdminView();
+                    showAlert("تم حذف الامتحان ونتائجه بنجاح من السحاب.", "info");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء الحذف.", "danger");
+                }
             }
         }
 
@@ -1898,7 +2022,7 @@
             const list = document.getElementById('pendingEssayGradingList');
             list.innerHTML = '';
 
-            const pendingResults = db.results.filter(r => r.needsGrading);
+            const pendingResults = dbResults.filter(r => r.needsGrading);
 
             if (pendingResults.length === 0) {
                 list.innerHTML = '<p style="color:var(--text-muted);">لا توجد إجابات مقالية بانتظار التصحيح حالياً.</p>';
@@ -1919,7 +2043,7 @@
                         <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
                             <label>الدرجة المستحقة من (${q.points}):</label>
                             <input type="number" id="grade_val_${r.id}_${q.questionId}" min="0" max="${q.points}" value="${q.points}" style="width:80px; padding:4px;">
-                            <button class="btn btn-success" style="width:auto; padding:4px 12px;" onclick="saveEssayGrade('${r.id}', '${q.questionId}')">حفظ التصحيح</button>
+                            <button class="btn btn-success" style="width:auto; padding:4px 12px;" onclick="saveEssayGrade('${r.id}', '${q.questionId}', '${r.firestoreId}')">حفظ التصحيح</button>
                         </div>
                     `;
                     list.appendChild(card);
@@ -1927,8 +2051,8 @@
             });
         }
 
-        function saveEssayGrade(resultId, questionId) {
-            const res = db.results.find(r => r.id === resultId);
+        async function saveEssayGrade(resultId, questionId, firestoreId) {
+            const res = dbResults.find(r => r.id === resultId);
             if (!res) return;
 
             const q = res.answersBreakdown.find(item => item.questionId === questionId);
@@ -1943,21 +2067,32 @@
             const hasMoreEssay = res.answersBreakdown.some(item => item.type === 'essay' && !item.isGraded);
             res.needsGrading = hasMoreEssay;
 
-            saveDB();
-            renderAdminView();
-            showAlert("تم حفظ درجة السؤال المقالي بنجاح!", "success");
+            try {
+                const docKey = firestoreId || resultId;
+                await window.FB.updateDoc(window.FB.doc(window.FB.db, "results", docKey), {
+                    score: res.score,
+                    percentage: res.percentage,
+                    needsGrading: res.needsGrading,
+                    answersBreakdown: res.answersBreakdown
+                });
+                await renderAdminView();
+                showAlert("تم حفظ درجة السؤال المقالي وتحديثها على السحاب بنجاح!", "success");
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء حفظ التصحيح.", "danger");
+            }
         }
 
         function renderAllResults() {
             const tbody = document.getElementById('allResultsTableBody');
             tbody.innerHTML = '';
 
-            if (db.results.length === 0) {
+            if (dbResults.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد سجلات نتائج مسجلة حتى الآن.</td></tr>';
                 return;
             }
 
-            db.results.forEach(r => {
+            dbResults.forEach(r => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
                     <td>${r.studentName}</td>
@@ -1967,23 +2102,28 @@
                     <td>محلولة: ${r.solvedCount} | خطأ: ${r.wrongCount}</td>
                     <td>${r.submittedAt}</td>
                     <td>
-                        <button class="btn btn-danger" style="padding:2px 6px; font-size:0.75rem;" onclick="deleteResultRecord('${r.id}')">حذف</button>
+                        <button class="btn btn-danger" style="padding:2px 6px; font-size:0.75rem;" onclick="deleteResultRecord('${r.id}', '${r.firestoreId}')">حذف</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function deleteResultRecord(resultId) {
+        async function deleteResultRecord(resultId, firestoreId) {
             if (confirm("هل أنت تأكد من حذف هذا السجل بشكل نهائي؟")) {
-                db.results = db.results.filter(r => r.id !== resultId);
-                saveDB();
-                renderAdminView();
-                showAlert("تم حذف سجل النتيجة.", "info");
+                try {
+                    const docKey = firestoreId || resultId;
+                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", docKey));
+                    await renderAdminView();
+                    showAlert("تم حذف سجل النتيجة من السحاب.", "info");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء حذف السجل.", "danger");
+                }
             }
         }
 
-        function handleFileUpload(e) {
+        async function handleFileUpload(e) {
             e.preventDefault();
             const title = document.getElementById('fileTitle').value.trim();
             const gradeTarget = document.getElementById('fileGradeTarget').value;
@@ -1993,15 +2133,16 @@
 
             const file = fileInput.files[0];
             if (file.size > 2 * 1024 * 1024) {
-                showAlert("حجم الملف كبير جداً! الحد الأقصى للملفات هو 2 ميجابايت لتجنب امتلاء ذاكرة المتصفح.", "danger");
+                showAlert("حجم الملف كبير جداً! الحد الأقصى للملفات هو 2 ميجابايت لتوافق التخزين السحابي.", "danger");
                 return;
             }
 
             const reader = new FileReader();
 
-            reader.onload = function(evt) {
+            reader.onload = async function(evt) {
+                const fileId = 'file_' + Date.now();
                 const newFile = {
-                    id: 'file_' + Date.now(),
+                    id: fileId,
                     title: title,
                     gradeTarget: gradeTarget,
                     fileName: file.name,
@@ -2009,12 +2150,17 @@
                     date: new Date().toLocaleDateString('ar-EG')
                 };
 
-                db.assignments.push(newFile);
-                saveDB();
+                try {
+                    await window.FB.setDoc(window.FB.doc(window.FB.db, "assignments", fileId), newFile);
+                    dbAssignments.push(newFile);
 
-                showAlert("تم رفع الملف بنجاح ووضعه متاحاً للطلاب!", "success");
-                document.getElementById('uploadFileForm').reset();
-                renderAdminFilesList();
+                    showAlert("تم رفع الملف بنجاح وحفظه على السحاب للطلاب!", "success");
+                    document.getElementById('uploadFileForm').reset();
+                    renderAdminFilesList();
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء رفع الملف.", "danger");
+                }
             };
 
             reader.readAsDataURL(file);
@@ -2024,12 +2170,12 @@
             const list = document.getElementById('adminFilesList');
             list.innerHTML = '';
 
-            if (db.assignments.length === 0) {
+            if (dbAssignments.length === 0) {
                 list.innerHTML = '<p style="color:var(--text-muted);">لا توجد ملفات مرفوعة بعد.</p>';
                 return;
             }
 
-            db.assignments.forEach(a => {
+            dbAssignments.forEach(a => {
                 const div = document.createElement('div');
                 div.style.padding = '10px';
                 div.style.borderBottom = '1px solid var(--border-color)';
@@ -2041,22 +2187,27 @@
                         <strong>${a.title} (${a.gradeTarget})</strong>
                         <div style="font-size:0.75rem; color:var(--text-muted);">${a.fileName} | ${a.date}</div>
                     </div>
-                    <button class="btn btn-danger" style="width:auto; padding:4px 8px; font-size:0.8rem;" onclick="deleteAssignment('${a.id}')">حذف الملف</button>
+                    <button class="btn btn-danger" style="width:auto; padding:4px 8px; font-size:0.8rem;" onclick="deleteAssignment('${a.id}', '${a.firestoreId}')">حذف الملف</button>
                 `;
                 list.appendChild(div);
             });
         }
 
-        function deleteAssignment(id) {
+        async function deleteAssignment(id, firestoreId) {
             if (confirm("هل تريد حذف هذا الملف؟")) {
-                db.assignments = db.assignments.filter(a => a.id !== id);
-                saveDB();
-                renderAdminFilesList();
-                showAlert("تم حذف الملف بنجاح.", "info");
+                try {
+                    const docKey = firestoreId || id;
+                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "assignments", docKey));
+                    renderAdminFilesList();
+                    showAlert("تم حذف الملف بنجاح من السحاب.", "info");
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء الحذف.", "danger");
+                }
             }
         }
 
-        function handleChangeAdminPassword(e) {
+        async function handleChangeAdminPassword(e) {
             e.preventDefault();
             const currentInput = document.getElementById('currentAdminPass').value.trim();
             const newInput = document.getElementById('newAdminPass').value.trim();
@@ -2073,14 +2224,14 @@
 
             ADMIN_PASS = newInput;
 
-            const adminUser = db.users.find(u => u.role === 'admin');
-            if (adminUser) {
-                adminUser.password = newInput;
-                saveDB();
+            try {
+                await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newInput });
+                showAlert("تم تغيير كلمة مرور الآدمن رسمياً على السحاب بنجاح! ✅", "success");
+                document.getElementById('changeAdminPassForm').reset();
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء تحديث كلمة المرور.", "danger");
             }
-
-            showAlert("تم تغيير كلمة مرور الآدمن رسمياً بنجاح! ✅", "success");
-            document.getElementById('changeAdminPassForm').reset();
         }
     </script>
 </body>
