@@ -635,6 +635,7 @@
                 <button class="tab-btn" onclick="switchAdminTab('tabExams', this)">إدارة الامتحانات والأسئلة</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabGrading', this)">تصحيح المقالي والنتائج</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabUploads', this)">رفع الواجبات والملفات</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabSettings', this)">إعدادات الحساب</button>
             </div>
 
             <div id="tabRequests" class="admin-tab">
@@ -808,61 +809,35 @@
                     <div id="adminFilesList"></div>
                 </div>
             </div>
+
+            <div id="tabSettings" class="admin-tab hidden">
+                <div class="card">
+                    <h3>تغيير كلمة مرور الآدمن رسمياً</h3>
+                    <form id="changeAdminPassForm" onsubmit="handleChangeAdminPassword(event)">
+                        <div class="form-group">
+                            <label>كلمة المرور الحالية</label>
+                            <input type="password" id="currentAdminPass" required placeholder="أدخل كلمة المرور الحالية">
+                        </div>
+                        <div class="form-group">
+                            <label>كلمة المرور الجديدة</label>
+                            <input type="password" id="newAdminPass" required placeholder="أدخل كلمة المرور الجديدة">
+                        </div>
+                        <button type="submit" class="btn btn-warning">تحديث كلمة المرور رسمياً</button>
+                    </form>
+                </div>
+            </div>
         </div>
 
     </div>
 
 <footer>
   Developed with passion <span class="designer-tag">By / Mohamed Sherif</span>
-  <div class="social-icons">
-    <!-- أيقونة الواتساب -->
-    <a href="https://wa.me/201118092036" target="_blank" class="whatsapp-icon">
-      <i class="fa-brands fa-whatsapp"></i>
-    </a>
-    <!-- أيقونة الفيسبوك -->
-    <a href="https://www.facebook.com/share/1CEQcGrhmc/" target="_blank" class="facebook-icon">
-      <i class="fa-brands fa-facebook-f"></i>
-    </a>
+  <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-top: 8px;">
+    <a href="https://wa.me/201118092036" target="_blank" style="color: #25d366; font-size: 20px;"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/share/1CEQcGrhmc/" target="_blank" style="color: #1877f2; font-size: 20px;"><i class="fa-brands fa-facebook-f"></i></a>
   </div>
 </footer>
 
-<style>
-  footer {
-    text-align: center;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-  }
-  
-  .designer-tag {
-    font-weight: bold;
-  }
-
-  .social-icons {
-    display: flex;
-    justify-content: center;
-    gap: 15px;
-    align-items: center;
-    margin-top: 10px;
-  }
-
-  .social-icons a {
-    font-size: 22px;
-    text-decoration: none;
-    transition: transform 0.2s ease;
-  }
-
-  .social-icons a:hover {
-    transform: scale(1.1);
-  }
-
-  .whatsapp-icon {
-    color: #25d366;
-  }
-
-  .facebook-icon {
-    color: #1877f2;
-  }
-</style>
 
 
     <script>
@@ -895,7 +870,7 @@
         initTheme();
 
         const ADMIN_PHONE = "01118092036";
-        const ADMIN_PASS = "12345678";
+        let ADMIN_PASS = "12345678";
 
         let db = {
             users: JSON.parse(localStorage.getItem('app_users')) || [
@@ -914,6 +889,12 @@
             resetRequests: JSON.parse(localStorage.getItem('app_resets')) || [],
             assignments: JSON.parse(localStorage.getItem('app_assignments')) || []
         };
+
+        // مزامنة كلمة مرور الآدمن من قاعدة البيانات المحلية إذا تم تحديثها مسبقاً
+        const adminRecord = db.users.find(u => u.role === 'admin');
+        if (adminRecord) {
+            ADMIN_PASS = adminRecord.password;
+        }
 
         let currentUser = JSON.parse(localStorage.getItem('app_current_user')) || null;
         let activeExamTimerInterval = null;
@@ -2073,6 +2054,33 @@
                 renderAdminFilesList();
                 showAlert("تم حذف الملف بنجاح.", "info");
             }
+        }
+
+        function handleChangeAdminPassword(e) {
+            e.preventDefault();
+            const currentInput = document.getElementById('currentAdminPass').value.trim();
+            const newInput = document.getElementById('newAdminPass').value.trim();
+
+            if (currentInput !== ADMIN_PASS) {
+                showAlert("كلمة المرور الحالية غير صحيحة!", "danger");
+                return;
+            }
+
+            if (newInput.length < 6) {
+                showAlert("كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف أو أرقام.", "danger");
+                return;
+            }
+
+            ADMIN_PASS = newInput;
+
+            const adminUser = db.users.find(u => u.role === 'admin');
+            if (adminUser) {
+                adminUser.password = newInput;
+                saveDB();
+            }
+
+            showAlert("تم تغيير كلمة مرور الآدمن رسمياً بنجاح! ✅", "success");
+            document.getElementById('changeAdminPassForm').reset();
         }
     </script>
 </body>
