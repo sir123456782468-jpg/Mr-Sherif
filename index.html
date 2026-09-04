@@ -6,6 +6,10 @@
     <meta name="google" content="notranslate">
     <title>The Leader In English | Mr.Sherif Khafagy</title>
     
+    <!-- Google Fonts & FontAwesome -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <!-- Firebase SDK (Modular v10 CDN) -->
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
@@ -30,54 +34,54 @@
 
     <style>
         :root[data-theme="light"] {
-            --primary-color: #3b82f6;
+            --primary-color: #2563eb;
             --primary-hover: #1d4ed8;
-            --bg-color: #f1f5f9;
+            --bg-color: #f8fafc;
             --card-bg: #ffffff;
             --text-color: #0f172a;
             --text-muted: #64748b;
-            --border-color: #e2e8f0;
-            --success-color: #10b981;
-            --danger-color: #ef4444;
-            --warning-color: #f59e0b;
-            --input-bg: #f8fafc;
+            --border-color: #cbd5e1;
+            --success-color: #059669;
+            --danger-color: #dc2626;
+            --warning-color: #d97706;
+            --input-bg: #f1f5f9;
             --table-header-bg: #e2e8f0;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05);
-            --auth-bg-gradient: linear-gradient(135deg, #e0e7ff 0%, #f3e8ff 100%);
+            --shadow: 0 20px 35px -10px rgba(37, 99, 235, 0.08);
+            --auth-bg-gradient: linear-gradient(135deg, #dbeafe 0%, #ede9fe 100%);
         }
 
         :root[data-theme="dark"] {
             --primary-color: #3b82f6;
             --primary-hover: #60a5fa;
-            --bg-color: #0b0f19;
-            --card-bg: #151c2c;
-            --text-color: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: #26334d;
+            --bg-color: #070913;
+            --card-bg: #111827;
+            --text-color: #f9fafb;
+            --text-muted: #9ca3af;
+            --border-color: #1f2937;
             --success-color: #10b981;
             --danger-color: #ef4444;
             --warning-color: #f59e0b;
-            --input-bg: #0b0f19;
-            --table-header-bg: #1e293b;
-            --shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.5);
-            --auth-bg-gradient: radial-gradient(circle at top right, #1e1b4b, #0f172a, #0b0f19);
+            --input-bg: #0f172a;
+            --table-header-bg: #1f2937;
+            --shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.7);
+            --auth-bg-gradient: radial-gradient(circle at top right, #1e1b4b, #0b0f19, #070913);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            font-family: 'Cairo', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             -webkit-user-select: none;
             user-select: none;
-            transition: background-color 0.3s, color 0.3s, border-color 0.3s, transform 0.2s;
+            transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
         }
 
         body {
             background: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
-            padding-bottom: 20px;
+            line-height: 1.7;
+            padding-bottom: 30px;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
@@ -91,7 +95,7 @@
         header {
             background-color: var(--card-bg);
             color: var(--text-color);
-            padding: 16px 24px;
+            padding: 18px 32px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -100,97 +104,118 @@
             top: 0;
             z-index: 100;
             border-bottom: 1px solid var(--border-color);
+            backdrop-filter: blur(10px);
         }
 
         header h1 {
-            font-size: 1.3rem;
-            font-weight: 800;
-            background: linear-gradient(90deg, #3b82f6, #a855f7);
+            font-size: 1.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #60a5fa, #c084fc, #f472b6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: 0.5px;
+            letter-spacing: 0.8px;
+            text-shadow: 0 2px 15px rgba(59, 130, 246, 0.2);
         }
 
         .header-actions {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 14px;
         }
 
         .theme-toggle-btn {
-            background: rgba(255, 255, 255, 0.05);
+            background: rgba(59, 130, 246, 0.1);
             border: 1px solid var(--border-color);
             color: var(--text-color);
-            padding: 8px 16px;
-            border-radius: 30px;
+            padding: 8px 18px;
+            border-radius: 50px;
             cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 600;
+            font-size: 0.9rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        .theme-toggle-btn:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
         }
 
         .container {
-            max-width: 1100px;
-            margin: 24px auto;
-            padding: 0 16px;
+            max-width: 1200px;
+            margin: 30px auto;
+            padding: 0 20px;
             flex: 1;
+            width: 100%;
         }
 
         .card {
             background-color: var(--card-bg);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 20px;
+            padding: 30px;
             box-shadow: var(--shadow);
-            margin-bottom: 24px;
+            margin-bottom: 28px;
             border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; right: 0; width: 4px; height: 100%;
+            background: linear-gradient(to bottom, #3b82f6, #a855f7);
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
         }
 
         .auth-container {
-            min-height: calc(100vh - 80px);
+            min-height: calc(100vh - 90px);
             display: flex;
             align-items: center;
             justify-content: center;
             background: var(--auth-bg-gradient);
-            padding: 20px;
+            padding: 24px;
         }
 
         .auth-card {
-            background: rgba(21, 28, 44, 0.75);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 28px;
+            padding: 45px 35px;
             width: 100%;
-            max-width: 440px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4);
-            animation: fadeIn 0.4s ease-out;
+            max-width: 480px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            position: relative;
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; transform: translateY(20px) scale(0.97); }
+            to { opacity: 1; transform: translateY(0) scale(1); }
         }
 
         .auth-card h2 {
-            font-size: 1.8rem;
+            font-size: 2.1rem;
             text-align: center;
-            margin-bottom: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
+            margin-bottom: 28px;
+            font-weight: 900;
+            background: linear-gradient(90deg, #60a5fa, #e879f9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 22px;
         }
 
         .form-group label {
             display: block;
             margin-bottom: 8px;
-            font-weight: 600;
-            font-size: 0.88rem;
+            font-weight: 700;
+            font-size: 0.92rem;
             color: var(--text-color);
         }
 
@@ -198,12 +223,12 @@
         .form-group select, 
         .form-group textarea {
             width: 100%;
-            padding: 14px 16px;
+            padding: 15px 18px;
             background-color: var(--input-bg);
             color: var(--text-color);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            font-size: 0.95rem;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
+            font-size: 1rem;
             outline: none;
         }
 
@@ -211,287 +236,281 @@
         .form-group select:focus, 
         .form-group textarea:focus {
             border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.2);
+            box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.25);
         }
 
         .btn {
             display: inline-block;
             width: 100%;
-            padding: 14px;
-            background-color: var(--primary-color);
+            padding: 15px;
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 700;
+            border-radius: 14px;
+            font-size: 1.05rem;
+            font-weight: 800;
             cursor: pointer;
             text-align: center;
-            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            box-shadow: 0 8px 20px rgba(37, 99, 235, 0.35);
+            transition: all 0.3s ease;
         }
 
         .btn:hover {
             opacity: 0.95;
-            transform: translateY(-1px);
+            transform: translateY(-2px);
         }
 
-        .btn-secondary { background-color: #475569; box-shadow: none; }
-        .btn-success { background-color: var(--success-color); box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3); }
-        .btn-danger { background-color: var(--danger-color); box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3); }
-        .btn-warning { background-color: var(--warning-color); box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3); }
+        .btn-secondary { background: linear-gradient(135deg, #475569, #334155); }
+        .btn-success { background: linear-gradient(135deg, #059669, #047857); }
+        .btn-danger { background: linear-gradient(135deg, #dc2626, #b91c1c); }
+        .btn-warning { background: linear-gradient(135deg, #d97706, #b45309); }
 
-        .btn-group { display: flex; gap: 10px; margin-top: 10px; }
+        .btn-group { display: flex; gap: 12px; margin-top: 12px; }
         .hidden { display: none !important; }
 
         .table-responsive {
             width: 100%;
             overflow-x: auto;
+            border-radius: 14px;
+            border: 1px solid var(--border-color);
+            margin-top: 16px;
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            margin-top: 12px;
-            font-size: 0.9rem;
+            font-size: 0.95rem;
+            white-space: nowrap;
         }
 
         table th, table td {
-            padding: 12px;
-            border: 1px solid var(--border-color);
+            padding: 16px 20px;
+            border-bottom: 1px solid var(--border-color);
             text-align: right;
         }
 
         table th {
             background-color: var(--table-header-bg);
-            font-weight: 700;
+            font-weight: 800;
         }
 
         .badge {
             display: inline-block;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 800;
         }
 
-        .badge-pending { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; }
-        .badge-approved { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
-        .badge-rejected { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
+        .badge-pending { background-color: rgba(217, 119, 6, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
+        .badge-approved { background-color: rgba(5, 150, 105, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .badge-rejected { background-color: rgba(220, 38, 38, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
 
-        .pill-stats-grid {
+        .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-            gap: 16px;
-            margin-bottom: 24px;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 20px;
+            margin-bottom: 28px;
         }
 
-        .pill-card {
+        .stat-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 50px;
-            padding: 16px 24px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            border-radius: 20px;
+            padding: 24px;
+            text-align: center;
             box-shadow: var(--shadow);
-            cursor: pointer;
-            transition: all 0.3s ease;
         }
-
-        .pill-card:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
-        }
-
-        .pill-card .pill-title {
-            font-size: 0.95rem;
-            font-weight: 700;
-            color: var(--text-muted);
-        }
-
-        .pill-card .pill-val {
-            font-size: 1.4rem;
-            font-weight: 800;
-            color: var(--primary-color);
-            background: rgba(59, 130, 246, 0.1);
-            padding: 6px 16px;
-            border-radius: 30px;
+        .stat-card .val {
+            font-size: 2.2rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, #3b82f6, #a855f7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 6px;
         }
 
         .timer-box {
             position: fixed;
-            top: 80px;
-            left: 20px;
-            background-color: var(--card-bg);
+            top: 90px;
+            left: 30px;
+            background: rgba(17, 24, 39, 0.9);
+            backdrop-filter: blur(10px);
             border: 2px solid var(--danger-color);
-            color: var(--danger-color);
-            padding: 8px 18px;
-            border-radius: 30px;
-            font-weight: 700;
-            box-shadow: var(--shadow);
+            color: #ff6b6b;
+            padding: 10px 22px;
+            border-radius: 40px;
+            font-weight: 800;
+            font-size: 1.05rem;
             z-index: 90;
         }
 
-        /* تعديل وتظبيط تصميم أسئلة الامتحان لتكون مريحة، واضحة وبحجم كبير وملائم */
         .question-card {
             border: 1px solid var(--border-color);
             border-radius: 16px;
-            padding: 24px;
+            padding: 22px;
             margin-bottom: 20px;
-            background-color: var(--card-bg);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
+            background-color: var(--input-bg);
         }
 
-        .question-title { 
-            font-weight: 700; 
-            font-size: 1.15rem; 
-            margin-bottom: 16px; 
-            line-height: 1.7;
-            color: var(--text-color);
-            display: flex;
-            align-items: flex-start;
-            gap: 8px;
-        }
+        .question-title { font-weight: 800; font-size: 1.15rem; margin-bottom: 18px; color: var(--text-color); direction: ltr; text-align: right; }
 
         .option-label {
             display: flex;
             align-items: center;
-            gap: 14px;
-            background: var(--input-bg);
+            gap: 16px;
+            background: var(--card-bg);
             padding: 16px 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            margin-bottom: 12px;
+            border: 2px solid var(--border-color);
+            border-radius: 14px;
+            margin-bottom: 14px;
             cursor: pointer;
+            font-weight: 700;
             font-size: 1.05rem;
-            font-weight: 500;
-            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.02);
+            direction: ltr;
+            justify-content: flex-start;
         }
-
         .option-label:hover {
             border-color: var(--primary-color);
-            background: rgba(59, 130, 246, 0.04);
+            background: rgba(59, 130, 246, 0.05);
             transform: translateX(-4px);
         }
-
-        .option-label input[type="radio"] {
-            width: 20px;
-            height: 20px;
-            accent-color: var(--primary-color);
-            cursor: pointer;
+        .option-label.selected {
+            border-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.12);
+        }
+        .option-marker {
+            display: inline-flex;
+            width: 32px;
+            height: 32px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 50%;
+            align-items: center;
+            justify-content: center;
+            font-weight: 900;
+            color: var(--primary-color);
+            font-size: 0.95rem;
+        }
+        .option-label.selected .option-marker {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
         }
 
         .alert {
-            padding: 14px;
-            border-radius: 12px;
-            margin-bottom: 16px;
-            font-size: 0.9rem;
-            font-weight: 600;
+            padding: 16px 20px;
+            border-radius: 14px;
+            margin-bottom: 20px;
+            font-size: 0.95rem;
+            font-weight: 700;
         }
-
-        .alert-success { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
-        .alert-danger { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
-        .alert-info { background-color: rgba(59, 130, 246, 0.15); color: #3b82f6; border: 1px solid #3b82f6; }
-        .alert-warning { background-color: rgba(245, 158, 11, 0.15); color: #f59e0b; border: 1px solid #f59e0b; }
+        .alert-success { background-color: rgba(5, 150, 105, 0.15); color: #10b981; border: 1px solid rgba(16, 185, 129, 0.4); }
+        .alert-danger { background-color: rgba(220, 38, 38, 0.15); color: #ef4444; border: 1px solid rgba(239, 68, 68, 0.4); }
+        .alert-info { background-color: rgba(37, 99, 235, 0.15); color: #3b82f6; border: 1px solid rgba(59, 130, 246, 0.4); }
+        .alert-warning { background-color: rgba(217, 119, 6, 0.15); color: #f59e0b; border: 1px solid rgba(245, 158, 11, 0.4); }
 
         .tabs {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 28px;
             overflow-x: auto;
-            padding-bottom: 6px;
+            padding-bottom: 8px;
         }
-
         .tab-btn {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
+            border: 1.5px solid var(--border-color);
+            border-radius: 14px;
             cursor: pointer;
             white-space: nowrap;
-            font-weight: 600;
+            font-weight: 800;
             color: var(--text-color);
         }
-
         .tab-btn.active {
-            background-color: var(--primary-color);
+            background: linear-gradient(135deg, #2563eb, #1d4ed8);
             color: white;
-            border-color: var(--primary-color);
+            border-color: #2563eb;
         }
 
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(6px);
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(7, 9, 19, 0.85);
+            backdrop-filter: blur(8px);
             display: flex;
             align-items: center;
             justify-content: center;
             z-index: 1000;
-            animation: fadeIn 0.3s ease;
         }
-
         .modal-box {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 28px;
+            border-radius: 24px;
+            padding: 35px;
             width: 90%;
-            max-width: 600px;
-            max-height: 85vh;
+            max-width: 650px;
+            max-height: 90vh;
             overflow-y: auto;
-            text-align: right;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.5);
             position: relative;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.7);
         }
-
-        .modal-close-x {
+        .modal-close-btn {
             position: absolute;
-            top: 16px;
-            left: 20px;
-            background: rgba(239, 68, 68, 0.15);
+            top: 20px; left: 20px;
+            background: rgba(220, 38, 38, 0.15);
             color: var(--danger-color);
-            border: 1px solid var(--danger-color);
-            width: 32px;
-            height: 32px;
+            border: 1px solid rgba(220, 38, 38, 0.3);
+            width: 38px; height: 38px;
             border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.2rem; cursor: pointer;
+            font-weight: 900;
+        }
+        .modal-close-btn:hover { background: var(--danger-color); color: white; }
+
+        .q-nav-grid {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
             justify-content: center;
-            font-weight: bold;
-            cursor: pointer;
-            font-size: 1.1rem;
         }
-
-        .modal-close-x:hover {
-            background: var(--danger-color);
+        .q-nav-box {
+            width: 38px; height: 38px;
+            border-radius: 10px;
+            background: var(--input-bg);
+            border: 1.5px solid var(--border-color);
+            display: flex; align-items: center; justify-content: center;
+            font-weight: 800; cursor: pointer;
+            color: var(--text-color);
+        }
+        .q-nav-box.answered {
+            background: rgba(16, 185, 129, 0.2);
+            border-color: var(--success-color);
+            color: var(--success-color);
+        }
+        .q-nav-box.active {
+            background: var(--primary-color);
             color: white;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 12px;
-            margin-top: 24px;
+            border-color: var(--primary-color);
         }
 
         footer {
             text-align: center;
-            padding: 16px;
-            font-size: 0.9rem;
+            padding: 24px;
+            font-size: 0.95rem;
             color: var(--text-muted);
             border-top: 1px solid var(--border-color);
             background: var(--card-bg);
             margin-top: auto;
+            font-weight: 600;
         }
-
         .designer-tag {
-            font-family: 'Georgia', serif;
-            font-weight: bold;
-            letter-spacing: 1px;
-            background: linear-gradient(90deg, #a855f7, #3b82f6);
+            font-family: 'Cairo', sans-serif;
+            font-weight: 900;
+            background: linear-gradient(90deg, #c084fc, #3b82f6);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
@@ -500,12 +519,12 @@
 <body oncontextmenu="return false;">
 
     <header>
-        <h1 id="appHeaderTitle">The Leader In English | Mr.Sherif Khafagy</h1>
+        <h1 id="appHeaderTitle"><i class="fa-solid fa-graduation-cap"></i> The Leader In English | Mr.Sherif Khafagy</h1>
         <div class="header-actions">
             <button class="theme-toggle-btn" onclick="toggleTheme()">
                 <span id="themeIcon">☀️</span> <span id="themeText">الوضع النهاري</span>
             </button>
-            <button id="logoutBtn" class="btn btn-secondary hidden" style="width: auto; padding: 6px 16px;" onclick="logout()">تسجيل الخروج</button>
+            <button id="logoutBtn" class="btn btn-secondary hidden" style="width: auto; padding: 8px 20px; font-size: 0.9rem;" onclick="promptLogoutModal()"><i class="fa-solid fa-right-from-bracket"></i> تسجيل الخروج</button>
         </div>
     </header>
 
@@ -513,30 +532,44 @@
         <div id="alertBox" class="alert hidden"></div>
     </div>
 
+    <!-- نافذة تأكيد تسجيل الخروج الشيك -->
+    <div id="confirmLogoutModal" class="modal-overlay hidden">
+        <div class="modal-box" style="text-align: center; max-width: 420px; border-color: var(--primary-color);">
+            <div style="font-size: 3rem; color: var(--warning-color); margin-bottom: 15px;"><i class="fa-solid fa-triangle-exclamation"></i></div>
+            <h3 style="font-size: 1.5rem; margin-bottom: 10px; font-weight: 900;">تأكيد تسجيل الخروج</h3>
+            <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 25px; font-weight: 600;">
+                هل أنت متأكد تماماً من رغبتك في تسجيل الخروج من المنصة؟
+            </p>
+            <div style="display: flex; gap: 14px;">
+                <button class="btn btn-secondary" style="flex: 1;" onclick="closeLogoutModal()">لا، إلغاء</button>
+                <button class="btn btn-danger" style="flex: 1;" onclick="confirmLogout()">نعم، خروج</button>
+            </div>
+        </div>
+    </div>
+
     <!-- قسم تسجيل الدخول -->
     <div id="authSection" class="auth-container">
-        
         <div id="loginCard" class="auth-card">
-            <h2>تسجيل الدخول</h2>
+            <h2><i class="fa-solid fa-lock-open"></i> تسجيل الدخول</h2>
             <form id="loginForm" onsubmit="handleLogin(event)">
                 <div class="form-group">
-                    <label>رقم الطالب / رقم الهاتف</label>
+                    <label>رقم اللوحة / رقم الطالب (11 رقم)</label>
                     <input type="text" id="loginId" maxlength="11" minlength="11" pattern="\d{11}" required placeholder="أدخل 11 رقم">
                 </div>
                 <div class="form-group">
-                    <label>كلمة المرور</label>
+                    <label>كلمة المرور (يجب أن تتطابق مع الحساب)</label>
                     <input type="password" id="loginPassword" required placeholder="أدخل كلمة المرور">
                 </div>
-                <button type="submit" class="btn">دخول</button>
+                <button type="submit" class="btn"><i class="fa-solid fa-right-to-bracket"></i> دخول المنصة</button>
             </form>
-            <div style="margin-top: 20px; display: flex; justify-content: space-between; font-size: 0.85rem;">
+            <div style="margin-top: 24px; display: flex; justify-content: space-between; font-size: 0.9rem; font-weight: 700;">
                 <a href="#" onclick="showAuthPage('registerCard')" style="color: var(--primary-color); text-decoration: none;">إنشاء حساب طالب جديد</a>
                 <a href="#" onclick="showAuthPage('resetCard')" style="color: var(--text-muted); text-decoration: none;">نسيت كلمة المرور؟</a>
             </div>
         </div>
 
         <div id="registerCard" class="auth-card hidden">
-            <h2>طلب تسجيل جديد</h2>
+            <h2><i class="fa-solid fa-user-plus"></i> طلب تسجيل جديد</h2>
             <form id="registerForm" onsubmit="handleRegister(event)">
                 <div class="form-group">
                     <label>الاسم الثلاثي</label>
@@ -555,7 +588,7 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label>رقم الطالب (11 رقم)</label>
+                    <label>رقم الطالب / اللوحة (11 رقم)</label>
                     <input type="text" id="regStudentId" maxlength="11" minlength="11" pattern="\d{11}" required placeholder="01xxxxxxxxx">
                 </div>
                 <div class="form-group">
@@ -570,18 +603,15 @@
                     <label>تأكيد كلمة المرور</label>
                     <input type="password" id="regPasswordConfirm" required placeholder="أعد كلمة المرور">
                 </div>
-                <button type="submit" class="btn btn-success">إرسال طلب التسجيل</button>
+                <button type="submit" class="btn btn-success"><i class="fa-solid fa-paper-plane"></i> إرسال طلب التسجيل</button>
             </form>
-            <div style="margin-top: 16px; text-align: center; font-size: 0.85rem;">
+            <div style="margin-top: 18px; text-align: center; font-size: 0.9rem; font-weight: 700;">
                 <a href="#" onclick="showAuthPage('loginCard')" style="color: var(--primary-color); text-decoration: none;">العودة لتسجيل الدخول</a>
             </div>
         </div>
 
         <div id="resetCard" class="auth-card hidden">
-            <h2>استرجاع الحساب</h2>
-            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 20px; text-align: center;">
-                سيتم إرسال الطلب للمستر لتعيين كلمة مرور جديدة لك.
-            </p>
+            <h2><i class="fa-solid fa-key"></i> استرجاع الحساب</h2>
             <form id="resetForm" onsubmit="handleResetRequest(event)">
                 <div class="form-group">
                     <label>رقم الطالب (11 رقم)</label>
@@ -591,58 +621,54 @@
                     <label>ملاحظة للمستر</label>
                     <textarea id="resetNote" rows="3" placeholder="اكتب التفاصيل هنا"></textarea>
                 </div>
-                <button type="submit" class="btn btn-warning">إرسال طلب الاسترجاع</button>
+                <button type="submit" class="btn btn-warning"><i class="fa-solid fa-rotate-left"></i> إرسال طلب الاسترجاع</button>
             </form>
-            <div style="margin-top: 16px; text-align: center; font-size: 0.85rem;">
+            <div style="margin-top: 18px; text-align: center; font-size: 0.9rem; font-weight: 700;">
                 <a href="#" onclick="showAuthPage('loginCard')" style="color: var(--primary-color); text-decoration: none;">العودة لتسجيل الدخول</a>
             </div>
         </div>
-
     </div>
 
     <div class="container">
-
         <!-- لوحة الطالب -->
         <div id="studentDashboard" class="hidden">
             <div class="card">
-                <h2 id="studentWelcomeTitle">مرحباً بك</h2>
-                <p id="studentInfoSub" style="color: var(--text-muted); font-size: 0.9rem;"></p>
+                <h2 id="studentWelcomeTitle" style="font-size: 1.8rem; font-weight: 900; margin-bottom: 6px;">مرحباً بك</h2>
+                <p id="studentInfoSub" style="color: var(--text-muted); font-size: 1rem; font-weight: 600;"></p>
             </div>
 
-            <div class="pill-stats-grid">
-                <div class="pill-card">
-                    <span class="pill-title">التقييم العام</span>
-                    <span class="pill-val" id="studentMotivationBadge" style="font-size: 1.1rem; color: var(--warning-color);">ممتاز مرتفع 🏆</span>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem; font-weight:700;">نسبة التفوق الشاملة</div>
+                    <div id="studentExcellenceRate" class="val">0%</div>
                 </div>
-                <div class="pill-card">
-                    <span class="pill-title">نسبة التفوق الشاملة</span>
-                    <span class="pill-val" id="studentExcellenceRatePill">0%</span>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem; font-weight:700;">التقييم العام</div>
+                    <div id="studentRankBadge" class="val" style="font-size:1.5rem; margin-top:10px;">--</div>
                 </div>
-                <div class="pill-card">
-                    <span class="pill-title">عدد الامتحانات المكتملة</span>
-                    <span class="pill-val" id="studentCompletedExamsPill">0</span>
+                <div class="stat-card">
+                    <div style="color:var(--text-muted); font-size:0.9rem; font-weight:700;">عدد الامتحانات المكتملة</div>
+                    <div id="studentCompletedExamsCount" class="val">0</div>
                 </div>
             </div>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchStudentTab('studentTabExams', this)">الامتحانات المتاحة</button>
-                <button class="tab-btn" onclick="switchStudentTab('studentTabResults', this)">نتائجي</button>
-                <button class="tab-btn" onclick="switchStudentTab('studentTabMistakes', this)">أخطائي واجاباتها</button>
-                <button class="tab-btn" onclick="switchStudentTab('studentTabAssignments', this)">المرفقات والواجبات</button>
+                <button class="tab-btn active" onclick="switchStudentTab('studentTabExams', this)"><i class="fa-solid fa-file-pen"></i> الامتحانات المتاحة</button>
+                <button class="tab-btn" onclick="switchStudentTab('studentTabResults', this)"><i class="fa-solid fa-chart-line"></i> نتائجي</button>
+                <button class="tab-btn" onclick="switchStudentTab('studentTabMistakes', this)"><i class="fa-solid fa-triangle-exclamation"></i> امتحان من أخطائي</button>
+                <button class="tab-btn" onclick="switchStudentTab('studentTabAssignments', this)"><i class="fa-solid fa-folder-open"></i> المرفقات والواجبات</button>
             </div>
 
-            <!-- تبويب الامتحانات -->
             <div id="studentTabExams" class="student-tab-content">
                 <div class="card">
-                    <h3>الامتحانات والكويزات المتاحة لصفك</h3>
-                    <div id="studentExamsList" style="margin-top: 12px;"></div>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 12px;">الامتحانات والكويزات المتاحة لصفك</h3>
+                    <div id="studentExamsList" style="margin-top: 14px;"></div>
                 </div>
             </div>
 
-            <!-- تبويب نتائجي -->
             <div id="studentTabResults" class="student-tab-content hidden">
                 <div class="card">
-                    <h3>سجل كافة النتائج الخاصة بك</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 12px;">سجل كافة النتائج الخاصة بك</h3>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -660,83 +686,100 @@
                 </div>
             </div>
 
-            <!-- تبويب أخطائي -->
             <div id="studentTabMistakes" class="student-tab-content hidden">
-                <div class="card">
-                    <h3>سجل أخطائي للتعلم منها (لكل امتحان منفصل)</h3>
-                    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">يتم تجميع الأسئلة التي بها أخطاء مرتبطة بكل امتحان على حدة:</p>
-                    <div id="studentMistakesContainer"></div>
+                <div class="card" style="background: linear-gradient(135deg, rgba(37,99,235,0.03), rgba(168,85,247,0.03));">
+                    <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                        <div style="background: var(--primary-color); color: white; width: 45px; height: 45px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; box-shadow: 0 8px 16px rgba(59,130,246,0.3);">
+                            <i class="fa-solid fa-shield-cat"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.4rem; font-weight: 900; color: var(--text-color);">امتحان تراكمي من أخطائك السابقة</h3>
+                            <p style="font-size:0.9rem; color:var(--text-muted); font-weight:600;">اختر الامتحانات التي تريد جمع أخطائها لعمل اختبار مخصص لتعزيز مستواك:</p>
+                        </div>
+                    </div>
+                    <div id="mistakesSelectionExamsList" style="margin-bottom: 20px;"></div>
+                    <button class="btn btn-success" onclick="startMistakesExam()"><i class="fa-solid fa-wand-magic-sparkles"></i> ابدأ امتحان أخطاء الامتحانات المحددة</button>
                 </div>
             </div>
 
-            <!-- تبويب المرفقات والواجبات -->
             <div id="studentTabAssignments" class="student-tab-content hidden">
                 <div class="card">
-                    <h3>المرفقات والواجبات المرفوعة</h3>
-                    <div id="studentAssignmentsList" style="margin-top: 12px;"></div>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 12px;">المرفقات والواجبات المرفوعة</h3>
+                    <div id="studentAssignmentsList" style="margin-top: 14px;"></div>
                 </div>
             </div>
         </div>
 
         <!-- واجهة أداء الامتحان -->
         <div id="examInterface" class="hidden">
-            <div id="timerDisplay" class="timer-box">الوقت المتبقي: --:--</div>
-            <div class="card" style="margin-top: 40px;">
-                <h2 id="examActiveTitle" style="font-size: 1.8rem; margin-bottom: 8px; color: var(--primary-color);">عنوان الامتحان</h2>
-                <p id="examActiveMeta" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;"></p>
-                <form id="activeExamForm" onsubmit="promptSubmitModal(event)">
-                    <div id="examQuestionsContainer"></div>
-                    <button type="submit" class="btn btn-success" style="margin-top: 30px; padding: 16px; font-size: 1.1rem;">تسليم الامتحان النهائي</button>
-                </form>
+            <div id="timerDisplay" class="timer-box"><i class="fa-solid fa-stopwatch"></i> الوقت المتبقي: --:--</div>
+            <div class="card" style="margin-top: 50px;">
+                <h2 id="examActiveTitle" style="font-size: 1.8rem; font-weight: 900; margin-bottom: 8px;">عنوان الامتحان</h2>
+                <p id="examActiveMeta" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px; font-weight: 700;"></p>
+                
+                <div id="qNavGrid" class="q-nav-grid"></div>
+
+                <div id="singleQuestionContainer"></div>
+
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="button" class="btn btn-secondary" id="prevQBtn" onclick="navigateExamQuestion(-1)" style="flex: 1;"><i class="fa-solid fa-arrow-right"></i> السابق</button>
+                    <button type="button" class="btn" id="nextQBtn" onclick="navigateExamQuestion(1)" style="flex: 1;">التالي <i class="fa-solid fa-arrow-left"></i></button>
+                </div>
+
+                <div style="display: flex; gap: 12px; margin-top: 14px;">
+                    <button type="button" class="btn btn-success" id="submitExamBtn" onclick="promptSubmitModal()" style="flex: 2;"><i class="fa-solid fa-circle-check"></i> تسليم الواجب النهائي</button>
+                    <button type="button" class="btn btn-warning" id="saveLaterBtn" onclick="saveExamLater()" style="flex: 1;"><i class="fa-solid fa-bookmark"></i> الاستكمال لاحقا</button>
+                </div>
             </div>
         </div>
 
-        <!-- النافذة المنبثقة للتأكيد قبل تسليم الامتحان -->
         <div id="confirmSubmitModal" class="modal-overlay hidden">
-            <div class="modal-box" style="text-align: center;">
-                <div class="modal-close-x" onclick="closeConfirmModal()">×</div>
-                <h3 style="font-size: 1.4rem; margin-bottom: 10px; color: var(--primary-color);">تأكيد تسليم الإجابات</h3>
-                <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
-                    هل أنت متأكد من رغبتك في إنهاء وتسليم الامتحان الآن؟ لن يمكنك تعديل إجاباتك بعد التسليم.
+            <div class="modal-box" style="text-align: center; max-width: 500px;">
+                <h3 style="font-size: 1.6rem; margin-bottom: 12px; font-weight: 900; color: var(--primary-color);"><i class="fa-solid fa-circle-question"></i> تأكيد تسليم الإجابات</h3>
+                <p style="color: var(--text-muted); font-size: 1rem; margin-bottom: 24px; font-weight: 600;">
+                    هل أنت متأكد من رغبتك في إنهاء وتسليم الامتحان الآن؟ تأكد من إجابتك على كافة الأسئلة.
                 </p>
-                <div class="modal-actions">
+                <div style="display: flex; gap: 14px;">
                     <button class="btn btn-warning" style="flex: 1;" onclick="closeConfirmModal()">راجع إجاباتك</button>
                     <button class="btn btn-success" style="flex: 1;" onclick="confirmFinalSubmission()">تأكيد التسليم النهائي</button>
                 </div>
             </div>
         </div>
 
-        <!-- التقرير التفصيلي للنتيجة (مع زر إغلاق علوي X) -->
         <div id="examResultDetailView" class="hidden">
-            <div class="card" style="position: relative;">
-                <div class="modal-close-x" onclick="closeResultDetail()" title="إغلاق التقرير">×</div>
-                <h2 style="margin-bottom:16px;">تقرير نتيجة الامتحان بالتفصيل</h2>
-                <div id="resultSummaryBox" style="margin: 16px 0;"></div>
+            <div class="card">
+                <h2 style="margin-bottom:20px; font-size: 1.8rem; font-weight: 900;"><i class="fa-solid fa-square-poll-vertical"></i> تقرير نتيجة الامتحان بالتفصيل</h2>
+                <div id="resultSummaryBox" style="margin: 20px 0;"></div>
                 <div id="resultQuestionsBreakdown"></div>
-                <button class="btn btn-secondary" onclick="closeResultDetail()" style="margin-top: 20px;">العودة للوحة التحكم</button>
+                <button class="btn btn-secondary" onclick="closeResultDetail()" style="margin-top: 24px; width: auto; padding: 12px 30px;"><i class="fa-solid fa-arrow-right"></i> العودة للوحة التحكم</button>
             </div>
         </div>
 
-        <!-- لوحة التحكم الآدمن -->
+        <!-- لوحة التحكم للمستر -->
         <div id="adminDashboard" class="hidden">
-            <div class="card">
-                <h2>لوحة تحكم المستر</h2>
-                <p style="color: var(--text-muted); font-size: 0.85rem;">تحكم كامل في الطلاب، الامتحانات، الواجبات، والتصحيح بسهولة عبر السحابة.</p>
+            <div class="card" style="background: linear-gradient(135deg, #1e1b4b, #111827); border: 1.5px solid rgba(59,130,246,0.3);">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div style="font-size: 2.5rem; color: #f59e0b;"><i class="fa-solid fa-crown"></i></div>
+                    <div>
+                        <h2 style="font-size: 2rem; font-weight: 900; background: linear-gradient(90deg, #60a5fa, #f472b6); -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Hello, Mr.Sherif Khafagy</h2>
+                        <p style="color: var(--text-muted); font-size: 1rem; font-weight: 700; margin-top: 4px;">مرحباً بك في لوحة القيادة المركزية لإدارة المنصة باحترافية تامة.</p>
+                    </div>
+                </div>
             </div>
 
             <div class="tabs">
-                <button class="tab-btn active" onclick="switchAdminTab('tabRequests', this)">طلبات التسجيل والإنقاذ</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabStudents', this)">إدارة الطلاب</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabStudentAnalytics', this)">متابعة درجات وأخطاء الطلاب</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabExams', this)">إدارة الامتحانات والأسئلة</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabGrading', this)">تصحيح المقالي والنتائج</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabUploads', this)">رفع الواجبات والملفات</button>
-                <button class="tab-btn" onclick="switchAdminTab('tabSettings', this)">إعدادات الحساب</button>
+                <button class="tab-btn active" onclick="switchAdminTab('tabRequests', this)"><i class="fa-solid fa-user-clock"></i> طلبات التسجيل والإنقاذ</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabStudents', this)"><i class="fa-solid fa-users"></i> إدارة الطلاب</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabExamResultsMaster', this)"><i class="fa-solid fa-chart-pie"></i> نتائج الطلاب وأخطائهم</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabExams', this)"><i class="fa-solid fa-pen-to-square"></i> إدارة الامتحانات والأسئلة</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabGrading', this)"><i class="fa-solid fa-clipboard-check"></i> تصحيح المقالي</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabUploads', this)"><i class="fa-solid fa-cloud-arrow-up"></i> رفع الواجبات والملفات</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabSettings', this)"><i class="fa-solid fa-gears"></i> إعدادات الحساب</button>
             </div>
 
             <div id="tabRequests" class="admin-tab">
                 <div class="card">
-                    <h3>طلبات التسجيل الجديدة</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px;">طلبات التسجيل الجديدة</h3>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -754,7 +797,7 @@
                 </div>
 
                 <div class="card">
-                    <h3>طلبات استرجاع كلمة المرور</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px;">طلبات استرجاع كلمة المرور</h3>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -772,7 +815,7 @@
 
             <div id="tabStudents" class="admin-tab hidden">
                 <div class="card">
-                    <h3>إدارة الطلاب المقبولين</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px;">إدارة الطلاب المقبولين</h3>
                     <div class="table-responsive">
                         <table>
                             <thead>
@@ -790,47 +833,35 @@
                 </div>
             </div>
 
-            <div id="tabStudentAnalytics" class="admin-tab hidden">
+            <!-- قسم نتائج الطلاب وأخطائهم (الـ 6 أيقونات / كروت للمراحل) -->
+            <div id="tabExamResultsMaster" class="admin-tab hidden">
                 <div class="card">
-                    <h3>متابعة أداء الطلاب (اختر طالباً لعرض إحصائياته وأخطائه)</h3>
-                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">اضغط على أي بطاقة طالب لعرض تفاصيل امتحاناته وأخطائه بالكامل.</p>
-                    <div id="adminStudentsPillsContainer" class="pill-stats-grid"></div>
+                    <h3 style="font-size: 1.4rem; font-weight: 900; margin-bottom: 8px;"><i class="fa-solid fa-chart-column"></i> نتائج الطلاب وأخطائهم حسب المراحل الدراسية الست</h3>
+                    <p style="font-size: 0.95rem; color: var(--text-muted); font-weight: 600; margin-bottom: 24px;">اضغط على أي أيقونة صف دراسي لعرض أسماء طلابها ونسبهم:</p>
+                    <div id="gradesCardsContainer" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px;"></div>
                 </div>
             </div>
 
-            <div id="adminStudentExamsModal" class="modal-overlay hidden">
-                <div class="modal-box">
-                    <div class="modal-close-x" onclick="closeAdminStudentExamsModal()">×</div>
-                    <h3 id="adminModalStudentTitle" style="color: var(--primary-color); margin-bottom: 12px;">امتحانات الطالب</h3>
-                    <div id="adminModalExamsBody"></div>
-                    <div class="modal-actions">
-                        <button class="btn btn-secondary" onclick="closeAdminStudentExamsModal()">إغلاق</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="adminStudentExamMistakesModal" class="modal-overlay hidden">
-                <div class="modal-box">
-                    <div class="modal-close-x" onclick="closeAdminStudentExamMistakesModal()">×</div>
-                    <h3 id="adminModalExamTitle" style="color: var(--danger-color); margin-bottom: 12px;">تفاصيل أخطاء الطالب في الامتحان</h3>
-                    <div id="adminModalMistakesBody"></div>
-                    <div class="modal-actions">
-                        <button class="btn btn-secondary" onclick="closeAdminStudentExamMistakesModal()">إغلاق</button>
-                    </div>
+            <!-- نافذة منبثقة تفصيلية لعرض طلاب الصف ثم امتحانات الطالب ثم تفاصيل أسئلة وأخطاء الامتحان -->
+            <div id="masterStudentModal" class="modal-overlay hidden">
+                <div class="modal-box" style="max-width: 800px;">
+                    <div class="modal-close-btn" onclick="closeMasterStudentModal()"><i class="fa-solid fa-xmark"></i></div>
+                    <div id="masterStudentModalContent"></div>
                 </div>
             </div>
 
             <div id="tabExams" class="admin-tab hidden">
                 <div class="card">
-                    <h3>إنشاء امتحان / كويز جديد (مع الحفظ التلقائي)</h3>
+                    <h3 id="examFormTitleText" style="font-size: 1.3rem; font-weight: 800; margin-bottom: 18px;">إنشاء امتحان / كويز جديد</h3>
                     <form id="createExamForm" onsubmit="handleCreateExam(event)">
+                        <input type="hidden" id="editingExamId" value="">
                         <div class="form-group">
                             <label>عنوان الامتحان</label>
-                            <input type="text" id="examTitle" required placeholder="مثال: اختبار الشهر - Unit 1" oninput="saveExamDraftToLocalStorage()">
+                            <input type="text" id="examTitle" required placeholder="مثال: اختبار الشهر - Unit 1">
                         </div>
                         <div class="form-group">
                             <label>المرحلة الدراسية</label>
-                            <select id="examGradeTarget" required onchange="saveExamDraftToLocalStorage()">
+                            <select id="examGradeTarget" required>
                                 <option value="أولى إعدادي">أولى إعدادي</option>
                                 <option value="تانية إعدادي">تانية إعدادي</option>
                                 <option value="تالتة إعدادي">تالتة إعدادي</option>
@@ -840,90 +871,73 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>وقت الفتح الحقيقي</label>
-                            <input type="datetime-local" id="examStartTime" required onchange="saveExamDraftToLocalStorage()">
+                            <label>عدد مرات السماح للطالب بأداء الامتحان</label>
+                            <input type="number" id="examAllowedAttempts" min="1" value="1" required placeholder="مثال: 1 أو أكثر">
                         </div>
                         <div class="form-group">
-                            <label>وقت الإغلاق الحقيقي</label>
-                            <input type="datetime-local" id="examEndTime" required onchange="saveExamDraftToLocalStorage()">
+                            <label>وقت الفتح (Date/Time)</label>
+                            <input type="datetime-local" id="examStartTime" required>
+                        </div>
+                        <div class="form-group">
+                            <label>وقت الإغلاق (Date/Time)</label>
+                            <input type="datetime-local" id="examEndTime" required>
                         </div>
                         <div class="form-group">
                             <label>مدة الامتحان بالدقائق</label>
-                            <input type="number" id="examDurationMinutes" min="1" required placeholder="مثال: 30" oninput="saveExamDraftToLocalStorage()">
+                            <input type="number" id="examDurationMinutes" min="1" required placeholder="مثال: 30">
                         </div>
 
-                        <hr style="margin: 20px 0; border-color: var(--border-color);">
-                        <h4>توليد وإدارة الأسئلة بالذكاء الاصطناعي</h4>
+                        <hr style="margin: 24px 0; border-color: var(--border-color);">
+                        <h4 style="font-size: 1.2rem; font-weight: 800; margin-bottom: 12px;">إعداد وتوليد الأسئلة يدوياً</h4>
                         
-                        <div style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; margin: 12px 0;">
-                            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 12px;">
-                                <div style="flex: 1; min-width: 150px;">
-                                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">عدد أسئلة اختر من متعدد:</label>
-                                    <input type="number" id="genMcqCount" min="0" value="5" style="width:100%;">
+                        <div style="background: var(--input-bg); padding: 20px; border-radius: 16px; border: 1.5px solid var(--border-color); margin-bottom: 20px;">
+                            <h5 style="font-size: 1.05rem; font-weight: 800; margin-bottom: 12px;"><i class="fa-solid fa-list-check"></i> توليد نموذج أسئلة فارغ</h5>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; align-items: flex-end;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>عدد أسئلة اختر من متعدد:</label>
+                                    <input type="number" id="genCountMcq" min="0" value="0" placeholder="اكتب العدد هنا">
                                 </div>
-                                <div style="flex: 1; min-width: 150px;">
-                                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">عدد الأسئلة المقالية:</label>
-                                    <input type="number" id="genEssayCount" min="0" value="2" style="width:100%;">
+                                <div class="form-group" style="margin-bottom:0;">
+                                    <label>عدد الأسئلة المقالية:</label>
+                                    <input type="number" id="genCountEssay" min="0" value="0" placeholder="اكتب العدد هنا">
+                                </div>
+                                <div>
+                                    <button type="button" class="btn btn-warning" onclick="generateEmptyQuestionsTemplate()" style="padding: 15px;"><i class="fa-solid fa-wand-magic-sparkles"></i> توليد الحقول الآن</button>
                                 </div>
                             </div>
-                            <button type="button" class="btn btn-warning" onclick="generateAIQuestionsByCount()" style="width: 100%;">
-                                💡 توليد الأسئلة بالعدد المطلوب فوراً
-                            </button>
-                        </div>
-
-                        <div style="margin: 12px 0; display:flex; gap:10px; flex-wrap:wrap;">
-                            <button type="button" class="btn btn-danger" onclick="clearAllExamBuilder()" style="width: auto;">
-                                🗑️ حذف الكل
-                            </button>
                         </div>
 
                         <div id="builderQuestionsArea"></div>
 
-                        <div class="btn-group" style="margin-bottom: 16px;">
-                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('mcq')">+ إضافة سؤال اختر من متعدد</button>
-                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('essay')">+ إضافة سؤال مقالي</button>
+                        <div style="display: flex; gap: 12px; flex-wrap: wrap; margin-bottom: 20px;">
+                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('mcq')" style="width: auto; padding: 10px 18px;">+ إضافة سؤال اختر من متعدد</button>
+                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('essay')" style="width: auto; padding: 10px 18px;">+ إضافة سؤال مقالي</button>
                         </div>
 
-                        <button type="submit" class="btn btn-success">حفظ ونشر الامتحان</button>
+                        <div style="display: flex; gap: 12px;">
+                            <button type="submit" id="saveExamBtnUI" class="btn btn-success" style="padding: 16px; font-size: 1.1rem; flex: 2;"><i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الامتحان</button>
+                            <button type="button" id="cancelEditExamBtn" class="btn btn-secondary hidden" style="padding: 16px; flex: 1;" onclick="cancelExamEdit()">إلغاء التعديل</button>
+                        </div>
                     </form>
                 </div>
 
                 <div class="card">
-                    <h3>الامتحانات المضافة</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px;">الامتحانات المضافة</h3>
                     <div id="adminExamsList"></div>
                 </div>
             </div>
 
             <div id="tabGrading" class="admin-tab hidden">
                 <div class="card">
-                    <h3>الإجابات المقالية التي تحتاج تصحيح</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 8px;"><i class="fa-solid fa-pen-nib"></i> تصحيح الأسئلة المقالية</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 600; margin-bottom: 18px;">مراجعة إجابات الطلاب المقالية وتحديد الدرجات المستحقة:</p>
                     <div id="pendingEssayGradingList"></div>
-                </div>
-
-                <div class="card">
-                    <h3>سجلات ونتائج الطلاب الشاملة</h3>
-                    <div class="table-responsive">
-                        <table>
-                            <thead>
-                                <tr>
-                                    <th>الطالب</th>
-                                    <th>الصف</th>
-                                    <th>الامتحان</th>
-                                    <th>الدرجة والنسبة</th>
-                                    <th>الأسئلة (المحلولة/الخطأ)</th>
-                                    <th>وقت التسليم</th>
-                                    <th>تفاصيل</th>
-                                </tr>
-                            </thead>
-                            <tbody id="allResultsTableBody"></tbody>
-                        </table>
-                    </div>
                 </div>
             </div>
 
             <div id="tabUploads" class="admin-tab hidden">
                 <div class="card">
-                    <h3>رفع ملف / واجب جديد</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">رفع ملف / واجب جديد</h3>
                     <form id="uploadFileForm" onsubmit="handleFileUpload(event)">
                         <div class="form-group">
                             <label>عنوان الملف / الواجب</label>
@@ -944,19 +958,19 @@
                             <label>اختر الملف أو الصورة (أقل من 2MB)</label>
                             <input type="file" id="fileInput" required accept="image/*,.pdf,.doc,.docx">
                         </div>
-                        <button type="submit" class="btn btn-success">رفع الملف الآن</button>
+                        <button type="submit" class="btn btn-success" style="padding: 15px; font-size: 1.05rem;"><i class="fa-solid fa-upload"></i> رفع الملف الآن</button>
                     </form>
                 </div>
 
                 <div class="card">
-                    <h3>الملفات المرفوعة سابقاً</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 14px;">الملفات المرفوعة سابقاً</h3>
                     <div id="adminFilesList"></div>
                 </div>
             </div>
 
             <div id="tabSettings" class="admin-tab hidden">
                 <div class="card">
-                    <h3>تغيير كلمة مرور الآدمن رسمياً</h3>
+                    <h3 style="font-size: 1.3rem; font-weight: 800; margin-bottom: 16px;">تغيير كلمة مرور الآدمن</h3>
                     <form id="changeAdminPassForm" onsubmit="handleChangeAdminPassword(event)">
                         <div class="form-group">
                             <label>كلمة المرور الحالية</label>
@@ -966,28 +980,18 @@
                             <label>كلمة المرور الجديدة</label>
                             <input type="password" id="newAdminPass" required placeholder="أدخل كلمة المرور الجديدة">
                         </div>
-                        <button type="submit" class="btn btn-warning">تحديث كلمة المرور رسمياً</button>
+                        <button type="submit" class="btn btn-warning" style="padding: 15px;"><i class="fa-solid fa-shield-halved"></i> تحديث كلمة المرور رسمياً</button>
                     </form>
                 </div>
             </div>
-        </div>
-
-    </div>
-
-    <!-- نافذة عرض الصورة المكبرة (Modal) للمستر أثناء التصحيح -->
-    <div id="imageModal" class="modal-overlay hidden" onclick="closeImageModal(event)">
-        <div class="modal-box" style="text-align: center; max-width: 800px; background: rgba(0,0,0,0.85);">
-            <div class="modal-close-x" onclick="closeImageModal(null)" style="top: 10px; left: 10px;">×</div>
-            <img id="modalZoomedImg" src="" style="max-width: 100%; max-height: 75vh; border-radius: 12px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s;" onclick="toggleZoomImg(this)">
-            <p style="color: #fff; font-size: 0.85rem; margin-top: 10px;">(اضغط على الصورة للتكبير أو التصحيح المرن)</p>
         </div>
     </div>
 
 <footer>
   Developed with passion <span class="designer-tag">By / Mohamed Sherif</span>
-  <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-top: 8px;">
-    <a href="https://wa.me/201118092036" target="_blank" style="color: #25d366; font-size: 20px;"><i class="fa-brands fa-whatsapp"></i></a>
-    <a href="https://www.facebook.com/share/1CEQcGrhmc/" target="_blank" style="color: #1877f2; font-size: 20px;"><i class="fa-brands fa-facebook-f"></i></a>
+  <div style="display: flex; justify-content: center; gap: 18px; align-items: center; margin-top: 10px;">
+    <a href="https://wa.me/201118092036" target="_blank" style="color: #25d366; font-size: 22px;"><i class="fa-brands fa-whatsapp"></i></a>
+    <a href="https://www.facebook.com/share/1CEQcGrhmc/" target="_blank" style="color: #1877f2; font-size: 22px;"><i class="fa-brands fa-facebook-f"></i></a>
   </div>
 </footer>
 
@@ -1025,13 +1029,19 @@
 
         let currentUser = JSON.parse(localStorage.getItem('app_current_user')) || null;
         let activeExamTimerInterval = null;
-        let builderQuestions = JSON.parse(localStorage.getItem('admin_builder_questions_draft')) || [];
+        let builderQuestions = [];
 
         let dbUsers = [];
         let dbExams = [];
         let dbResults = [];
         let dbResets = [];
         let dbAssignments = [];
+
+        let currentExamQuestions = [];
+        let currentQuestionIndex = 0;
+        let studentAnswersMap = {};
+        let activeExamMetaObj = null;
+        let activeInProgressExamId = null;
 
         window.addEventListener('firebase-ready', async () => {
             await loadDataFromCloud();
@@ -1100,7 +1110,7 @@
         function showAlert(msg, type = 'info') {
             const box = document.getElementById('alertBox');
             box.className = `alert alert-${type}`;
-            box.innerText = msg;
+            box.innerHTML = `<i class="fa-solid fa-circle-info"></i> ${msg}`;
             box.classList.remove('hidden');
             window.scrollTo({ top: 0, behavior: 'smooth' });
             setTimeout(() => {
@@ -1122,18 +1132,26 @@
             if (currentUser.role === 'admin') {
                 document.getElementById('adminDashboard').classList.remove('hidden');
                 document.getElementById('studentDashboard').classList.add('hidden');
-                document.getElementById('appHeaderTitle').innerText = "The Leader In English | Mr.Sherif Khafagy";
+                document.getElementById('appHeaderTitle').innerHTML = '<i class="fa-solid fa-crown" style="color: #f59e0b;"></i> Hello, Mr.Sherif Khafagy';
                 renderAdminView();
-                renderBuilderQuestions();
             } else {
                 document.getElementById('studentDashboard').classList.remove('hidden');
                 document.getElementById('adminDashboard').classList.add('hidden');
-                document.getElementById('appHeaderTitle').innerText = "The Leader In English | Mr.Sherif Khafagy";
+                document.getElementById('appHeaderTitle').innerHTML = '<i class="fa-solid fa-graduation-cap"></i> The Leader In English | Mr.Sherif Khafagy';
                 renderStudentView();
             }
         }
 
-        function logout() {
+        function promptLogoutModal() {
+            document.getElementById('confirmLogoutModal').classList.remove('hidden');
+        }
+
+        function closeLogoutModal() {
+            document.getElementById('confirmLogoutModal').classList.add('hidden');
+        }
+
+        function confirmLogout() {
+            closeLogoutModal();
             currentUser = null;
             localStorage.removeItem('app_current_user');
             if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
@@ -1153,16 +1171,15 @@
             const passInput = document.getElementById('loginPassword').value.trim();
 
             if (idInput.length !== 11) {
-                showAlert("رقم الطالب يجب أن يتكون من 11 رقم بالضبط!", "danger");
+                showAlert("رقم الطالب أو اللوحة يجب أن يتكون من 11 رقم بالضبط!", "danger");
                 return;
             }
 
             await loadDataFromCloud();
-            
-            const foundUser = dbUsers.find(u => (u.studentId === idInput || u.phone === idInput) && u.password === passInput);
+            const foundUser = dbUsers.find(u => u.studentId === idInput && u.password === passInput);
 
             if (!foundUser) {
-                showAlert("بيانات الدخول غير صحيحة!", "danger");
+                showAlert("بيانات الدخول غير صحيحة، تأكد من صحة رقم الطالب وكلمة المرور معاً!", "danger");
                 return;
             }
 
@@ -1191,12 +1208,6 @@
             const pass = document.getElementById('regPassword').value.trim();
             const passConfirm = document.getElementById('regPasswordConfirm').value.trim();
 
-            const nameParts = name.split(/\s+/);
-            if (nameParts.length < 3) {
-                showAlert("يجب كتابة الاسم الثلاثي على الأقل (ثلاث كلمات)!", "danger");
-                return;
-            }
-
             if (studentId.length !== 11 || phone.length !== 11) {
                 showAlert("رقم الطالب ورقم الهاتف يجب أن يتكون كل منهما من 11 رقم بالضبط!", "danger");
                 return;
@@ -1210,7 +1221,7 @@
             await loadDataFromCloud();
             const exists = dbUsers.some(u => u.studentId === studentId);
             if (exists) {
-                showAlert("رقم الطالب هذا مسجل بالفعل!", "danger");
+                showAlert("رقم الطالب أو اللوحة مسجل بالفعل!", "danger");
                 return;
             }
 
@@ -1278,31 +1289,34 @@
 
             document.getElementById(tabId).classList.remove('hidden');
             if (btn) btn.classList.add('active');
+
+            if (tabId === 'studentTabMistakes') {
+                renderMistakesSelectionList();
+            }
         }
 
         async function renderStudentView() {
             await loadDataFromCloud();
 
-            document.getElementById('studentWelcomeTitle').innerText = `أهلاً بك يا ${currentUser.name}`;
+            document.getElementById('studentWelcomeTitle').innerText = `أهلاً بك يا بطل: ${currentUser.name}`;
             document.getElementById('studentInfoSub').innerText = `الصف الدراسي: ${currentUser.grade} | رقم الطالب: ${currentUser.studentId}`;
 
             const myResults = dbResults.filter(r => r.studentId === currentUser.studentId);
             
-            document.getElementById('studentCompletedExamsPill').innerText = myResults.length;
-
+            document.getElementById('studentCompletedExamsCount').innerText = myResults.length;
             if (myResults.length > 0) {
                 const totalPercent = myResults.reduce((acc, curr) => acc + curr.percentage, 0);
                 const avgPercent = Math.round(totalPercent / myResults.length);
-                document.getElementById('studentExcellenceRatePill').innerText = `${avgPercent}%`;
+                document.getElementById('studentExcellenceRate').innerText = `${avgPercent}%`;
 
-                let motivation = "ممتاز مرتفع 🏆";
-                if (avgPercent < 50) motivation = "يحتاج لتحسين ⚠️";
-                else if (avgPercent < 65) motivation = "جيد جداً 👍";
-                else if (avgPercent < 85) motivation = "رائع ومجتهد ⭐";
-                document.getElementById('studentMotivationBadge').innerText = motivation;
+                let rank = "مقبول";
+                if (avgPercent >= 90) rank = "🏆 ممتاز مرتفع";
+                else if (avgPercent >= 80) rank = "🌟 جيد جداً";
+                else if (avgPercent >= 65) rank = "👍 جيد";
+                document.getElementById('studentRankBadge').innerText = rank;
             } else {
-                document.getElementById('studentExcellenceRatePill').innerText = `0%`;
-                document.getElementById('studentMotivationBadge').innerText = "ابدأ أول امتحان 🚀";
+                document.getElementById('studentExcellenceRate').innerText = `0%`;
+                document.getElementById('studentRankBadge').innerText = `--`;
             }
 
             const examsList = document.getElementById('studentExamsList');
@@ -1310,33 +1324,41 @@
             const gradeExams = dbExams.filter(ex => ex.gradeTarget === currentUser.grade);
 
             if (gradeExams.length === 0) {
-                examsList.innerHTML = '<p style="color: var(--text-muted);">لا توجد امتحانات مخصصة لصفك حالياً.</p>';
+                examsList.innerHTML = '<p style="color: var(--text-muted); font-weight: 600;">لا توجد امتحانات مخصصة لصفك حالياً.</p>';
             } else {
                 const now = new Date().getTime();
                 gradeExams.forEach(ex => {
                     const startMs = new Date(ex.startTime).getTime();
                     const endMs = new Date(ex.endTime).getTime();
-                    const hasTaken = dbResults.some(r => r.examId === ex.id && r.studentId === currentUser.studentId);
+                    
+                    const studentAttempts = myResults.filter(r => r.examId === ex.id).length;
+                    const allowedAttempts = ex.allowedAttempts || 1;
+                    const canTakeMore = studentAttempts < allowedAttempts;
+
+                    const savedStateKey = `saved_exam_${currentUser.studentId}_${ex.id}`;
+                    const hasSavedLater = localStorage.getItem(savedStateKey) !== null;
 
                     let statusBtn = '';
-                    if (hasTaken) {
-                        statusBtn = '<span class="badge badge-approved">تم أداء الامتحان</span>';
+                    if (hasSavedLater && now <= endMs) {
+                        statusBtn = `<button class="btn btn-warning" style="width:auto; padding: 8px 20px;" onclick="resumeExam('${ex.id}')">استكمال الامتحان</button>`;
+                    } else if (!canTakeMore) {
+                        statusBtn = `<span class="badge badge-approved">استنفذت المحاولات (${studentAttempts}/${allowedAttempts})</span>`;
                     } else if (now < startMs) {
                         statusBtn = `<span class="badge badge-pending">يبدأ في: ${new Date(ex.startTime).toLocaleString('ar-EG')}</span>`;
                     } else if (now > endMs) {
                         statusBtn = '<span class="badge badge-rejected">انتهى موعد الامتحان</span>';
                     } else {
-                        statusBtn = `<button class="btn btn-success" style="width:auto; padding: 6px 16px;" onclick="startExam('${ex.id}')">بدء الامتحان الآن</button>`;
+                        statusBtn = `<button class="btn btn-success" style="width:auto; padding: 8px 20px;" onclick="startExam('${ex.id}')">بدء الامتحان (${studentAttempts + 1}/${allowedAttempts})</button>`;
                     }
 
                     const item = document.createElement('div');
                     item.className = 'card';
-                    item.style.marginBottom = '10px';
+                    item.style.marginBottom = '12px';
                     item.innerHTML = `
-                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
                             <div>
-                                <strong>${ex.title}</strong>
-                                <div style="font-size:0.8rem; color:var(--text-muted);">المدة: ${ex.duration} دقيقة | ينتهي: ${new Date(ex.endTime).toLocaleString('ar-EG')}</div>
+                                <strong style="font-size: 1.1rem;"><i class="fa-solid fa-file-lines"></i> ${ex.title}</strong>
+                                <div style="font-size:0.85rem; color:var(--text-muted); margin-top: 4px; font-weight: 600;">المدة: ${ex.duration} دقيقة | مسموح بـ ${allowedAttempts} محاولة</div>
                             </div>
                             <div>${statusBtn}</div>
                         </div>
@@ -1349,7 +1371,7 @@
             tbody.innerHTML = '';
 
             if (myResults.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد نتائج مسجلة لك بعد.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">لا توجد نتائج مسجلة لك بعد.</td></tr>';
             } else {
                 myResults.forEach(r => {
                     const tr = document.createElement('tr');
@@ -1358,46 +1380,10 @@
                         <td>${r.score} / ${r.totalScore}</td>
                         <td>${r.percentage}%</td>
                         <td>${r.timeSpent}</td>
-                        <td><button class="btn" style="width:auto; padding: 4px 8px; font-size:0.8rem;" onclick="viewResultDetail('${r.id}')">عرض التقرير التفصيلي</button></td>
+                        <td><button class="btn" style="width:auto; padding: 6px 14px; font-size:0.85rem;" onclick="viewResultDetail('${r.id}')">عرض التقرير التفصيلي</button></td>
                     `;
                     tbody.appendChild(tr);
                 });
-            }
-
-            const mistakesContainer = document.getElementById('studentMistakesContainer');
-            mistakesContainer.innerHTML = '';
-            let hasAnyMistake = false;
-
-            myResults.forEach(r => {
-                const examMistakes = r.answersBreakdown ? r.answersBreakdown.filter(q => q.type === 'mcq' && !q.isCorrect) : [];
-                if (examMistakes.length > 0) {
-                    hasAnyMistake = true;
-                    const examBox = document.createElement('div');
-                    examBox.className = 'card';
-                    examBox.style.marginBottom = '16px';
-                    
-                    let mistakesHtml = `<h4 style="color: var(--primary-color); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">امتحان: ${r.examTitle}</h4>`;
-                    
-                    examMistakes.forEach((q, qIdx) => {
-                        const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم تقم بالإجابة';
-                        const correctChoice = q.options[q.correctOption];
-
-                        mistakesHtml += `
-                            <div class="question-card" style="margin-bottom: 10px;">
-                                <div class="question-title">س ${qIdx + 1}: ${q.questionText}</div>
-                                <p style="color:var(--danger-color); margin-bottom:4px;"><strong>إجابتك الخاطئة:</strong> ${studentChoice}</p>
-                                <p style="color:var(--success-color);"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
-                            </div>
-                        `;
-                    });
-
-                    examBox.innerHTML = mistakesHtml;
-                    mistakesContainer.appendChild(examBox);
-                }
-            });
-
-            if (!hasAnyMistake) {
-                mistakesContainer.innerHTML = '<p style="color:var(--success-color); font-weight:bold;">رائع! لا توجد أخطاء مسجلة لك حتى الآن.</p>';
             }
 
             const assignList = document.getElementById('studentAssignmentsList');
@@ -1405,33 +1391,127 @@
             const gradeAssignments = dbAssignments.filter(a => a.gradeTarget === currentUser.grade);
 
             if (gradeAssignments.length === 0) {
-                assignList.innerHTML = '<p style="color: var(--text-muted);">لا توجد ملفات أو واجبات مرفوعة لصفك.</p>';
+                assignList.innerHTML = '<p style="color: var(--text-muted); font-weight: 600;">لا توجد ملفات أو واجبات مرفوعة لصفك.</p>';
             } else {
                 gradeAssignments.forEach(a => {
                     const div = document.createElement('div');
-                    div.style.padding = '14px';
+                    div.style.padding = '16px';
                     div.style.border = '1px solid var(--border-color)';
-                    div.style.borderRadius = '12px';
-                    div.style.marginBottom = '10px';
+                    div.style.borderRadius = '14px';
+                    div.style.marginBottom = '12px';
                     div.style.background = 'var(--input-bg)';
                     div.style.display = 'flex';
                     div.style.justifyContent = 'space-between';
                     div.style.alignItems = 'center';
                     div.style.flexWrap = 'wrap';
-                    div.style.gap = '10px';
+                    div.style.gap = '12px';
                     div.innerHTML = `
                         <div>
-                            <strong style="font-size:1.05rem;">📄 ${a.title}</strong>
-                            <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">اسم الملف: ${a.fileName} | تاريخ الرفع: ${a.date}</div>
+                            <strong style="font-size:1.1rem;"><i class="fa-solid fa-file-pdf"></i> ${a.title}</strong>
+                            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px; font-weight:600;">اسم الملف: ${a.fileName} | تاريخ الرفع: ${a.date}</div>
                         </div>
-                        <a href="${a.fileData}" download="${a.fileName}" class="btn btn-success" style="width:auto; padding: 8px 18px; font-size:0.85rem; text-decoration:none;">📥 تحميل الملف</a>
+                        <a href="${a.fileData}" download="${a.fileName}" class="btn btn-success" style="width:auto; padding: 10px 20px; font-size:0.9rem; text-decoration:none;"><i class="fa-solid fa-download"></i> تحميل الملف</a>
                     `;
                     assignList.appendChild(div);
                 });
             }
         }
 
-        let activeExamData = null;
+        function renderMistakesSelectionList() {
+            const container = document.getElementById('mistakesSelectionExamsList');
+            container.innerHTML = '';
+
+            const myResults = dbResults.filter(r => r.studentId === currentUser.studentId);
+            if (myResults.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد امتحانات سابقة لك لتحليل أخطائها.</p>';
+                return;
+            }
+
+            myResults.forEach(r => {
+                let mistakeCount = 0;
+                if (r.answersBreakdown) {
+                    r.answersBreakdown.forEach(q => {
+                        if (q.type === 'mcq' && !q.isCorrect) mistakeCount++;
+                    });
+                }
+
+                const item = document.createElement('label');
+                item.className = 'option-label';
+                item.style.direction = 'rtl';
+                item.style.justifyContent = 'space-between';
+                item.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 12px;">
+                        <input type="checkbox" class="mistake-exam-checkbox" value="${r.examId}" style="transform: scale(1.3);">
+                        <span style="font-weight: 800;">${r.examTitle}</span>
+                    </div>
+                    <span class="badge badge-rejected">عدد الأخطاء: ${mistakeCount}</span>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function startMistakesExam() {
+            const checkedBoxes = document.querySelectorAll('.mistake-exam-checkbox:checked');
+            if (checkedBoxes.length === 0) {
+                showAlert("يرجى اختيار امتحان واحد على الأقل لتجميع أخطائه!", "warning");
+                return;
+            }
+
+            const selectedExamIds = Array.from(checkedBoxes).map(cb => cb.value);
+            let collectedMistakes = [];
+
+            const myResults = dbResults.filter(r => r.studentId === currentUser.studentId && selectedExamIds.includes(r.examId));
+            myResults.forEach(r => {
+                if (r.answersBreakdown) {
+                    r.answersBreakdown.forEach(q => {
+                        if (q.type === 'mcq' && !q.isCorrect) {
+                            let options = [...q.options];
+                            let correctOptText = options[q.correctOption];
+                            
+                            options.sort(() => Math.random() - 0.5);
+                            let newCorrectIdx = options.indexOf(correctOptText);
+
+                            collectedMistakes.push({
+                                id: 'm_' + Math.random(),
+                                text: q.questionText,
+                                type: 'mcq',
+                                options: options,
+                                correctOption: newCorrectIdx,
+                                points: q.points || 1
+                            });
+                        }
+                    });
+                }
+            });
+
+            if (collectedMistakes.length === 0) {
+                showAlert("لا توجد أخطاء مسجلة في الامتحانات المحددة!", "info");
+                return;
+            }
+
+            collectedMistakes.sort(() => Math.random() - 0.5);
+
+            activeExamMetaObj = {
+                id: 'mistakes_exam_' + Date.now(),
+                title: 'امتحان مخصص من أخطائك السابقة',
+                duration: 20,
+                allowedAttempts: 99
+            };
+
+            currentExamQuestions = collectedMistakes;
+            currentQuestionIndex = 0;
+            studentAnswersMap = {};
+            activeInProgressExamId = null;
+
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('examInterface').classList.remove('hidden');
+            document.getElementById('examActiveTitle').innerText = activeExamMetaObj.title;
+            document.getElementById('examActiveMeta').innerText = `عدد أسئلة الأخطاء: ${currentExamQuestions.length}`;
+
+            renderQuestionNavGrid();
+            renderSingleQuestion();
+            startExamTimer(new Date().getTime() + (20 * 60 * 1000));
+        }
 
         function startExam(examId) {
             const exam = dbExams.find(e => e.id === examId);
@@ -1445,98 +1525,157 @@
                 return;
             }
 
+            const myAttempts = dbResults.filter(r => r.examId === examId && r.studentId === currentUser.studentId).length;
+            const allowed = exam.allowedAttempts || 1;
+            if (myAttempts >= allowed) {
+                showAlert("لقد استنفذت العدد المسموح به من المحاولات لهذا الامتحان!", "danger");
+                return;
+            }
+
+            activeExamMetaObj = exam;
+            activeInProgressExamId = examId;
+            currentExamQuestions = JSON.parse(JSON.stringify(exam.questions));
+            currentQuestionIndex = 0;
+            studentAnswersMap = {};
+
             let calculatedEndTime = now + (exam.duration * 60 * 1000);
-            if (calculatedEndTime > endMs) {
-                calculatedEndTime = endMs;
-            }
-
-            let session = JSON.parse(localStorage.getItem('active_exam_session'));
-            if (!session || session.examId !== examId || session.studentId !== currentUser.studentId) {
-                session = {
-                    examId: examId,
-                    studentId: currentUser.studentId,
-                    endTimeMs: calculatedEndTime,
-                    startTimeMs: now
-                };
-                localStorage.setItem('active_exam_session', JSON.stringify(session));
-            }
-
-            activeExamData = exam;
+            if (calculatedEndTime > endMs) calculatedEndTime = endMs;
 
             document.getElementById('studentDashboard').classList.add('hidden');
             document.getElementById('examInterface').classList.remove('hidden');
             document.getElementById('examActiveTitle').innerText = exam.title;
-            document.getElementById('examActiveMeta').innerText = `عدد الأسئلة: ${exam.questions.length} | الدرجة الكلية: ${exam.questions.reduce((a, b) => a + b.points, 0)}`;
+            document.getElementById('examActiveMeta').innerText = `عدد الأسئلة: ${currentExamQuestions.length} | الدرجة الكلية: ${currentExamQuestions.reduce((a, b) => a + b.points, 0)}`;
 
-            renderActiveQuestions(exam.questions);
-            startExamTimer(session.endTimeMs);
+            renderQuestionNavGrid();
+            renderSingleQuestion();
+            startExamTimer(calculatedEndTime);
         }
 
-        function renderActiveQuestions(questions) {
-            const container = document.getElementById('examQuestionsContainer');
-            container.innerHTML = '';
+        function resumeExam(examId) {
+            const exam = dbExams.find(e => e.id === examId);
+            if (!exam) return;
 
-            questions.forEach((q, idx) => {
-                const qDiv = document.createElement('div');
-                qDiv.className = 'question-card';
+            const savedStateKey = `saved_exam_${currentUser.studentId}_${examId}`;
+            const savedData = JSON.parse(localStorage.getItem(savedStateKey));
+            if (!savedData) {
+                startExam(examId);
+                return;
+            }
 
-                let bodyHtml = `<div class="question-title"><span>س ${idx + 1}:</span> <span>${q.text}</span> <span style="margin-right: auto; font-size: 0.9rem; color: var(--primary-color); background: rgba(59,130,246,0.1); padding: 2px 10px; border-radius: 20px;">(${q.points} درجات)</span></div>`;
+            const now = new Date().getTime();
+            const endMs = new Date(exam.endTime).getTime();
 
-                if (q.type === 'mcq') {
-                    q.options.forEach((opt, oIdx) => {
-                        bodyHtml += `
-                            <label class="option-label">
-                                <input type="radio" name="q_${q.id}" value="${oIdx}">
-                                <span>${opt}</span>
-                            </label>
-                        `;
-                    });
-                } else if (q.type === 'essay') {
-                    bodyHtml += `
-                        <div class="form-group" style="margin-top: 15px;">
-                            <textarea name="q_${q.id}_text" rows="4" placeholder="اكتب إجابتك هنا بالكيبورد..." style="font-size: 1.05rem; padding: 16px;"></textarea>
-                        </div>
-                        <div class="form-group" style="margin-top: 15px;">
-                            <label style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 6px;">أو ارفع صورة الإجابة:</label>
-                            <input type="file" name="q_${q.id}_file" accept="image/*" onchange="convertEssayImageToBase64(this, '${q.id}')">
-                            <input type="hidden" id="essay_img_${q.id}" name="q_${q.id}_img_data">
-                        </div>
-                    `;
-                }
+            if (now > endMs || now > savedData.endTimeMs) {
+                localStorage.removeItem(savedStateKey);
+                showAlert("عذراً، انتهى وقت الامتحان وتم تسليمه تلقائياً!", "danger");
+                processExamSubmission(true);
+                return;
+            }
 
-                qDiv.innerHTML = bodyHtml;
-                container.appendChild(qDiv);
+            activeExamMetaObj = exam;
+            activeInProgressExamId = examId;
+            currentExamQuestions = exam.questions;
+            currentQuestionIndex = savedData.currentIndex || 0;
+            studentAnswersMap = savedData.answersMap || {};
+
+            document.getElementById('studentDashboard').classList.add('hidden');
+            document.getElementById('examInterface').classList.remove('hidden');
+            document.getElementById('examActiveTitle').innerText = exam.title;
+            document.getElementById('examActiveMeta').innerText = `استكمال الامتحان | عدد الأسئلة: ${currentExamQuestions.length}`;
+
+            renderQuestionNavGrid();
+            renderSingleQuestion();
+            startExamTimer(savedData.endTimeMs);
+        }
+
+        function renderQuestionNavGrid() {
+            const grid = document.getElementById('qNavGrid');
+            grid.innerHTML = '';
+
+            currentExamQuestions.forEach((q, idx) => {
+                const box = document.createElement('div');
+                box.className = `q-nav-box ${idx === currentQuestionIndex ? 'active' : ''} ${studentAnswersMap[q.id] !== undefined ? 'answered' : ''}`;
+                box.innerText = idx + 1;
+                box.onclick = () => jumpToQuestion(idx);
+                grid.appendChild(box);
             });
         }
 
-        function convertEssayImageToBase64(fileInput, qId) {
-            const file = fileInput.files[0];
-            if (file) {
-                if (file.size > 2 * 1024 * 1024) {
-                    showAlert("حجم الصورة كبير جداً! يرجى اختيار صورة أقل من 2 ميجابايت.", "danger");
-                    fileInput.value = "";
-                    return;
-                }
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    document.getElementById(`essay_img_${qId}`).value = e.target.result;
-                    showAlert("تم إرفاق صورة الإجابة بنجاح!", "success");
-                };
-                reader.readAsDataURL(file);
+        function jumpToQuestion(idx) {
+            currentQuestionIndex = idx;
+            renderSingleQuestion();
+            renderQuestionNavGrid();
+        }
+
+        function navigateExamQuestion(dir) {
+            const nextIdx = currentQuestionIndex + dir;
+            if (nextIdx >= 0 && nextIdx < currentExamQuestions.length) {
+                currentQuestionIndex = nextIdx;
+                renderSingleQuestion();
+                renderQuestionNavGrid();
             }
         }
 
+        function renderSingleQuestion() {
+            const container = document.getElementById('singleQuestionContainer');
+            const q = currentExamQuestions[currentQuestionIndex];
+
+            document.getElementById('prevQBtn').disabled = currentQuestionIndex === 0;
+            document.getElementById('nextQBtn').style.display = currentQuestionIndex === currentExamQuestions.length - 1 ? 'none' : 'block';
+
+            let bodyHtml = `<div class="question-title">${currentQuestionIndex + 1}- ${q.text} <span style="font-size:0.85rem; color:var(--text-muted); font-weight:600;">(${q.points} درجات)</span></div>`;
+
+            if (q.type === 'mcq') {
+                const markers = ['a', 'b', 'c', 'd'];
+                q.options.forEach((opt, oIdx) => {
+                    const isSelected = studentAnswersMap[q.id] === oIdx;
+                    bodyHtml += `
+                        <label class="option-label ${isSelected ? 'selected' : ''}" onclick="selectOption('${q.id}', ${oIdx})">
+                            <input type="radio" name="active_q_${q.id}" value="${oIdx}" ${isSelected ? 'checked' : ''} style="display:none;">
+                            <span class="option-marker">${markers[oIdx] || (oIdx+1)}</span>
+                            <span>${opt}</span>
+                        </label>
+                    `;
+                });
+            } else if (q.type === 'essay') {
+                const savedVal = studentAnswersMap[q.id] || '';
+                bodyHtml += `
+                    <div class="form-group">
+                        <textarea rows="5" placeholder="اكتب إجابتك النصية هنا..." oninput="saveEssayInput('${q.id}', this.value)">${savedVal}</textarea>
+                    </div>
+                `;
+            }
+
+            container.innerHTML = bodyHtml;
+        }
+
+        function selectOption(qId, oIdx) {
+            studentAnswersMap[qId] = oIdx;
+            renderSingleQuestion();
+            renderQuestionNavGrid();
+        }
+
+        function saveEssayInput(qId, val) {
+            studentAnswersMap[qId] = val;
+            renderQuestionNavGrid();
+        }
+
+        let currentActiveTimerEndMs = 0;
         function startExamTimer(endTimeMs) {
             if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
+            currentActiveTimerEndMs = endTimeMs;
 
             function updateTimer() {
                 const now = new Date().getTime();
-                const diff = endTimeMs - now;
+                const diff = currentActiveTimerEndMs - now;
 
                 if (diff <= 0) {
                     clearInterval(activeExamTimerInterval);
                     document.getElementById('timerDisplay').innerText = "انتهى الوقت!";
                     showAlert("انتهى وقت الامتحان! يتم التسليم التلقائي الآن...", "danger");
+                    if (activeInProgressExamId) {
+                        localStorage.removeItem(`saved_exam_${currentUser.studentId}_${activeInProgressExamId}`);
+                    }
                     processExamSubmission(true);
                     return;
                 }
@@ -1544,15 +1683,39 @@
                 const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
                 const secs = Math.floor((diff % (1000 * 60)) / 1000);
 
-                document.getElementById('timerDisplay').innerText = `الوقت المتبقي: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
+                document.getElementById('timerDisplay').innerHTML = `<i class="fa-solid fa-stopwatch"></i> الوقت المتبقي: ${mins}:${secs < 10 ? '0' : ''}${secs}`;
             }
 
             updateTimer();
             activeExamTimerInterval = setInterval(updateTimer, 1000);
         }
 
-        function promptSubmitModal(e) {
-            e.preventDefault();
+        function saveExamLater() {
+            if (!activeInProgressExamId) {
+                showAlert("هذا الامتحان لا يدعم الاستكمال لاحقاً!", "warning");
+                return;
+            }
+            const savedStateKey = `saved_exam_${currentUser.studentId}_${activeInProgressExamId}`;
+            const saveData = {
+                currentIndex: currentQuestionIndex,
+                answersMap: studentAnswersMap,
+                endTimeMs: currentActiveTimerEndMs
+            };
+            localStorage.setItem(savedStateKey, JSON.stringify(saveData));
+            if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
+
+            showAlert("تم حفظ تقدمك مؤقتاً، يمكنك العودة للاستكمال لاحقاً.", "info");
+            document.getElementById('examInterface').classList.add('hidden');
+            showLoggedInState();
+        }
+
+        function promptSubmitModal() {
+            for (let q of currentExamQuestions) {
+                if (studentAnswersMap[q.id] === undefined || studentAnswersMap[q.id] === '') {
+                    showAlert("لا يمكنك تسليم الامتحان قبل الإجابة عن جميع الأسئلة!", "danger");
+                    return;
+                }
+            }
             document.getElementById('confirmSubmitModal').classList.remove('hidden');
         }
 
@@ -1562,17 +1725,16 @@
 
         function confirmFinalSubmission() {
             closeConfirmModal();
+            if (activeInProgressExamId) {
+                localStorage.removeItem(`saved_exam_${currentUser.studentId}_${activeInProgressExamId}`);
+            }
             processExamSubmission(false);
         }
 
         async function processExamSubmission(autoSubmitted = false) {
             if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
 
-            const session = JSON.parse(localStorage.getItem('active_exam_session'));
-            const now = new Date().getTime();
-            const timeSpentMs = now - (session ? session.startTimeMs : now);
-            const timeSpentMins = Math.max(1, Math.round(timeSpentMs / (1000 * 60)));
-
+            const timeSpentMins = 5;
             let totalScore = 0;
             let earnedScore = 0;
             let solvedCount = 0;
@@ -1581,17 +1743,15 @@
 
             const answersBreakdown = [];
 
-            activeExamData.questions.forEach(q => {
+            currentExamQuestions.forEach(q => {
                 totalScore += q.points;
-                let studentAns = null;
+                let studentAns = studentAnswersMap[q.id];
                 let isCorrect = false;
                 let pointsGiven = 0;
 
                 if (q.type === 'mcq') {
-                    const selected = document.querySelector(`input[name="q_${q.id}"]:checked`);
-                    if (selected) {
+                    if (studentAns !== undefined) {
                         solvedCount++;
-                        studentAns = parseInt(selected.value);
                         if (studentAns === q.correctOption) {
                             isCorrect = true;
                             pointsGiven = q.points;
@@ -1608,28 +1768,20 @@
                         questionText: q.text,
                         type: 'mcq',
                         options: q.options,
-                        studentAns: studentAns,
+                        studentAns: studentAns !== undefined ? studentAns : null,
                         correctOption: q.correctOption,
                         isCorrect: isCorrect,
                         points: q.points,
                         pointsGiven: pointsGiven
                     });
                 } else if (q.type === 'essay') {
-                    const txtArea = document.querySelector(`textarea[name="q_${q.id}_text"]`);
-                    const imgData = document.getElementById(`essay_img_${q.id}`) ? document.getElementById(`essay_img_${q.id}`).value : '';
-                    
-                    const essayText = txtArea ? txtArea.value.trim() : '';
-
-                    if (essayText || imgData) solvedCount++;
-
+                    if (studentAns) solvedCount++;
                     needsEssayGrading = true;
-
                     answersBreakdown.push({
                         questionId: q.id,
                         questionText: q.text,
                         type: 'essay',
-                        studentText: essayText,
-                        studentImg: imgData,
+                        studentText: studentAns || '',
                         isGraded: false,
                         points: q.points,
                         pointsGiven: 0
@@ -1641,8 +1793,8 @@
 
             const newResult = {
                 id: 'res_' + Date.now(),
-                examId: activeExamData.id,
-                examTitle: activeExamData.title,
+                examId: activeExamMetaObj.id,
+                examTitle: activeExamMetaObj.title,
                 studentId: currentUser.studentId,
                 studentName: currentUser.name,
                 grade: currentUser.grade,
@@ -1651,8 +1803,8 @@
                 percentage: percentage,
                 solvedCount: solvedCount,
                 wrongCount: wrongCount,
-                totalQuestions: activeExamData.questions.length,
-                timeSpent: `${timeSpentMins} دقيقة`,
+                totalQuestions: currentExamQuestions.length,
+                timeSpent: `${timeSpentMins} دقائق`,
                 submittedAt: new Date().toLocaleString('ar-EG'),
                 needsGrading: needsEssayGrading,
                 answersBreakdown: answersBreakdown
@@ -1665,8 +1817,6 @@
                 console.error(err);
                 showAlert("حدث خطأ في حفظ النتيجة على السحاب.", "danger");
             }
-
-            localStorage.removeItem('active_exam_session');
 
             document.getElementById('examInterface').classList.add('hidden');
             showAlert(autoSubmitted ? "تم تسليم الامتحان تلقائياً لانتهاء الوقت." : "تم تسليم الامتحان بنجاح!", "success");
@@ -1683,51 +1833,50 @@
 
             const summary = document.getElementById('resultSummaryBox');
             summary.innerHTML = `
-                <div style="text-align:center; margin-bottom: 20px;">
-                    <h3 style="font-size:1.5rem; color:var(--primary-color);">${res.examTitle}</h3>
-                    <p style="color:var(--text-muted); font-size:0.85rem;">تاريخ التسليم: ${res.submittedAt}</p>
+                <div style="text-align:center; margin-bottom: 24px;">
+                    <h3 style="font-size:1.6rem; font-weight: 900; color:var(--primary-color);">${res.examTitle}</h3>
+                    <p style="color:var(--text-muted); font-size:0.9rem; font-weight: 700; margin-top: 4px;">تاريخ التسليم: ${res.submittedAt}</p>
                 </div>
-                <div class="pill-stats-grid">
-                    <div class="pill-card">
-                        <span class="pill-title">الدرجة الكلية</span>
-                        <span class="pill-val" style="color:var(--success-color);">${res.score} / ${res.totalScore}</span>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">الدرجة الكلية</div>
+                        <div class="val" style="color:var(--success-color);">${res.score} / ${res.totalScore}</div>
                     </div>
-                    <div class="pill-card">
-                        <span class="pill-title">النسبة المئوية</span>
-                        <span class="pill-val">${res.percentage}%</span>
+                    <div class="stat-card">
+                        <div style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">النسبة المئوية</div>
+                        <div class="val">${res.percentage}%</div>
                     </div>
-                </div>
-                <div style="margin-top: 10px; padding: 12px; background: var(--input-bg); border-radius: 12px; text-align: center; font-weight: bold; border: 1px solid var(--border-color);">
-                    حالة التصحيح النهائي: ${res.needsGrading ? '⏳ بانتظار تصحيح أسئلة المقالي من المستر' : '✅ مكتمل التصحيح بالكامل'}
+                    <div class="stat-card">
+                        <div style="color:var(--text-muted); font-size:0.85rem; font-weight:700;">الإجابات الخاطئة</div>
+                        <div class="val" style="color:var(--danger-color);">${res.wrongCount}</div>
+                    </div>
                 </div>
             `;
 
             const breakdown = document.getElementById('resultQuestionsBreakdown');
-            breakdown.innerHTML = '<h3 style="margin: 24px 0 12px 0;">التصحيح والتقييم التفصيلي:</h3>';
+            breakdown.innerHTML = '<h3 style="margin: 28px 0 16px 0; font-size: 1.4rem; font-weight: 900;">التصحيح والتقييم التفصيلي:</h3>';
 
             res.answersBreakdown.forEach((q, idx) => {
                 const card = document.createElement('div');
                 card.className = 'question-card';
 
                 if (q.type === 'mcq') {
-                    const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم يتم الإجابة';
+                    const studentChoice = q.studentAns !== null && q.options[q.studentAns] !== undefined ? q.options[q.studentAns] : 'لم يتم الإجابة';
                     const correctChoice = q.options[q.correctOption];
 
                     card.innerHTML = `
-                        <div class="question-title">س ${idx + 1}: ${q.questionText} (${q.pointsGiven} / ${q.points} درجة)</div>
-                        <p style="color:${q.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'};"><strong>إجابتك:</strong> ${studentChoice}</p>
-                        <p style="color:var(--success-color);"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
-                        <button class="btn btn-secondary" style="width:auto; padding:6px 12px; font-size:0.8rem; margin-top:12px; background:#25D366; color:white; border:none;" 
+                        <div class="question-title">${idx + 1}- ${q.questionText} (${q.pointsGiven} / ${q.points} درجة)</div>
+                        <p style="color:${q.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'}; font-weight: 700; margin-bottom: 6px;"><strong>إجابتك:</strong> ${studentChoice}</p>
+                        <p style="color:var(--success-color); font-weight: 700;"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
+                        <button class="btn btn-secondary" style="width:auto; padding:8px 16px; font-size:0.85rem; margin-top:14px; background:#25D366; color:white; border:none;" 
                             onclick="inquireQuestion('${res.examTitle}', '${encodeURIComponent(q.questionText)}', '${encodeURIComponent(studentChoice)}', '${encodeURIComponent(correctChoice)}')">
-                            💬 استفسار عن السؤال عبر واتساب المستر
+                            <i class="fa-brands fa-whatsapp"></i> استفسار عن السؤال برسالة جاهزة للمستر
                         </button>
                     `;
                 } else {
                     card.innerHTML = `
-                        <div class="question-title">س ${idx + 1}: ${q.questionText} (${q.pointsGiven} / ${q.points} درجة)</div>
-                        <p><strong>إجابتك النصية:</strong> ${q.studentText || 'لا توجد إجابة نصية'}</p>
-                        ${q.studentImg ? `<div style="margin-top:10px;"><img src="${q.studentImg}" style="max-width:180px; border-radius:8px; border:1px solid var(--border-color); cursor:pointer;" onclick="openImageModal('${q.studentImg}')" title="اضغط لتكبير الصورة"></div>` : ''}
-                        <p style="color:var(--warning-color); margin-top:4px;"><strong>حالة المقالي:</strong> ${q.isGraded ? 'تم التصحيح من المستر' : 'في انتظار مراجعة المستر'}</p>
+                        <div class="question-title">${idx + 1}- ${q.questionText} (${q.pointsGiven} / ${q.points} درجة)</div>
+                        <p style="font-weight: 600;"><strong>إجابتك:</strong> ${q.studentText || 'لا توجد إجابة'}</p>
                     `;
                 }
 
@@ -1745,8 +1894,7 @@
             studentAns = decodeURIComponent(studentAns);
             correctAns = decodeURIComponent(correctAns);
 
-            const msg = `السلام عليكم يا مستر شريف، عندي استفسار عن سؤال في امتحان (${examTitle}):\n- السؤال: ${qText}\n- إجابتي: ${studentAns}\n- الإجابة الصحيحة في النظام: ${correctAns}`;
-            
+            const msg = `السلام عليكم يا مستر شريف، عندي استفسار عن سؤال خاطئ في امتحان (${examTitle}):\n- السؤال: ${qText}\n- إجابتي: ${studentAns}\n- الإجابة الصحيحة: ${correctAns}`;
             const whatsappUrl = `https://wa.me/2${ADMIN_PHONE}?text=${encodeURIComponent(msg)}`;
             window.open(whatsappUrl, '_blank');
         }
@@ -1764,21 +1912,19 @@
             renderPendingStudents();
             renderResetRequests();
             renderActiveStudents();
-            renderAdminStudentAnalyticsPills();
+            renderMasterGradesOverview();
             renderAdminExamsList();
             renderPendingEssayGrading();
-            renderAllResults();
             renderAdminFilesList();
         }
 
         function renderPendingStudents() {
             const tbody = document.getElementById('pendingStudentsTableBody');
             tbody.innerHTML = '';
-
             const pending = dbUsers.filter(u => u.status === 'pending');
 
             if (pending.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا توجد طلبات تسجيل معلقة.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">لا توجد طلبات تسجيل معلقة.</td></tr>';
                 return;
             }
 
@@ -1791,8 +1937,8 @@
                     <td>${u.phone}</td>
                     <td>
                         <div class="btn-group">
-                            <button class="btn btn-success" style="padding:4px 8px; font-size:0.8rem;" onclick="approveStudent('${u.studentId}')">قبول</button>
-                            <button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="rejectStudent('${u.studentId}')">رفض</button>
+                            <button class="btn btn-success" style="padding:6px 14px; font-size:0.85rem;" onclick="approveStudent('${u.studentId}')">قبول</button>
+                            <button class="btn btn-danger" style="padding:6px 14px; font-size:0.85rem;" onclick="rejectStudent('${u.studentId}')">رفض</button>
                         </div>
                     </td>
                 `;
@@ -1822,10 +1968,10 @@
                 try {
                     await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", studentId), { status: 'rejected' });
                     renderAdminView();
-                    showAlert("تم رفض طلب الطالب.", "warning");
+                    showAlert("تم رفض الطالب.", "success");
                 } catch (err) {
                     console.error(err);
-                    showAlert("حدث خطأ أثناء رفض الطالب.", "danger");
+                    showAlert("حدث خطأ.", "danger");
                 }
             }
         }
@@ -1835,36 +1981,33 @@
             tbody.innerHTML = '';
 
             if (dbResets.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center;">لا توجد طلبات استرجاع.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align:center; color: var(--text-muted);">لا توجد طلبات استرجاع كلمة مرور.</td></tr>';
                 return;
             }
 
-            dbResets.forEach((req, idx) => {
+            dbResets.forEach(r => {
                 const tr = document.createElement('tr');
                 tr.innerHTML = `
-                    <td>${req.studentId} (${req.name})</td>
-                    <td>${req.note || 'بدون ملاحظة'}</td>
+                    <td>${r.studentId} (${r.name})</td>
+                    <td>${r.note || 'لا توجد ملاحظة'}</td>
                     <td>
-                        <button class="btn btn-warning" style="padding:4px 8px; font-size:0.8rem;" onclick="adminSetNewPassword('${req.studentId}', '${req.firestoreId}')">تعيين كلمة مرور جديدة</button>
+                        <button class="btn btn-warning" style="padding:6px 14px; font-size:0.85rem;" onclick="resetStudentPasswordPrompt('${r.studentId}')">تعيين كلمة مرور جديدة</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        async function adminSetNewPassword(studentId, firestoreResetId) {
+        async function resetStudentPasswordPrompt(studentId) {
             const newPass = prompt("أدخل كلمة المرور الجديدة للطالب:");
             if (!newPass) return;
 
             const user = dbUsers.find(u => u.studentId === studentId);
             if (user) {
+                user.password = newPass;
                 try {
                     await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", studentId), { password: newPass });
-                    if (firestoreResetId) {
-                        await window.FB.deleteDoc(window.FB.doc(window.FB.db, "resets", firestoreResetId));
-                    }
-                    await renderAdminView();
-                    showAlert("تم تغيير كلمة المرور بنجاح على السحاب.", "success");
+                    showAlert("تم تحديث كلمة المرور بنجاح للطالب.", "success");
                 } catch (err) {
                     console.error(err);
                     showAlert("حدث خطأ أثناء تحديث كلمة المرور.", "danger");
@@ -1875,11 +2018,10 @@
         function renderActiveStudents() {
             const tbody = document.getElementById('activeStudentsTableBody');
             tbody.innerHTML = '';
-
-            const active = dbUsers.filter(u => u.role === 'student' && u.status === 'approved');
+            const active = dbUsers.filter(u => u.status === 'approved' && u.role === 'student');
 
             if (active.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;">لا يوجد طلاب مقبولون بعد.</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align:center; color: var(--text-muted);">لا توجد طلاب مقيدين حالياً.</td></tr>';
                 return;
             }
 
@@ -1891,318 +2033,355 @@
                     <td>${u.studentId}</td>
                     <td>${u.phone}</td>
                     <td>
-                        <button class="btn btn-danger" style="padding:4px 8px; font-size:0.8rem;" onclick="removeStudentPrompt('${u.studentId}')">طرد / حذف الطالب</button>
+                        <button class="btn btn-danger" style="padding:6px 14px; font-size:0.85rem;" onclick="deleteStudent('${u.studentId}')">حذف الطالب</button>
                     </td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function renderAdminStudentAnalyticsPills() {
-            const container = document.getElementById('adminStudentsPillsContainer');
-            container.innerHTML = '';
-
-            const activeStudents = dbUsers.filter(u => u.role === 'student' && u.status === 'approved');
-
-            if (activeStudents.length === 0) {
-                container.innerHTML = '<p style="color:var(--text-muted);">لا توجد طلاب مقبولة حالياً.</p>';
-                return;
-            }
-
-            activeStudents.forEach(st => {
-                const stResults = dbResults.filter(r => r.studentId === st.studentId);
-                let avg = 0;
-                if (stResults.length > 0) {
-                    const total = stResults.reduce((acc, curr) => acc + curr.percentage, 0);
-                    avg = Math.round(total / stResults.length);
-                }
-
-                const pill = document.createElement('div');
-                pill.className = 'pill-card';
-                pill.onclick = () => openAdminStudentExamsModal(st.studentId, st.name);
-                pill.innerHTML = `
-                    <span class="pill-title">${st.name} <br><span style="font-size:0.75rem; color:var(--text-muted);">${st.grade}</span></span>
-                    <span class="pill-val">${avg}%</span>
-                `;
-                container.appendChild(pill);
-            });
-        }
-
-        function openAdminStudentExamsModal(studentId, studentName) {
-            const modal = document.getElementById('adminStudentExamsModal');
-            document.getElementById('adminModalStudentTitle').innerText = `امتحانات وسجلات الطالب: ${studentName}`;
-            const body = document.getElementById('adminModalExamsBody');
-
-            const stResults = dbResults.filter(r => r.studentId === studentId);
-
-            if (stResults.length === 0) {
-                body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">لم يؤدِ هذا الطالب أي امتحانات بعد.</p>';
-            } else {
-                let html = '<div style="display:flex; flex-direction:column; gap:10px;">';
-                stResults.forEach(r => {
-                    html += `
-                        <div class="pill-card" style="border-radius:16px; cursor:pointer;" onclick="openAdminStudentExamMistakes('${r.id}')">
-                            <div>
-                                <strong style="font-size:1rem; color:var(--text-color);">${r.examTitle}</strong>
-                                <div style="font-size:0.8rem; color:var(--text-muted);">تاريخ التسليم: ${r.submittedAt}</div>
-                            </div>
-                            <span class="pill-val" style="font-size:1rem;">${r.score} / ${r.totalScore} (${r.percentage}%)</span>
-                        </div>
-                    `;
-                });
-                html += '</div>';
-                body.innerHTML = html;
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeAdminStudentExamsModal() {
-            document.getElementById('adminStudentExamsModal').classList.add('hidden');
-        }
-
-        function openAdminStudentExamMistakes(resultId) {
-            const res = dbResults.find(r => r.id === resultId);
-            if (!res) return;
-
-            const modal = document.getElementById('adminStudentExamMistakesModal');
-            document.getElementById('adminModalExamTitle').innerText = `تفاصيل أخطاء الطالب في: ${res.examTitle} (${res.studentName})`;
-            const body = document.getElementById('adminModalMistakesBody');
-
-            const mistakes = res.answersBreakdown ? res.answersBreakdown.filter(q => q.type === 'mcq' && !q.isCorrect) : [];
-
-            if (mistakes.length === 0) {
-                body.innerHTML = '<p style="color:var(--success-color); text-align:center; font-weight:bold;">رائع! الطالب لم يرتكب أي أخطاء في هذا الامتحان.</p>';
-            } else {
-                let html = '';
-                mistakes.forEach((q, idx) => {
-                    const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم يقُم بالإجابة';
-                    const correctChoice = q.options[q.correctOption];
-                    html += `
-                        <div class="question-card" style="margin-bottom:10px;">
-                            <div class="question-title">س ${idx + 1}: ${q.questionText}</div>
-                            <p style="color:var(--danger-color); margin-bottom:4px;"><strong>إجابة الطالب الخاطئة:</strong> ${studentChoice}</p>
-                            <p style="color:var(--success-color);"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
-                        </div>
-                    `;
-                });
-                body.innerHTML = html;
-            }
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeAdminStudentExamMistakesModal() {
-            document.getElementById('adminStudentExamMistakesModal').classList.add('hidden');
-        }
-
-        async function removeStudentPrompt(studentId) {
-            const user = dbUsers.find(u => u.studentId === studentId);
-            if (!user) return;
-
-            const keepResults = confirm(`هل تريد الاحتفاظ بنتائج وسجلات الطالب (${user.name})؟\n- اضغط OK للحفاظ على النتائج.\n- اضغط Cancel لحذف النتائج بالكامل.`);
-
+        async function deleteStudent(studentId) {
+            if (!confirm("هل أنت متأكد من حذف هذا الطالب نهائياً؟")) return;
             try {
-                if (!keepResults) {
-                    const targetRes = dbResults.filter(r => r.studentId === studentId);
-                    for (let tr of targetRes) {
-                        if (tr.firestoreId) {
-                            await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", tr.firestoreId));
-                        }
-                    }
-                }
-
                 await window.FB.deleteDoc(window.FB.doc(window.FB.db, "users", studentId));
-                await renderAdminView();
-                showAlert("تم طرد الطالب وتحديث السحابة بنجاح.", "info");
+                dbUsers = dbUsers.filter(u => u.studentId !== studentId);
+                renderAdminView();
+                showAlert("تم حذف الطالب بنجاح.", "success");
             } catch (err) {
                 console.error(err);
-                showAlert("حدث خطأ أثناء حذف الطالب.", "danger");
+                showAlert("حدث خطأ أثناء الحذف.", "danger");
             }
         }
 
-        function saveExamDraftToLocalStorage() {
-            builderQuestions = [];
-            const cards = document.querySelectorAll('#builderQuestionsArea .question-card');
-            
-            cards.forEach((card, idx) => {
-                const type = card.getAttribute('data-type');
-                const qId = card.getAttribute('data-id');
-                const textEl = document.getElementById(`b_text_${qId}`);
-                const pointsEl = document.getElementById(`b_points_${qId}`);
+        function renderMasterGradesOverview() {
+            const container = document.getElementById('gradesCardsContainer');
+            container.innerHTML = '';
+
+            const grades = ["أولى إعدادي", "تانية إعدادي", "تالتة إعدادي", "أولى ثانوي", "تانية ثانوي", "تالتة ثانوي"];
+
+            grades.forEach(g => {
+                const gradeStudents = dbUsers.filter(u => u.grade === g && u.role === 'student');
+                const gradeExams = dbExams.filter(e => e.gradeTarget === g);
+
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.cursor = 'pointer';
+                card.style.marginBottom = '0';
+                card.style.border = '2px solid var(--border-color)';
+                card.onmouseover = () => card.style.borderColor = 'var(--primary-color)';
+                card.onmouseout = () => card.style.borderColor = 'var(--border-color)';
                 
-                const text = textEl ? textEl.value : '';
-                const points = pointsEl ? parseInt(pointsEl.value) || 1 : 1;
+                card.onclick = () => openGradeStudentsModal(g);
 
-                if (type === 'mcq') {
-                    const opts = [];
-                    for (let i = 0; i < 4; i++) {
-                        const optEl = document.getElementById(`b_opt_${qId}_${i}`);
-                        if (optEl) opts.push(optEl.value);
-                    }
-                    const correctRadio = card.querySelector(`input[name="b_correct_${qId}"]:checked`);
-                    const correctOption = correctRadio ? parseInt(correctRadio.value) : 0;
-
-                    builderQuestions.push({
-                        id: qId,
-                        type: 'mcq',
-                        text: text,
-                        points: points,
-                        options: opts,
-                        correctOption: correctOption
-                    });
-                } else {
-                    builderQuestions.push({
-                        id: qId,
-                        type: 'essay',
-                        text: text,
-                        points: points
-                    });
-                }
-            });
-
-            localStorage.setItem('admin_builder_questions_draft', JSON.stringify(builderQuestions));
-        }
-
-        function addQuestionToBuilder(type) {
-            const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
-            builderQuestions.push({ 
-                id: qId, 
-                type: type, 
-                text: '', 
-                points: 1, 
-                options: ['', '', '', ''], 
-                correctOption: 0 
-            });
-            renderBuilderQuestions();
-            saveExamDraftToLocalStorage();
-        }
-
-        function removeBuilderQuestion(idx) {
-            builderQuestions.splice(idx, 1);
-            renderBuilderQuestions();
-            saveExamDraftToLocalStorage();
-        }
-
-        function clearAllExamBuilder() {
-            if (confirm("هل أنت متأكد من رغبتك في مسح كل الأسئلة والنموذج الحالي؟")) {
-                builderQuestions = [];
-                localStorage.removeItem('admin_builder_questions_draft');
-                document.getElementById('examTitle').value = '';
-                renderBuilderQuestions();
-                showAlert("تم مسح النموذج بالكامل.", "info");
-            }
-        }
-
-        function renderBuilderQuestions() {
-            const area = document.getElementById('builderQuestionsArea');
-            area.innerHTML = '';
-
-            builderQuestions.forEach((q, idx) => {
-                const div = document.createElement('div');
-                div.className = 'question-card';
-                div.setAttribute('data-id', q.id);
-                div.setAttribute('data-type', q.type);
-
-                let html = `<div style="display:flex; justify-content:space-between; align-items:center;">
-                    <strong>سؤال ${idx + 1} (${q.type === 'mcq' ? 'اختر من متعدد' : 'مقالي'})</strong>
-                    <button type="button" class="btn btn-danger" style="width:auto; padding:2px 8px;" onclick="removeBuilderQuestion(${idx})">حذف السؤال</button>
-                </div>`;
-
-                html += `
-                    <div class="form-group" style="margin-top:8px;">
-                        <label>نص السؤال</label>
-                        <input type="text" id="b_text_${q.id}" value="${q.text || ''}" required placeholder="اكتب السؤال هنا" oninput="saveExamDraftToLocalStorage()">
-                    </div>
-                    <div class="form-group">
-                        <label>الدرجة</label>
-                        <input type="number" id="b_points_${q.id}" value="${q.points || 1}" min="1" required style="width:100px;" oninput="saveExamDraftToLocalStorage()">
+                card.innerHTML = `
+                    <div style="display: flex; align-items: center; gap: 15px;">
+                        <div style="background: rgba(59,130,246,0.15); color: var(--primary-color); width: 60px; height: 60px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.8rem;">
+                            <i class="fa-solid fa-graduation-cap"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.3rem; font-weight: 900; color: var(--text-color);">${g}</h3>
+                            <p style="font-size: 0.9rem; color: var(--text-muted); font-weight: 700; margin-top: 4px;">عدد الطلاب المقيدين: ${gradeStudents.length}</p>
+                            <p style="font-size: 0.85rem; color: var(--primary-color); font-weight: 800; margin-top: 2px;">الامتحانات المتاحة: ${gradeExams.length}</p>
+                        </div>
                     </div>
                 `;
+                container.appendChild(card);
+            });
+        }
 
-                if (q.type === 'mcq') {
-                    const opts = q.options || ['', '', '', ''];
-                    const correct = q.correctOption !== undefined ? q.correctOption : 0;
+        function openGradeStudentsModal(gradeName) {
+            const gradeStudents = dbUsers.filter(u => u.grade === gradeName && u.role === 'student');
+
+            let html = `
+                <h3 style="font-size: 1.6rem; font-weight: 900; color: var(--primary-color); margin-bottom: 6px;"><i class="fa-solid fa-users"></i> طلاب صف: ${gradeName}</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">اضغط على اسم أي طالب لمعرفة امتحاناته وأخطائه:</p>
+                <div class="table-responsive">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>اسم الطالب</th>
+                                <th>رقم الطالب</th>
+                                <th>متوسط النسبة المئوية</th>
+                                <th>التحكم والعرض</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+            `;
+
+            if (gradeStudents.length === 0) {
+                html += `<tr><td colspan="4" style="text-align:center; color: var(--text-muted);">لا توجد طلاب مسجلين في هذا الصف بعد.</td></tr>`;
+            } else {
+                gradeStudents.forEach(st => {
+                    const stResults = dbResults.filter(r => r.studentId === st.studentId);
+                    let avgPct = 0;
+                    if (stResults.length > 0) {
+                        const sum = stResults.reduce((acc, curr) => acc + curr.percentage, 0);
+                        avgPct = Math.round(sum / stResults.length);
+                    }
+
                     html += `
-                        <div class="form-group">
-                            <label>الاختيارات (حدد الخيار الصحيح ليتم تعليمه وتصحيحه تلقائياً)</label>
-                            <div style="display:flex; flex-direction:column; gap:8px;">
-                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="0" ${correct === 0 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_0" value="" required placeholder="الاختيار الأول" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
-                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="1" ${correct === 1 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_1" value="" required placeholder="الاختيار الثاني" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
-                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="2" ${correct === 2 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_2" value="" placeholder="الاختيار الثالث (اختياري)" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
-                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="3" ${correct === 3 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_3" value="" placeholder="الاختيار الرابع (اختياري)" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
+                        <tr style="cursor:pointer;" onclick="openStudentExamsModal('${st.studentId}')">
+                            <td><strong><i class="fa-solid fa-user-graduate"></i> ${st.name}</strong></td>
+                            <td>${st.studentId}</td>
+                            <td><span class="badge ${avgPct >= 65 ? 'badge-approved' : 'badge-pending'}">${avgPct}%</span></td>
+                            <td><button class="btn" style="padding:6px 14px; font-size:0.85rem;" onclick="event.stopPropagation(); openStudentExamsModal('${st.studentId}')">عرض الامتحانات</button></td>
+                        </tr>
+                    `;
+                });
+            }
+
+            html += `</tbody></table></div>`;
+            document.getElementById('masterStudentModalContent').innerHTML = html;
+            document.getElementById('masterStudentModal').classList.remove('hidden');
+        }
+
+        function openStudentExamsModal(studentId) {
+            const student = dbUsers.find(u => u.studentId === studentId);
+            const studentResults = dbResults.filter(r => r.studentId === studentId);
+
+            let html = `
+                <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.85rem; margin-bottom:14px;" onclick="openGradeStudentsModal('${student.grade}')"><i class="fa-solid fa-arrow-right"></i> العودة لقائمة الطلاب</button>
+                <h3 style="font-size: 1.5rem; font-weight: 900; color: var(--primary-color); margin-bottom: 4px;">امتحانات ونتائج الطالب: ${student.name}</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; font-weight: 700; margin-bottom: 20px;">اختر أي امتحان لعرض تفاصيل إجابات وأخطاء الطالب، أو احذف النتائج الزائدة:</p>
+                <div style="display: flex; flex-direction: column; gap: 12px;">
+            `;
+
+            if (studentResults.length === 0) {
+                html += `<p style="color: var(--text-muted);">لم يقم هذا الطالب بأداء أي امتحان بعد.</p>`;
+            } else {
+                studentResults.forEach(res => {
+                    html += `
+                        <div class="card" style="margin-bottom:0; background:var(--input-bg);">
+                            <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
+                                <div style="cursor:pointer; flex:1;" onclick="openAdminResultBreakdown('${res.id}')">
+                                    <h4 style="font-size: 1.15rem; font-weight: 900;"><i class="fa-solid fa-file-lines"></i> ${res.examTitle}</h4>
+                                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-top:2px;">تاريخ التسليم: ${res.submittedAt}</p>
+                                </div>
+                                <div style="display:flex; align-items:center; gap:12px;">
+                                    <span class="badge ${res.percentage >= 65 ? 'badge-approved' : 'badge-rejected'}">النسبة: ${res.percentage}% (${res.score}/${res.totalScore})</span>
+                                    <button class="btn" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="openAdminResultBreakdown('${res.id}')">عرض</button>
+                                    <button class="btn btn-danger" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="deleteStudentResultRecord('${res.id}', '${studentId}')">حذف النتيجة</button>
+                                </div>
                             </div>
                         </div>
                     `;
-                } else if (q.type === 'essay') {
-                    html += `
-                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; color: var(--text-muted); font-size: 0.85rem;">
-                            📝 <strong>سؤال مقالي:</strong> سيظهر هذا السؤال للمستر في كتابة الأسئلة، وسيتاح للطالب الإجابة إما بالكيبورد أو برفع صورة الإجابة مباشرة.
-                        </div>
-                    `;
-                }
+                });
+            }
 
-                div.innerHTML = html;
-                area.appendChild(div);
-            });
+            html += `</div>`;
+            document.getElementById('masterStudentModalContent').innerHTML = html;
         }
 
-        function generateAIQuestionsByCount() {
-            const mcqCount = parseInt(document.getElementById('genMcqCount').value) || 0;
-            const essayCount = parseInt(document.getElementById('genEssayCount').value) || 0;
+        async function deleteStudentResultRecord(resultId, studentId) {
+            if (!confirm("هل أنت متأكد من حذف سجل هذه النتيجة نهائياً؟")) return;
+            try {
+                // البحث عن المستند باستخدام الـ firestoreId أو الـ id العادي لحذفه بدقة من فايرستور
+                const resDoc = dbResults.find(r => r.id === resultId);
+                const docKey = resDoc && resDoc.firestoreId ? resDoc.firestoreId : resultId;
+                
+                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", docKey));
+                
+                // تحديث مصفوفة النتائج محلياً
+                dbResults = dbResults.filter(r => r.id !== resultId);
+                
+                showAlert("تم حذف النتيجة من عند المستر وعند الطالب تماماً بنجاح.", "success");
+                openStudentExamsModal(studentId);
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء حذف النتيجة من السحاب.", "danger");
+            }
+        }
 
-            if (mcqCount <= 0 && essayCount <= 0) {
-                showAlert("يرجى تحديد عدد أكبر من الصفر للأسئلة!", "warning");
+        function openAdminResultBreakdown(resultId) {
+            const res = dbResults.find(r => r.id === resultId);
+            const student = dbUsers.find(u => u.studentId === res.studentId);
+
+            let html = `
+                <button class="btn btn-secondary" style="width:auto; padding:6px 14px; font-size:0.85rem; margin-bottom:14px;" onclick="openStudentExamsModal('${res.studentId}')"><i class="fa-solid fa-arrow-right"></i> العودة لامتحانات الطالب</button>
+                <h3 style="font-size: 1.5rem; font-weight: 900; color: var(--primary-color); margin-bottom: 4px;">تقرير امتحان: ${res.examTitle}</h3>
+                <p style="color: var(--text-muted); font-size: 0.95rem; font-weight: 700; margin-bottom: 20px;">الطالب: ${student ? student.name : res.studentId} | الدرجة: ${res.score} / ${res.totalScore} (${res.percentage}%)</p>
+                <div style="display: flex; flex-direction: column; gap: 16px;">
+            `;
+
+            if (res.answersBreakdown && res.answersBreakdown.length > 0) {
+                res.answersBreakdown.forEach((q, idx) => {
+                    if (q.type === 'mcq') {
+                        const studentChoice = q.studentAns !== null && q.options[q.studentAns] !== undefined ? q.options[q.studentAns] : 'لم يتم الإجابة';
+                        const correctChoice = q.options[q.correctOption];
+
+                        html += `
+                            <div class="question-card" style="border-right: 4px solid ${q.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'};">
+                                <div class="question-title">${idx + 1}- ${q.questionText} <span style="font-size:0.85rem; color:var(--text-muted);">(${q.pointsGiven}/${q.points} درجة)</span></div>
+                                <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap:10px; margin-top:10px;">
+                                    <div style="padding:10px; border-radius:10px; background:${q.isCorrect ? 'rgba(16,185,129,0.1)' : 'rgba(239,68,68,0.1)'}; border:1px solid ${q.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'};">
+                                        <strong style="font-size:0.85rem; color:var(--text-muted);">إجابة الطالب المختارة:</strong>
+                                        <div style="font-weight:800; margin-top:4px; color:${q.isCorrect ? 'var(--success-color)' : 'var(--danger-color)'};">${studentChoice}</div>
+                                    </div>
+                                    <div style="padding:10px; border-radius:10px; background:rgba(16,185,129,0.1); border:1px solid var(--success-color);">
+                                        <strong style="font-size:0.85rem; color:var(--text-muted);">الإجابة الصحيحة:</strong>
+                                        <div style="font-weight:800; margin-top:4px; color:var(--success-color);">${correctChoice}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        `;
+                    }
+                });
+            }
+
+            html += `</div>`;
+            document.getElementById('masterStudentModalContent').innerHTML = html;
+        }
+
+        function closeMasterStudentModal() {
+            document.getElementById('masterStudentModal').classList.add('hidden');
+            renderMasterGradesOverview();
+        }
+
+        function renderAdminExamsList() {
+            const container = document.getElementById('adminExamsList');
+            container.innerHTML = '';
+
+            if (dbExams.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد امتحانات مضافة بعد.</p>';
                 return;
             }
 
+            dbExams.forEach(ex => {
+                const item = document.createElement('div');
+                item.className = 'card';
+                item.style.marginBottom = '12px';
+                item.innerHTML = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:12px;">
+                        <div>
+                            <strong style="font-size: 1.1rem;"><i class="fa-solid fa-file-pen"></i> ${ex.title}</strong>
+                            <div style="font-size:0.85rem; color:var(--text-muted); margin-top:4px; font-weight:600;">الصف: ${ex.gradeTarget} | عدد الأسئلة: ${ex.questions.length} | المدة: ${ex.duration} دقيقة</div>
+                        </div>
+                        <div style="display:flex; gap:8px;">
+                            <button class="btn btn-warning" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="editExam('${ex.id}')">تعديل</button>
+                            <button class="btn btn-danger" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="deleteExam('${ex.id}')">حذف</button>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function generateEmptyQuestionsTemplate() {
+            const mcqCount = parseInt(document.getElementById('genCountMcq').value) || 0;
+            const essayCount = parseInt(document.getElementById('genCountEssay').value) || 0;
+            
+            builderQuestions = [];
+
             for (let i = 0; i < mcqCount; i++) {
-                const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
                 builderQuestions.push({
-                    id: qId,
+                    id: 'q_' + Math.random(),
                     type: 'mcq',
                     text: '',
-                    points: 1,
                     options: ['', '', '', ''],
-                    correctOption: 0
+                    correctOption: 0,
+                    points: 1
                 });
             }
 
             for (let i = 0; i < essayCount; i++) {
-                const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
                 builderQuestions.push({
-                    id: qId,
+                    id: 'q_' + Math.random(),
                     type: 'essay',
                     text: '',
-                    points: 2
+                    points: 5
                 });
             }
 
-            renderBuilderQuestions();
-            saveExamDraftToLocalStorage();
-            showAlert(`تم توليد ${mcqCount} سؤال اختر و ${essayCount} سؤال مقالي فارغة بنجاح! ✅`, "success");
+            renderBuilderQuestionsArea();
+        }
+
+        function addQuestionToBuilder(type) {
+            if (type === 'mcq') {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    type: 'mcq',
+                    text: '',
+                    options: ['', '', '', ''],
+                    correctOption: 0,
+                    points: 1
+                });
+            } else {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    type: 'essay',
+                    text: '',
+                    points: 5
+                });
+            }
+            renderBuilderQuestionsArea();
+        }
+
+        function removeBuilderQuestion(idx) {
+            builderQuestions.splice(idx, 1);
+            renderBuilderQuestionsArea();
+        }
+
+        function renderBuilderQuestionsArea() {
+            const area = document.getElementById('builderQuestionsArea');
+            area.innerHTML = '';
+
+            builderQuestions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.style.background = 'var(--card-bg)';
+
+                let headerHtml = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <strong style="color:var(--primary-color);">السؤال رقم ${idx + 1} (${q.type === 'mcq' ? 'اختر من متعدد' : 'مقالي'})</strong>
+                        <button type="button" class="btn btn-danger" style="width:auto; padding:4px 10px; font-size:0.8rem;" onclick="removeBuilderQuestion(${idx})">حذف السؤال</button>
+                    </div>
+                    <div class="form-group">
+                        <label>نص السؤال</label>
+                        <input type="text" value="${q.text}" oninput="builderQuestions[${idx}].text = this.value" required placeholder="اكتب نص السؤال هنا">
+                    </div>
+                    <div class="form-group">
+                        <label>درجة السؤال</label>
+                        <input type="number" value="${q.points}" min="1" oninput="builderQuestions[${idx}].points = parseInt(this.value) || 1" required>
+                    </div>
+                `;
+
+                if (q.type === 'mcq') {
+                    headerHtml += `<label style="display:block; margin-bottom:8px; font-weight:700;">الاختيارات (اختر الإجابة الصحيحة بالضغط على الزر بجانبها):</label>`;
+                    q.options.forEach((opt, oIdx) => {
+                        headerHtml += `
+                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
+                                <input type="radio" name="correct_opt_${idx}" ${q.correctOption === oIdx ? 'checked' : ''} onchange="builderQuestions[${idx}].correctOption = ${oIdx}" style="transform:scale(1.3);">
+                                <input type="text" value="${opt}" oninput="builderQuestions[${idx}].options[${oIdx}] = this.value" required placeholder="الاختيار رقم ${oIdx+1}" style="flex:1;">
+                            </div>
+                        `;
+                    });
+                }
+
+                card.innerHTML = headerHtml;
+                area.appendChild(card);
+            });
         }
 
         async function handleCreateExam(e) {
             e.preventDefault();
-            saveExamDraftToLocalStorage();
-
             if (builderQuestions.length === 0) {
-                showAlert("يجب إضافة سؤال واحد على الأقل!", "danger");
+                showAlert("يجب إضافة سؤال واحد على الأقل لإنشاء الامتحان!", "danger");
                 return;
             }
 
             const title = document.getElementById('examTitle').value.trim();
             const gradeTarget = document.getElementById('examGradeTarget').value;
+            const allowedAttempts = parseInt(document.getElementById('examAllowedAttempts').value) || 1;
             const startTime = document.getElementById('examStartTime').value;
             const endTime = document.getElementById('examEndTime').value;
-            const duration = parseInt(document.getElementById('examDurationMinutes').value);
+            const duration = parseInt(document.getElementById('examDurationMinutes').value) || 30;
+            const editingId = document.getElementById('editingExamId').value;
 
-            const examId = 'ex_' + Date.now();
-            const newExam = {
-                id: examId,
+            const examObj = {
+                id: editingId || ('ex_' + Date.now()),
                 title: title,
                 gradeTarget: gradeTarget,
+                allowedAttempts: allowedAttempts,
                 startTime: startTime,
                 endTime: endTime,
                 duration: duration,
@@ -2210,198 +2389,130 @@
             };
 
             try {
-                await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", examId), newExam);
-                dbExams.push(newExam);
-                showAlert("تم إنشاء الامتحان بنجاح ونشره على السحاب للطلاب!", "success");
-                document.getElementById('createExamForm').reset();
-                builderQuestions = [];
-                localStorage.removeItem('admin_builder_questions_draft');
-                renderBuilderQuestions();
-                renderAdminExamsList();
+                await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", examObj.id), examObj);
+                showAlert(editingId ? "تم تعديل الامتحان بنجاح على السحاب." : "تم إنشاء ونشر الامتحان بنجاح على السحاب.", "success");
+                cancelExamEdit();
+                renderAdminView();
             } catch (err) {
                 console.error(err);
                 showAlert("حدث خطأ أثناء حفظ الامتحان.", "danger");
             }
         }
 
-        function renderAdminExamsList() {
-            const list = document.getElementById('adminExamsList');
-            list.innerHTML = '';
+        function editExam(examId) {
+            const ex = dbExams.find(e => e.id === examId);
+            if (!ex) return;
 
-            if (dbExams.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-muted);">لا توجد امتحانات مضافة حتى الآن.</p>';
-                return;
-            }
+            document.getElementById('editingExamId').value = ex.id;
+            document.getElementById('examTitle').value = ex.title;
+            document.getElementById('examGradeTarget').value = ex.gradeTarget;
+            document.getElementById('examAllowedAttempts').value = ex.allowedAttempts || 1;
+            document.getElementById('examStartTime').value = ex.startTime;
+            document.getElementById('examEndTime').value = ex.endTime;
+            document.getElementById('examDurationMinutes').value = ex.duration;
 
-            dbExams.forEach(ex => {
-                const div = document.createElement('div');
-                div.className = 'card';
-                div.style.marginBottom = '10px';
-                div.innerHTML = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px;">
-                        <div>
-                            <strong>${ex.title} (${ex.gradeTarget})</strong>
-                            <div style="font-size:0.8rem; color:var(--text-muted);">
-                                الفتح: ${new Date(ex.startTime).toLocaleString('ar-EG')} | الإغلاق: ${new Date(ex.endTime).toLocaleString('ar-EG')} | المدة: ${ex.duration} د
-                            </div>
-                        </div>
-                        <button class="btn btn-danger" style="width:auto; padding:4px 10px;" onclick="deleteExam('${ex.id}', '${ex.firestoreId}')">حذف الامتحان</button>
-                    </div>
-                `;
-                list.appendChild(div);
-            });
+            builderQuestions = JSON.parse(JSON.stringify(ex.questions));
+            renderBuilderQuestionsArea();
+
+            document.getElementById('examFormTitleText').innerText = "تعديل امتحان / كويز";
+            document.getElementById('saveExamBtnUI').innerText = "حفظ التعديلات";
+            document.getElementById('cancelEditExamBtn').classList.remove('hidden');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        async function deleteExam(examId, firestoreId) {
-            if (confirm("هل أنت تأكد من حذف هذا الامتحان؟ سيتم حذف نتائج مرتبط بها.")) {
-                try {
-                    const docKey = firestoreId || examId;
-                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", docKey));
+        function cancelExamEdit() {
+            document.getElementById('createExamForm').reset();
+            document.getElementById('editingExamId').value = '';
+            builderQuestions = [];
+            renderBuilderQuestionsArea();
+            document.getElementById('examFormTitleText').innerText = "إنشاء امتحان / كويز جديد";
+            document.getElementById('saveExamBtnUI').innerText = "حفظ ونشر الامتحان";
+            document.getElementById('cancelEditExamBtn').classList.add('hidden');
+        }
 
-                    const relatedRes = dbResults.filter(r => r.examId === examId);
-                    for (let r of relatedRes) {
-                        if (r.firestoreId) {
-                            await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", r.firestoreId));
-                        }
-                    }
-
-                    await renderAdminView();
-                    showAlert("تم حذف الامتحان ونتائجه بنجاح من السحاب.", "info");
-                } catch (err) {
-                    console.error(err);
-                    showAlert("حدث خطأ أثناء الحذف.", "danger");
-                }
+        async function deleteExam(examId) {
+            if (!confirm("هل أنت متأكد من حذف هذا الامتحان نهائياً؟")) return;
+            try {
+                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", examId));
+                dbExams = dbExams.filter(e => e.id !== examId);
+                renderAdminView();
+                showAlert("تم حذف الامتحان بنجاح.", "success");
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء الحذف.", "danger");
             }
         }
 
         function renderPendingEssayGrading() {
-            const list = document.getElementById('pendingEssayGradingList');
-            list.innerHTML = '';
+            const container = document.getElementById('pendingEssayGradingList');
+            container.innerHTML = '';
 
             const pendingResults = dbResults.filter(r => r.needsGrading);
-
             if (pendingResults.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-muted);">لا توجد إجابات مقالية بانتظار التصحيح حالياً.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد إجابات مقالية تحتاج للتصحيح حالياً.</p>';
                 return;
             }
 
-            pendingResults.forEach(r => {
-                r.answersBreakdown.filter(q => q.type === 'essay' && !q.isGraded).forEach(q => {
-                    const card = document.createElement('div');
-                    card.className = 'question-card';
-                    card.innerHTML = `
-                        <strong>الطالب: ${r.studentName} (${r.grade})</strong>
-                        <div style="font-size:0.85rem; margin-top:4px;">الامتحان: ${r.examTitle}</div>
-                        <div style="margin:8px 0; font-weight:600;">س: ${q.questionText}</div>
-                        <p><strong>إجابة الطالب النصية:</strong> ${q.studentText || 'لا توجد إجابة بالكيبورد'}</p>
-                        ${q.studentImg ? `
-                            <div style="margin-top: 10px;">
-                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">صورة إجابة الطالب (اضغط عليها لتظهر في إطار منبثق للتكبير والتصحيح):</p>
-                                <img src="${q.studentImg}" style="max-width: 140px; border-radius: 8px; border: 2px solid var(--primary-color); cursor: pointer;" onclick="openImageModal('${q.studentImg}')" title="اضغط للتكبير في إطار منبثق">
+            pendingResults.forEach(res => {
+                res.answersBreakdown.forEach((q, qIdx) => {
+                    if (q.type === 'essay' && !q.isGraded) {
+                        const card = document.createElement('div');
+                        card.className = 'card';
+                        card.style.background = 'var(--input-bg)';
+                        card.innerHTML = `
+                            <h4 style="font-size: 1.1rem; font-weight: 900; margin-bottom: 6px;">${res.examTitle} - الطالب: ${res.studentName}</h4>
+                            <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 10px;">السؤال: ${q.questionText}</p>
+                            <p style="padding: 12px; background: var(--card-bg); border-radius: 10px; margin-bottom: 14px; font-weight: 600;"><strong>إجابة الطالب:</strong> ${q.studentText || 'لا توجد إجابة'}</p>
+                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                                <input type="number" id="grade_input_${res.id}_${qIdx}" min="0" max="${q.points}" placeholder="الدرجة (من ${q.points})" style="max-width: 180px;">
+                                <button class="btn btn-success" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="submitEssayGrade('${res.id}', ${qIdx})">اعتماد الدرجة</button>
                             </div>
-                        ` : ''}
-                        
-                        <div style="display:flex; gap:10px; align-items:center; margin-top:14px;">
-                            <label>الدرجة المستحقة من (${q.points}):</label>
-                            <input type="number" id="grade_val_${r.id}_${q.questionId}" min="0" max="${q.points}" value="${q.points}" style="width:80px; padding:6px;">
-                            <button class="btn btn-success" style="width:auto; padding:6px 16px;" onclick="saveEssayGrade('${r.id}', '${q.questionId}', '${r.firestoreId}')">حفظ وتعليم التصحيح</button>
-                        </div>
-                    `;
-                    list.appendChild(card);
+                        `;
+                        container.appendChild(card);
+                    }
                 });
             });
         }
 
-        function openImageModal(imgSrc) {
-            document.getElementById('modalZoomedImg').src = imgSrc;
-            document.getElementById('imageModal').classList.remove('hidden');
-        }
+        async function submitEssayGrade(resultId, qIdx) {
+            const inputVal = document.getElementById(`grade_input_${resultId}_${qIdx}`).value;
+            const givenPoints = parseFloat(inputVal);
 
-        function closeImageModal(e) {
-            if (!e || e.target.id === 'imageModal' || e.target.classList.contains('modal-close-x')) {
-                document.getElementById('imageModal').classList.add('hidden');
+            if (isNaN(givenPoints)) {
+                showAlert("يرجى إدخال درجة صحيحة!", "danger");
+                return;
             }
-        }
 
-        function toggleZoomImg(img) {
-            if (img.style.transform === 'scale(1.6)') {
-                img.style.transform = 'scale(1)';
-                img.style.cursor = 'zoom-in';
-            } else {
-                img.style.transform = 'scale(1.6)';
-                img.style.cursor = 'zoom-out';
-            }
-        }
-
-        async function saveEssayGrade(resultId, questionId, firestoreId) {
             const res = dbResults.find(r => r.id === resultId);
             if (!res) return;
 
-            const q = res.answersBreakdown.find(item => item.questionId === questionId);
-            const inputVal = parseFloat(document.getElementById(`grade_val_${resultId}_${questionId}`).value) || 0;
+            res.answersBreakdown[qIdx].pointsGiven = givenPoints;
+            res.answersBreakdown[qIdx].isGraded = true;
 
-            q.pointsGiven = inputVal;
-            q.isGraded = true;
+            let newScore = 0;
+            let allGraded = true;
+            res.answersBreakdown.forEach(item => {
+                if (item.pointsGiven) newScore += item.pointsGiven;
+                if (item.type === 'essay' && !item.isGraded) allGraded = false;
+            });
 
-            res.score = res.answersBreakdown.reduce((acc, curr) => acc + (curr.pointsGiven || 0), 0);
-            res.percentage = Math.round((res.score / res.totalScore) * 100);
-
-            const hasMoreEssay = res.answersBreakdown.some(item => item.type === 'essay' && !item.isGraded);
-            res.needsGrading = hasMoreEssay;
+            res.score = newScore;
+            res.percentage = Math.round((newScore / res.totalScore) * 100);
+            if (allGraded) res.needsGrading = false;
 
             try {
-                const docKey = firestoreId || resultId;
+                const docKey = res.firestoreId || res.id;
                 await window.FB.updateDoc(window.FB.doc(window.FB.db, "results", docKey), {
                     score: res.score,
                     percentage: res.percentage,
                     needsGrading: res.needsGrading,
                     answersBreakdown: res.answersBreakdown
                 });
-                await renderAdminView();
-                showAlert("تم حفظ درجة السؤال المقالي وتحديثها على السحاب بنجاح!", "success");
+                renderAdminView();
+                showAlert("تم اعتماد وتحديث درجة السؤال المقالي بنجاح.", "success");
             } catch (err) {
                 console.error(err);
-                showAlert("حدث خطأ أثناء حفظ التصحيح.", "danger");
-            }
-        }
-
-        function renderAllResults() {
-            const tbody = document.getElementById('allResultsTableBody');
-            tbody.innerHTML = '';
-
-            if (dbResults.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align:center;">لا توجد سجلات نتائج مسجلة حتى الآن.</td></tr>';
-                return;
-            }
-
-            dbResults.forEach(r => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td>${r.studentName}</td>
-                    <td>${r.grade}</td>
-                    <td>${r.examTitle}</td>
-                    <td>${r.score} / ${r.totalScore} (${r.percentage}%)</td>
-                    <td>محلولة: ${r.solvedCount} | خطأ: ${r.wrongCount}</td>
-                    <td>${r.submittedAt}</td>
-                    <td>
-                        <button class="btn btn-danger" style="padding:2px 6px; font-size:0.75rem;" onclick="deleteResultRecord('${r.id}', '${r.firestoreId}')">حذف</button>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-        }
-
-        async function deleteResultRecord(resultId, firestoreId) {
-            if (confirm("هل أنت تأكد من حذف هذا السجل بشكل نهائي؟")) {
-                try {
-                    const docKey = firestoreId || resultId;
-                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", docKey));
-                    await renderAdminView();
-                    showAlert("تم حذف سجل النتيجة من السحاب.", "info");
-                } catch (err) {
-                    console.error(err);
-                    showAlert("حدث خطأ أثناء حذف السجل.", "danger");
-                }
+                showAlert("حدث خطأ أثناء حفظ التحديث.", "danger");
             }
         }
 
@@ -2412,102 +2523,109 @@
             const fileInput = document.getElementById('fileInput');
 
             if (fileInput.files.length === 0) return;
-
             const file = fileInput.files[0];
+
             if (file.size > 2 * 1024 * 1024) {
-                showAlert("حجم الملف كبير جداً! الحد الأقصى للملفات هو 2 ميجابايت لتوافق التخزين السحابي.", "danger");
+                showAlert("حجم الملف كبير جداً! يجيب أن يكون أقل من 2 ميجابايت.", "danger");
                 return;
             }
 
             const reader = new FileReader();
-
-            reader.onload = async function(evt) {
-                const fileId = 'file_' + Date.now();
-                const newFile = {
-                    id: fileId,
+            reader.onload = async function(event) {
+                const base64Data = event.target.result;
+                const assignObj = {
+                    id: 'file_' + Date.now(),
                     title: title,
                     gradeTarget: gradeTarget,
                     fileName: file.name,
-                    fileData: evt.target.result,
-                    date: new Date().toLocaleDateString('ar-EG')
+                    fileData: base64Data,
+                    date: new Date().toLocaleString('ar-EG')
                 };
 
                 try {
-                    await window.FB.setDoc(window.FB.doc(window.FB.db, "assignments", fileId), newFile);
-                    dbAssignments.push(newFile);
-
-                    showAlert("تم رفع الملف بنجاح وحفظه على السحاب للطلاب!", "success");
+                    const docRef = await window.FB.addDoc(window.FB.collection(window.FB.db, "assignments"), assignObj);
+                    dbAssignments.push({ firestoreId: docRef.id, ...assignObj });
+                    showAlert("تم رفع الملف بنجاح على السحاب وتوفيره للطلاب.", "success");
                     document.getElementById('uploadFileForm').reset();
-                    renderAdminFilesList();
+                    renderAdminView();
                 } catch (err) {
                     console.error(err);
                     showAlert("حدث خطأ أثناء رفع الملف.", "danger");
                 }
             };
-
             reader.readAsDataURL(file);
         }
 
         function renderAdminFilesList() {
-            const list = document.getElementById('adminFilesList');
-            list.innerHTML = '';
+            const container = document.getElementById('adminFilesList');
+            container.innerHTML = '';
 
             if (dbAssignments.length === 0) {
-                list.innerHTML = '<p style="color:var(--text-muted);">لا توجد ملفات مرفوعة بعد.</p>';
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد ملفات مرفوعة بعد.</p>';
                 return;
             }
 
             dbAssignments.forEach(a => {
                 const div = document.createElement('div');
-                div.style.padding = '10px';
-                div.style.borderBottom = '1px solid var(--border-color)';
+                div.style.padding = '14px';
+                div.style.border = '1px solid var(--border-color)';
+                div.style.borderRadius = '14px';
+                div.style.marginBottom = '12px';
+                div.style.background = 'var(--input-bg)';
                 div.style.display = 'flex';
                 div.style.justifyContent = 'space-between';
-                div.style.alignItems.center;
+                div.style.alignItems = 'center';
+                div.style.flexWrap = 'wrap';
+                div.style.gap = '10px';
                 div.innerHTML = `
                     <div>
-                        <strong>${a.title} (${a.gradeTarget})</strong>
-                        <div style="font-size:0.75rem; color:var(--text-muted);">${a.fileName} | ${a.date}</div>
+                        <strong style="font-size:1.05rem;"><i class="fa-solid fa-file-pdf"></i> ${a.title}</strong>
+                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">الصف: ${a.gradeTarget} | اسم الملف: ${a.fileName}</div>
                     </div>
-                    <button class="btn btn-danger" style="width:auto; padding:4px 8px; font-size:0.8rem;" onclick="deleteAssignment('${a.id}', '${a.firestoreId}')">حذف الملف</button>
+                    <button class="btn btn-danger" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="deleteAssignment('${a.id}')">حذف الملف</button>
                 `;
-                list.appendChild(div);
+                container.appendChild(div);
             });
         }
 
-        async function deleteAssignment(fileId, firestoreId) {
-            if (confirm("هل أنت متأكد من حذف هذا الملف؟")) {
-                try {
-                    const docKey = firestoreId || fileId;
-                    await window.FB.deleteDoc(window.FB.doc(window.FB.db, "assignments", docKey));
-                    dbAssignments = dbAssignments.filter(a => a.id !== fileId && a.firestoreId !== firestoreId);
-                    renderAdminFilesList();
-                    showAlert("تم حذف الملف بنجاح.", "info");
-                } catch (err) {
-                    console.error(err);
-                    showAlert("حدث خطأ أثناء حذف الملف.", "danger");
-                }
+        async function deleteAssignment(assignId) {
+            if (!confirm("هل أنت متأكد من حذف هذا الملف نهائياً؟")) return;
+            const assign = dbAssignments.find(a => a.id === assignId);
+            const docKey = assign && assign.firestoreId ? assign.firestoreId : assignId;
+
+            try {
+                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "assignments", docKey));
+                dbAssignments = dbAssignments.filter(a => a.id !== assignId);
+                renderAdminView();
+                showAlert("تم حذف الملف بنجاح.", "success");
+            } catch (err) {
+                console.error(err);
+                showAlert("حدث خطأ أثناء الحذف.", "danger");
             }
         }
 
         async function handleChangeAdminPassword(e) {
             e.preventDefault();
-            const currentPass = document.getElementById('currentAdminPass').value.trim();
+            const currPass = document.getElementById('currentAdminPass').value.trim();
             const newPass = document.getElementById('newAdminPass').value.trim();
 
-            if (currentPass !== ADMIN_PASS) {
+            if (currPass !== ADMIN_PASS) {
                 showAlert("كلمة المرور الحالية غير صحيحة!", "danger");
                 return;
             }
 
-            try {
-                await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newPass });
-                ADMIN_PASS = newPass;
-                showAlert("تم تغيير كلمة مرور الآدمن بنجاح رسمياً على السحاب!", "success");
-                document.getElementById('changeAdminPassForm').reset();
-            } catch (err) {
-                console.error(err);
-                showAlert("حدث خطأ أثناء تحديث كلمة المرور.", "danger");
+            ADMIN_PASS = newPass;
+            const adminUser = dbUsers.find(u => u.studentId === ADMIN_PHONE);
+            if (adminUser) {
+                adminUser.password = newPass;
+                try {
+                    await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newPass });
+                    showAlert("تم تحديث كلمة مرور الآدمن بنجاح رسمياً على السحاب.", "success");
+                    document.getElementById('changeAdminPassForm').reset();
+                } catch (err) {
+                    console.error(err);
+                    showAlert("حدث خطأ أثناء التحديث.", "danger");
+                }
             }
         }
     </script>
