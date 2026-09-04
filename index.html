@@ -24,7 +24,6 @@
         const app = initializeApp(firebaseConfig);
         const dbFirestore = getFirestore(app);
 
-        // إتاحة الفايربيس عامة للنطاق البرمجي في الصفحة
         window.FB = { db: dbFirestore, collection, getDocs, getDoc, doc, setDoc, addDoc, updateDoc, deleteDoc, query, where };
         window.dispatchEvent(new Event('firebase-ready'));
     </script>
@@ -278,26 +277,45 @@
         .badge-approved { background-color: rgba(16, 185, 129, 0.15); color: #10b981; border: 1px solid #10b981; }
         .badge-rejected { background-color: rgba(239, 68, 68, 0.15); color: #ef4444; border: 1px solid #ef4444; }
 
-        .stats-grid {
+        .pill-stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 16px;
             margin-bottom: 24px;
         }
 
-        .stat-card {
+        .pill-card {
             background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px;
-            text-align: center;
+            border-radius: 50px;
+            padding: 16px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: var(--shadow);
+            cursor: pointer;
+            transition: all 0.3s ease;
         }
 
-        .stat-card .val {
-            font-size: 1.8rem;
+        .pill-card:hover {
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 12px 30px rgba(59, 130, 246, 0.15);
+        }
+
+        .pill-card .pill-title {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-muted);
+        }
+
+        .pill-card .pill-val {
+            font-size: 1.4rem;
             font-weight: 800;
             color: var(--primary-color);
-            margin-top: 4px;
+            background: rgba(59, 130, 246, 0.1);
+            padding: 6px 16px;
+            border-radius: 30px;
         }
 
         .timer-box {
@@ -314,25 +332,52 @@
             z-index: 90;
         }
 
+        /* تعديل وتظبيط تصميم أسئلة الامتحان لتكون مريحة، واضحة وبحجم كبير وملائم */
         .question-card {
             border: 1px solid var(--border-color);
-            border-radius: 14px;
-            padding: 18px;
-            margin-bottom: 16px;
-            background-color: var(--input-bg);
+            border-radius: 16px;
+            padding: 24px;
+            margin-bottom: 20px;
+            background-color: var(--card-bg);
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.03);
         }
 
-        .question-title { font-weight: 700; margin-bottom: 12px; }
+        .question-title { 
+            font-weight: 700; 
+            font-size: 1.15rem; 
+            margin-bottom: 16px; 
+            line-height: 1.7;
+            color: var(--text-color);
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
 
         .option-label {
             display: flex;
             align-items: center;
-            gap: 10px;
-            background: var(--card-bg);
-            padding: 12px;
+            gap: 14px;
+            background: var(--input-bg);
+            padding: 16px 20px;
             border: 1px solid var(--border-color);
-            border-radius: 10px;
-            margin-bottom: 8px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            font-size: 1.05rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .option-label:hover {
+            border-color: var(--primary-color);
+            background: rgba(59, 130, 246, 0.04);
+            transform: translateX(-4px);
+        }
+
+        .option-label input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
             cursor: pointer;
         }
 
@@ -374,7 +419,6 @@
             border-color: var(--primary-color);
         }
 
-        /* Modal / Popups Styling */
         .modal-overlay {
             position: fixed;
             top: 0;
@@ -396,9 +440,35 @@
             border-radius: 20px;
             padding: 28px;
             width: 90%;
-            max-width: 460px;
-            text-align: center;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            text-align: right;
             box-shadow: 0 20px 40px rgba(0,0,0,0.5);
+            position: relative;
+        }
+
+        .modal-close-x {
+            position: absolute;
+            top: 16px;
+            left: 20px;
+            background: rgba(239, 68, 68, 0.15);
+            color: var(--danger-color);
+            border: 1px solid var(--danger-color);
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            cursor: pointer;
+            font-size: 1.1rem;
+        }
+
+        .modal-close-x:hover {
+            background: var(--danger-color);
+            color: white;
         }
 
         .modal-actions {
@@ -539,19 +609,18 @@
                 <p id="studentInfoSub" style="color: var(--text-muted); font-size: 0.9rem;"></p>
             </div>
 
-            <!-- بطاقة النسبة والتميز والإحصائيات -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">نسبة التفوق الشاملة</div>
-                    <div id="studentExcellenceRate" class="val">0%</div>
+            <div class="pill-stats-grid">
+                <div class="pill-card">
+                    <span class="pill-title">التقييم العام</span>
+                    <span class="pill-val" id="studentMotivationBadge" style="font-size: 1.1rem; color: var(--warning-color);">ممتاز مرتفع 🏆</span>
                 </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">التقييم العام</div>
-                    <div id="studentRankBadge" class="val" style="font-size:1.4rem; margin-top:10px;">--</div>
+                <div class="pill-card">
+                    <span class="pill-title">نسبة التفوق الشاملة</span>
+                    <span class="pill-val" id="studentExcellenceRatePill">0%</span>
                 </div>
-                <div class="stat-card">
-                    <div style="color:var(--text-muted); font-size:0.85rem;">عدد الامتحانات المكتملة</div>
-                    <div id="studentCompletedExamsCount" class="val">0</div>
+                <div class="pill-card">
+                    <span class="pill-title">عدد الامتحانات المكتملة</span>
+                    <span class="pill-val" id="studentCompletedExamsPill">0</span>
                 </div>
             </div>
 
@@ -594,8 +663,8 @@
             <!-- تبويب أخطائي -->
             <div id="studentTabMistakes" class="student-tab-content hidden">
                 <div class="card">
-                    <h3>سجل أخطائي للتعلم منها</h3>
-                    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">يتم تجميع كل الأسئلة التي أجبت عليها بإجابة خاطئة هنا مع تصحيحها لضمان التميز:</p>
+                    <h3>سجل أخطائي للتعلم منها (لكل امتحان منفصل)</h3>
+                    <p style="font-size:0.85rem; color:var(--text-muted); margin-bottom:12px;">يتم تجميع الأسئلة التي بها أخطاء مرتبطة بكل امتحان على حدة:</p>
                     <div id="studentMistakesContainer"></div>
                 </div>
             </div>
@@ -613,18 +682,19 @@
         <div id="examInterface" class="hidden">
             <div id="timerDisplay" class="timer-box">الوقت المتبقي: --:--</div>
             <div class="card" style="margin-top: 40px;">
-                <h2 id="examActiveTitle">عنوان الامتحان</h2>
-                <p id="examActiveMeta" style="color: var(--text-muted); font-size: 0.85rem; margin-bottom: 16px;"></p>
+                <h2 id="examActiveTitle" style="font-size: 1.8rem; margin-bottom: 8px; color: var(--primary-color);">عنوان الامتحان</h2>
+                <p id="examActiveMeta" style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 24px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;"></p>
                 <form id="activeExamForm" onsubmit="promptSubmitModal(event)">
                     <div id="examQuestionsContainer"></div>
-                    <button type="submit" class="btn btn-success" style="margin-top: 20px;">تسليم الامتحان النهائي</button>
+                    <button type="submit" class="btn btn-success" style="margin-top: 30px; padding: 16px; font-size: 1.1rem;">تسليم الامتحان النهائي</button>
                 </form>
             </div>
         </div>
 
         <!-- النافذة المنبثقة للتأكيد قبل تسليم الامتحان -->
         <div id="confirmSubmitModal" class="modal-overlay hidden">
-            <div class="modal-box">
+            <div class="modal-box" style="text-align: center;">
+                <div class="modal-close-x" onclick="closeConfirmModal()">×</div>
                 <h3 style="font-size: 1.4rem; margin-bottom: 10px; color: var(--primary-color);">تأكيد تسليم الإجابات</h3>
                 <p style="color: var(--text-muted); font-size: 0.95rem; margin-bottom: 20px;">
                     هل أنت متأكد من رغبتك في إنهاء وتسليم الامتحان الآن؟ لن يمكنك تعديل إجاباتك بعد التسليم.
@@ -636,9 +706,10 @@
             </div>
         </div>
 
-        <!-- التقرير التفصيلي للنتيجة -->
+        <!-- التقرير التفصيلي للنتيجة (مع زر إغلاق علوي X) -->
         <div id="examResultDetailView" class="hidden">
-            <div class="card">
+            <div class="card" style="position: relative;">
+                <div class="modal-close-x" onclick="closeResultDetail()" title="إغلاق التقرير">×</div>
                 <h2 style="margin-bottom:16px;">تقرير نتيجة الامتحان بالتفصيل</h2>
                 <div id="resultSummaryBox" style="margin: 16px 0;"></div>
                 <div id="resultQuestionsBreakdown"></div>
@@ -656,6 +727,7 @@
             <div class="tabs">
                 <button class="tab-btn active" onclick="switchAdminTab('tabRequests', this)">طلبات التسجيل والإنقاذ</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabStudents', this)">إدارة الطلاب</button>
+                <button class="tab-btn" onclick="switchAdminTab('tabStudentAnalytics', this)">متابعة درجات وأخطاء الطلاب</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabExams', this)">إدارة الامتحانات والأسئلة</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabGrading', this)">تصحيح المقالي والنتائج</button>
                 <button class="tab-btn" onclick="switchAdminTab('tabUploads', this)">رفع الواجبات والملفات</button>
@@ -718,17 +790,47 @@
                 </div>
             </div>
 
+            <div id="tabStudentAnalytics" class="admin-tab hidden">
+                <div class="card">
+                    <h3>متابعة أداء الطلاب (اختر طالباً لعرض إحصائياته وأخطائه)</h3>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 16px;">اضغط على أي بطاقة طالب لعرض تفاصيل امتحاناته وأخطائه بالكامل.</p>
+                    <div id="adminStudentsPillsContainer" class="pill-stats-grid"></div>
+                </div>
+            </div>
+
+            <div id="adminStudentExamsModal" class="modal-overlay hidden">
+                <div class="modal-box">
+                    <div class="modal-close-x" onclick="closeAdminStudentExamsModal()">×</div>
+                    <h3 id="adminModalStudentTitle" style="color: var(--primary-color); margin-bottom: 12px;">امتحانات الطالب</h3>
+                    <div id="adminModalExamsBody"></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" onclick="closeAdminStudentExamsModal()">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="adminStudentExamMistakesModal" class="modal-overlay hidden">
+                <div class="modal-box">
+                    <div class="modal-close-x" onclick="closeAdminStudentExamMistakesModal()">×</div>
+                    <h3 id="adminModalExamTitle" style="color: var(--danger-color); margin-bottom: 12px;">تفاصيل أخطاء الطالب في الامتحان</h3>
+                    <div id="adminModalMistakesBody"></div>
+                    <div class="modal-actions">
+                        <button class="btn btn-secondary" onclick="closeAdminStudentExamMistakesModal()">إغلاق</button>
+                    </div>
+                </div>
+            </div>
+
             <div id="tabExams" class="admin-tab hidden">
                 <div class="card">
-                    <h3>إنشاء امتحان / كويز جديد</h3>
+                    <h3>إنشاء امتحان / كويز جديد (مع الحفظ التلقائي)</h3>
                     <form id="createExamForm" onsubmit="handleCreateExam(event)">
                         <div class="form-group">
                             <label>عنوان الامتحان</label>
-                            <input type="text" id="examTitle" required placeholder="مثال: اختبار الشهر - Unit 1">
+                            <input type="text" id="examTitle" required placeholder="مثال: اختبار الشهر - Unit 1" oninput="saveExamDraftToLocalStorage()">
                         </div>
                         <div class="form-group">
                             <label>المرحلة الدراسية</label>
-                            <select id="examGradeTarget" required>
+                            <select id="examGradeTarget" required onchange="saveExamDraftToLocalStorage()">
                                 <option value="أولى إعدادي">أولى إعدادي</option>
                                 <option value="تانية إعدادي">تانية إعدادي</option>
                                 <option value="تالتة إعدادي">تالتة إعدادي</option>
@@ -738,31 +840,49 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label>وقت الفتح الحقيقي (Date/Time)</label>
-                            <input type="datetime-local" id="examStartTime" required>
+                            <label>وقت الفتح الحقيقي</label>
+                            <input type="datetime-local" id="examStartTime" required onchange="saveExamDraftToLocalStorage()">
                         </div>
                         <div class="form-group">
-                            <label>وقت الإغلاق الحقيقي (Date/Time)</label>
-                            <input type="datetime-local" id="examEndTime" required>
+                            <label>وقت الإغلاق الحقيقي</label>
+                            <input type="datetime-local" id="examEndTime" required onchange="saveExamDraftToLocalStorage()">
                         </div>
                         <div class="form-group">
                             <label>مدة الامتحان بالدقائق</label>
-                            <input type="number" id="examDurationMinutes" min="1" required placeholder="مثال: 30">
+                            <input type="number" id="examDurationMinutes" min="1" required placeholder="مثال: 30" oninput="saveExamDraftToLocalStorage()">
                         </div>
 
                         <hr style="margin: 20px 0; border-color: var(--border-color);">
-                        <h4>إضافة الأسئلة</h4>
+                        <h4>توليد وإدارة الأسئلة بالذكاء الاصطناعي</h4>
                         
-                        <div style="margin: 12px 0;">
-                            <button type="button" class="btn btn-warning" onclick="generateAIQuestions()" style="margin-bottom: 12px;">
-                                💡 مساعدة بالذكاء الاصطناعي لتوليد نموذج أسئلة
+                        <div style="background: var(--input-bg); border: 1px solid var(--border-color); padding: 16px; border-radius: 12px; margin: 12px 0;">
+                            <div style="display: flex; gap: 15px; flex-wrap: wrap; margin-bottom: 12px;">
+                                <div style="flex: 1; min-width: 150px;">
+                                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">عدد أسئلة اختر من متعدد:</label>
+                                    <input type="number" id="genMcqCount" min="0" value="5" style="width:100%;">
+                                </div>
+                                <div style="flex: 1; min-width: 150px;">
+                                    <label style="font-size: 0.85rem; margin-bottom: 4px; display: block;">عدد الأسئلة المقالية:</label>
+                                    <input type="number" id="genEssayCount" min="0" value="2" style="width:100%;">
+                                </div>
+                            </div>
+                            <button type="button" class="btn btn-warning" onclick="generateAIQuestionsByCount()" style="width: 100%;">
+                                💡 توليد الأسئلة بالعدد المطلوب فوراً
+                            </button>
+                        </div>
+
+                        <div style="margin: 12px 0; display:flex; gap:10px; flex-wrap:wrap;">
+                            <button type="button" class="btn btn-danger" onclick="clearAllExamBuilder()" style="width: auto;">
+                                🗑️ حذف الكل
                             </button>
                         </div>
 
                         <div id="builderQuestionsArea"></div>
 
-                        <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('mcq')" style="margin-bottom: 8px;">+ إضافة سؤال اختر من متعدد</button>
-                        <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('essay')" style="margin-bottom: 16px;">+ إضافة سؤال مقالي</button>
+                        <div class="btn-group" style="margin-bottom: 16px;">
+                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('mcq')">+ إضافة سؤال اختر من متعدد</button>
+                            <button type="button" class="btn btn-secondary" onclick="addQuestionToBuilder('essay')">+ إضافة سؤال مقالي</button>
+                        </div>
 
                         <button type="submit" class="btn btn-success">حفظ ونشر الامتحان</button>
                     </form>
@@ -854,6 +974,15 @@
 
     </div>
 
+    <!-- نافذة عرض الصورة المكبرة (Modal) للمستر أثناء التصحيح -->
+    <div id="imageModal" class="modal-overlay hidden" onclick="closeImageModal(event)">
+        <div class="modal-box" style="text-align: center; max-width: 800px; background: rgba(0,0,0,0.85);">
+            <div class="modal-close-x" onclick="closeImageModal(null)" style="top: 10px; left: 10px;">×</div>
+            <img id="modalZoomedImg" src="" style="max-width: 100%; max-height: 75vh; border-radius: 12px; object-fit: contain; cursor: zoom-in; transition: transform 0.2s;" onclick="toggleZoomImg(this)">
+            <p style="color: #fff; font-size: 0.85rem; margin-top: 10px;">(اضغط على الصورة للتكبير أو التصحيح المرن)</p>
+        </div>
+    </div>
+
 <footer>
   Developed with passion <span class="designer-tag">By / Mohamed Sherif</span>
   <div style="display: flex; justify-content: center; gap: 15px; align-items: center; margin-top: 8px;">
@@ -861,8 +990,6 @@
     <a href="https://www.facebook.com/share/1CEQcGrhmc/" target="_blank" style="color: #1877f2; font-size: 20px;"><i class="fa-brands fa-facebook-f"></i></a>
   </div>
 </footer>
-
-
 
     <script>
         function initTheme() {
@@ -898,9 +1025,8 @@
 
         let currentUser = JSON.parse(localStorage.getItem('app_current_user')) || null;
         let activeExamTimerInterval = null;
-        let builderQuestions = [];
+        let builderQuestions = JSON.parse(localStorage.getItem('admin_builder_questions_draft')) || [];
 
-        // متغيرات البيانات السحابية
         let dbUsers = [];
         let dbExams = [];
         let dbResults = [];
@@ -910,7 +1036,6 @@
         window.addEventListener('firebase-ready', async () => {
             await loadDataFromCloud();
             
-            // تحقق من حساب المستر الافتراضي وتكوينه في قاعدة البيانات إن لم يكن موجوداً
             const adminExists = dbUsers.find(u => u.studentId === ADMIN_PHONE);
             if (!adminExists) {
                 const defaultAdmin = {
@@ -929,7 +1054,6 @@
             }
 
             if (currentUser) {
-                // تحديث بيانات المستخدم الحالي من السيرفر
                 const updated = dbUsers.find(u => u.studentId === currentUser.studentId);
                 if (updated) currentUser = updated;
                 showLoggedInState();
@@ -940,27 +1064,22 @@
 
         async function loadDataFromCloud() {
             try {
-                // جلب المستخدمين
                 const usersSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "users"));
                 dbUsers = [];
                 usersSnap.forEach(d => dbUsers.push({ firestoreId: d.id, ...d.data() }));
 
-                // جلب الامتحانات
                 const examsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "exams"));
                 dbExams = [];
                 examsSnap.forEach(d => dbExams.push({ firestoreId: d.id, ...d.data() }));
 
-                // جلب النتائج
                 const resultsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "results"));
                 dbResults = [];
                 resultsSnap.forEach(d => dbResults.push({ firestoreId: d.id, ...d.data() }));
 
-                // جلب طلبات إعادة التعيين
                 const resetsSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "resets"));
                 dbResets = [];
                 resetsSnap.forEach(d => dbResets.push({ firestoreId: d.id, ...d.data() }));
 
-                // جلب الواجبات
                 const assignSnap = await window.FB.getDocs(window.FB.collection(window.FB.db, "assignments"));
                 dbAssignments = [];
                 assignSnap.forEach(d => dbAssignments.push({ firestoreId: d.id, ...d.data() }));
@@ -1005,6 +1124,7 @@
                 document.getElementById('studentDashboard').classList.add('hidden');
                 document.getElementById('appHeaderTitle').innerText = "The Leader In English | Mr.Sherif Khafagy";
                 renderAdminView();
+                renderBuilderQuestions();
             } else {
                 document.getElementById('studentDashboard').classList.remove('hidden');
                 document.getElementById('adminDashboard').classList.add('hidden');
@@ -1037,9 +1157,8 @@
                 return;
             }
 
-            // تحديث البيانات من السيرفر للتأكد
             await loadDataFromCloud();
-
+            
             const foundUser = dbUsers.find(u => (u.studentId === idInput || u.phone === idInput) && u.password === passInput);
 
             if (!foundUser) {
@@ -1169,24 +1288,23 @@
 
             const myResults = dbResults.filter(r => r.studentId === currentUser.studentId);
             
-            // حساب نسبة التفوق والإحصائيات
-            document.getElementById('studentCompletedExamsCount').innerText = myResults.length;
+            document.getElementById('studentCompletedExamsPill').innerText = myResults.length;
+
             if (myResults.length > 0) {
                 const totalPercent = myResults.reduce((acc, curr) => acc + curr.percentage, 0);
                 const avgPercent = Math.round(totalPercent / myResults.length);
-                document.getElementById('studentExcellenceRate').innerText = `${avgPercent}%`;
+                document.getElementById('studentExcellenceRatePill').innerText = `${avgPercent}%`;
 
-                let rank = "مقبول";
-                if (avgPercent >= 90) rank = "🏆 ممتاز مرتفع";
-                else if (avgPercent >= 80) rank = "🌟 جيد جداً";
-                else if (avgPercent >= 65) rank = "👍 جيد";
-                document.getElementById('studentRankBadge').innerText = rank;
+                let motivation = "ممتاز مرتفع 🏆";
+                if (avgPercent < 50) motivation = "يحتاج لتحسين ⚠️";
+                else if (avgPercent < 65) motivation = "جيد جداً 👍";
+                else if (avgPercent < 85) motivation = "رائع ومجتهد ⭐";
+                document.getElementById('studentMotivationBadge').innerText = motivation;
             } else {
-                document.getElementById('studentExcellenceRate').innerText = `0%`;
-                document.getElementById('studentRankBadge').innerText = `--`;
+                document.getElementById('studentExcellenceRatePill').innerText = `0%`;
+                document.getElementById('studentMotivationBadge').innerText = "ابدأ أول امتحان 🚀";
             }
 
-            // الامتحانات
             const examsList = document.getElementById('studentExamsList');
             examsList.innerHTML = '';
             const gradeExams = dbExams.filter(ex => ex.gradeTarget === currentUser.grade);
@@ -1227,7 +1345,6 @@
                 });
             }
 
-            // نتائجي
             const tbody = document.getElementById('studentResultsTableBody');
             tbody.innerHTML = '';
 
@@ -1247,38 +1364,42 @@
                 });
             }
 
-            // أخطائي
             const mistakesContainer = document.getElementById('studentMistakesContainer');
             mistakesContainer.innerHTML = '';
-            let totalMistakes = 0;
+            let hasAnyMistake = false;
 
             myResults.forEach(r => {
-                if (r.answersBreakdown) {
-                    r.answersBreakdown.forEach(q => {
-                        if (q.type === 'mcq' && !q.isCorrect) {
-                            totalMistakes++;
-                            const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم تقم بالإجابة';
-                            const correctChoice = q.options[q.correctOption];
+                const examMistakes = r.answersBreakdown ? r.answersBreakdown.filter(q => q.type === 'mcq' && !q.isCorrect) : [];
+                if (examMistakes.length > 0) {
+                    hasAnyMistake = true;
+                    const examBox = document.createElement('div');
+                    examBox.className = 'card';
+                    examBox.style.marginBottom = '16px';
+                    
+                    let mistakesHtml = `<h4 style="color: var(--primary-color); margin-bottom: 12px; border-bottom: 1px solid var(--border-color); padding-bottom: 8px;">امتحان: ${r.examTitle}</h4>`;
+                    
+                    examMistakes.forEach((q, qIdx) => {
+                        const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم تقم بالإجابة';
+                        const correctChoice = q.options[q.correctOption];
 
-                            const mDiv = document.createElement('div');
-                            mDiv.className = 'question-card';
-                            mDiv.innerHTML = `
-                                <div style="font-size:0.8rem; color:var(--text-muted); margin-bottom:4px;">من امتحان: ${r.examTitle}</div>
-                                <div class="question-title">س: ${q.questionText}</div>
-                                <p style="color:var(--danger-color);"><strong>إجابتك الخاطئة:</strong> ${studentChoice}</p>
+                        mistakesHtml += `
+                            <div class="question-card" style="margin-bottom: 10px;">
+                                <div class="question-title">س ${qIdx + 1}: ${q.questionText}</div>
+                                <p style="color:var(--danger-color); margin-bottom:4px;"><strong>إجابتك الخاطئة:</strong> ${studentChoice}</p>
                                 <p style="color:var(--success-color);"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
-                            `;
-                            mistakesContainer.appendChild(mDiv);
-                        }
+                            </div>
+                        `;
                     });
+
+                    examBox.innerHTML = mistakesHtml;
+                    mistakesContainer.appendChild(examBox);
                 }
             });
 
-            if (totalMistakes === 0) {
+            if (!hasAnyMistake) {
                 mistakesContainer.innerHTML = '<p style="color:var(--success-color); font-weight:bold;">رائع! لا توجد أخطاء مسجلة لك حتى الآن.</p>';
             }
 
-            // الواجبات والمرفقات
             const assignList = document.getElementById('studentAssignmentsList');
             assignList.innerHTML = '';
             const gradeAssignments = dbAssignments.filter(a => a.gradeTarget === currentUser.grade);
@@ -1359,7 +1480,7 @@
                 const qDiv = document.createElement('div');
                 qDiv.className = 'question-card';
 
-                let bodyHtml = `<div class="question-title">س ${idx + 1}: ${q.text} (${q.points} درجات)</div>`;
+                let bodyHtml = `<div class="question-title"><span>س ${idx + 1}:</span> <span>${q.text}</span> <span style="margin-right: auto; font-size: 0.9rem; color: var(--primary-color); background: rgba(59,130,246,0.1); padding: 2px 10px; border-radius: 20px;">(${q.points} درجات)</span></div>`;
 
                 if (q.type === 'mcq') {
                     q.options.forEach((opt, oIdx) => {
@@ -1372,11 +1493,11 @@
                     });
                 } else if (q.type === 'essay') {
                     bodyHtml += `
-                        <div class="form-group">
-                            <textarea name="q_${q.id}_text" rows="3" placeholder="اكتب إجابتك هنا..."></textarea>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <textarea name="q_${q.id}_text" rows="4" placeholder="اكتب إجابتك هنا بالكيبورد..." style="font-size: 1.05rem; padding: 16px;"></textarea>
                         </div>
-                        <div class="form-group">
-                            <label style="font-size:0.8rem;">أو ارفع صورة الإجابة:</label>
+                        <div class="form-group" style="margin-top: 15px;">
+                            <label style="font-size:0.9rem; color: var(--text-muted); margin-bottom: 6px;">أو ارفع صورة الإجابة:</label>
                             <input type="file" name="q_${q.id}_file" accept="image/*" onchange="convertEssayImageToBase64(this, '${q.id}')">
                             <input type="hidden" id="essay_img_${q.id}" name="q_${q.id}_img_data">
                         </div>
@@ -1399,6 +1520,7 @@
                 const reader = new FileReader();
                 reader.onload = function(e) {
                     document.getElementById(`essay_img_${qId}`).value = e.target.result;
+                    showAlert("تم إرفاق صورة الإجابة بنجاح!", "success");
                 };
                 reader.readAsDataURL(file);
             }
@@ -1565,30 +1687,14 @@
                     <h3 style="font-size:1.5rem; color:var(--primary-color);">${res.examTitle}</h3>
                     <p style="color:var(--text-muted); font-size:0.85rem;">تاريخ التسليم: ${res.submittedAt}</p>
                 </div>
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">الدرجة الكلية</div>
-                        <div class="val" style="color:var(--success-color);">${res.score} / ${res.totalScore}</div>
+                <div class="pill-stats-grid">
+                    <div class="pill-card">
+                        <span class="pill-title">الدرجة الكلية</span>
+                        <span class="pill-val" style="color:var(--success-color);">${res.score} / ${res.totalScore}</span>
                     </div>
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">النسبة المئوية</div>
-                        <div class="val">${res.percentage}%</div>
-                    </div>
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">إجمالي الأسئلة</div>
-                        <div class="val" style="color:var(--text-color);">${res.totalQuestions || res.answersBreakdown.length}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">الأسئلة المحلولة</div>
-                        <div class="val" style="color:var(--primary-color);">${res.solvedCount}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">الإجابات الخاطئة</div>
-                        <div class="val" style="color:var(--danger-color);">${res.wrongCount}</div>
-                    </div>
-                    <div class="stat-card">
-                        <div style="color:var(--text-muted); font-size:0.8rem;">الوقت المستغرق</div>
-                        <div class="val" style="font-size:1.2rem; margin-top:10px;">${res.timeSpent}</div>
+                    <div class="pill-card">
+                        <span class="pill-title">النسبة المئوية</span>
+                        <span class="pill-val">${res.percentage}%</span>
                     </div>
                 </div>
                 <div style="margin-top: 10px; padding: 12px; background: var(--input-bg); border-radius: 12px; text-align: center; font-weight: bold; border: 1px solid var(--border-color);">
@@ -1620,7 +1726,7 @@
                     card.innerHTML = `
                         <div class="question-title">س ${idx + 1}: ${q.questionText} (${q.pointsGiven} / ${q.points} درجة)</div>
                         <p><strong>إجابتك النصية:</strong> ${q.studentText || 'لا توجد إجابة نصية'}</p>
-                        ${q.studentImg ? `<img src="${q.studentImg}" style="max-width:200px; border-radius:8px; margin-top:6px; display:block;">` : ''}
+                        ${q.studentImg ? `<div style="margin-top:10px;"><img src="${q.studentImg}" style="max-width:180px; border-radius:8px; border:1px solid var(--border-color); cursor:pointer;" onclick="openImageModal('${q.studentImg}')" title="اضغط لتكبير الصورة"></div>` : ''}
                         <p style="color:var(--warning-color); margin-top:4px;"><strong>حالة المقالي:</strong> ${q.isGraded ? 'تم التصحيح من المستر' : 'في انتظار مراجعة المستر'}</p>
                     `;
                 }
@@ -1658,6 +1764,7 @@
             renderPendingStudents();
             renderResetRequests();
             renderActiveStudents();
+            renderAdminStudentAnalyticsPills();
             renderAdminExamsList();
             renderPendingEssayGrading();
             renderAllResults();
@@ -1791,6 +1898,104 @@
             });
         }
 
+        function renderAdminStudentAnalyticsPills() {
+            const container = document.getElementById('adminStudentsPillsContainer');
+            container.innerHTML = '';
+
+            const activeStudents = dbUsers.filter(u => u.role === 'student' && u.status === 'approved');
+
+            if (activeStudents.length === 0) {
+                container.innerHTML = '<p style="color:var(--text-muted);">لا توجد طلاب مقبولة حالياً.</p>';
+                return;
+            }
+
+            activeStudents.forEach(st => {
+                const stResults = dbResults.filter(r => r.studentId === st.studentId);
+                let avg = 0;
+                if (stResults.length > 0) {
+                    const total = stResults.reduce((acc, curr) => acc + curr.percentage, 0);
+                    avg = Math.round(total / stResults.length);
+                }
+
+                const pill = document.createElement('div');
+                pill.className = 'pill-card';
+                pill.onclick = () => openAdminStudentExamsModal(st.studentId, st.name);
+                pill.innerHTML = `
+                    <span class="pill-title">${st.name} <br><span style="font-size:0.75rem; color:var(--text-muted);">${st.grade}</span></span>
+                    <span class="pill-val">${avg}%</span>
+                `;
+                container.appendChild(pill);
+            });
+        }
+
+        function openAdminStudentExamsModal(studentId, studentName) {
+            const modal = document.getElementById('adminStudentExamsModal');
+            document.getElementById('adminModalStudentTitle').innerText = `امتحانات وسجلات الطالب: ${studentName}`;
+            const body = document.getElementById('adminModalExamsBody');
+
+            const stResults = dbResults.filter(r => r.studentId === studentId);
+
+            if (stResults.length === 0) {
+                body.innerHTML = '<p style="color:var(--text-muted); text-align:center;">لم يؤدِ هذا الطالب أي امتحانات بعد.</p>';
+            } else {
+                let html = '<div style="display:flex; flex-direction:column; gap:10px;">';
+                stResults.forEach(r => {
+                    html += `
+                        <div class="pill-card" style="border-radius:16px; cursor:pointer;" onclick="openAdminStudentExamMistakes('${r.id}')">
+                            <div>
+                                <strong style="font-size:1rem; color:var(--text-color);">${r.examTitle}</strong>
+                                <div style="font-size:0.8rem; color:var(--text-muted);">تاريخ التسليم: ${r.submittedAt}</div>
+                            </div>
+                            <span class="pill-val" style="font-size:1rem;">${r.score} / ${r.totalScore} (${r.percentage}%)</span>
+                        </div>
+                    `;
+                });
+                html += '</div>';
+                body.innerHTML = html;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdminStudentExamsModal() {
+            document.getElementById('adminStudentExamsModal').classList.add('hidden');
+        }
+
+        function openAdminStudentExamMistakes(resultId) {
+            const res = dbResults.find(r => r.id === resultId);
+            if (!res) return;
+
+            const modal = document.getElementById('adminStudentExamMistakesModal');
+            document.getElementById('adminModalExamTitle').innerText = `تفاصيل أخطاء الطالب في: ${res.examTitle} (${res.studentName})`;
+            const body = document.getElementById('adminModalMistakesBody');
+
+            const mistakes = res.answersBreakdown ? res.answersBreakdown.filter(q => q.type === 'mcq' && !q.isCorrect) : [];
+
+            if (mistakes.length === 0) {
+                body.innerHTML = '<p style="color:var(--success-color); text-align:center; font-weight:bold;">رائع! الطالب لم يرتكب أي أخطاء في هذا الامتحان.</p>';
+            } else {
+                let html = '';
+                mistakes.forEach((q, idx) => {
+                    const studentChoice = q.studentAns !== null ? q.options[q.studentAns] : 'لم يقُم بالإجابة';
+                    const correctChoice = q.options[q.correctOption];
+                    html += `
+                        <div class="question-card" style="margin-bottom:10px;">
+                            <div class="question-title">س ${idx + 1}: ${q.questionText}</div>
+                            <p style="color:var(--danger-color); margin-bottom:4px;"><strong>إجابة الطالب الخاطئة:</strong> ${studentChoice}</p>
+                            <p style="color:var(--success-color);"><strong>الإجابة الصحيحة:</strong> ${correctChoice}</p>
+                        </div>
+                    `;
+                });
+                body.innerHTML = html;
+            }
+
+            modal.classList.remove('hidden');
+        }
+
+        function closeAdminStudentExamMistakesModal() {
+            document.getElementById('adminStudentExamMistakesModal').classList.add('hidden');
+        }
+
         async function removeStudentPrompt(studentId) {
             const user = dbUsers.find(u => u.studentId === studentId);
             if (!user) return;
@@ -1816,15 +2021,77 @@
             }
         }
 
+        function saveExamDraftToLocalStorage() {
+            builderQuestions = [];
+            const cards = document.querySelectorAll('#builderQuestionsArea .question-card');
+            
+            cards.forEach((card, idx) => {
+                const type = card.getAttribute('data-type');
+                const qId = card.getAttribute('data-id');
+                const textEl = document.getElementById(`b_text_${qId}`);
+                const pointsEl = document.getElementById(`b_points_${qId}`);
+                
+                const text = textEl ? textEl.value : '';
+                const points = pointsEl ? parseInt(pointsEl.value) || 1 : 1;
+
+                if (type === 'mcq') {
+                    const opts = [];
+                    for (let i = 0; i < 4; i++) {
+                        const optEl = document.getElementById(`b_opt_${qId}_${i}`);
+                        if (optEl) opts.push(optEl.value);
+                    }
+                    const correctRadio = card.querySelector(`input[name="b_correct_${qId}"]:checked`);
+                    const correctOption = correctRadio ? parseInt(correctRadio.value) : 0;
+
+                    builderQuestions.push({
+                        id: qId,
+                        type: 'mcq',
+                        text: text,
+                        points: points,
+                        options: opts,
+                        correctOption: correctOption
+                    });
+                } else {
+                    builderQuestions.push({
+                        id: qId,
+                        type: 'essay',
+                        text: text,
+                        points: points
+                    });
+                }
+            });
+
+            localStorage.setItem('admin_builder_questions_draft', JSON.stringify(builderQuestions));
+        }
+
         function addQuestionToBuilder(type) {
-            const qId = 'q_' + Date.now() + Math.floor(Math.random() * 100);
-            builderQuestions.push({ id: qId, type: type });
+            const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
+            builderQuestions.push({ 
+                id: qId, 
+                type: type, 
+                text: '', 
+                points: 1, 
+                options: ['', '', '', ''], 
+                correctOption: 0 
+            });
             renderBuilderQuestions();
+            saveExamDraftToLocalStorage();
         }
 
         function removeBuilderQuestion(idx) {
             builderQuestions.splice(idx, 1);
             renderBuilderQuestions();
+            saveExamDraftToLocalStorage();
+        }
+
+        function clearAllExamBuilder() {
+            if (confirm("هل أنت متأكد من رغبتك في مسح كل الأسئلة والنموذج الحالي؟")) {
+                builderQuestions = [];
+                localStorage.removeItem('admin_builder_questions_draft');
+                document.getElementById('examTitle').value = '';
+                renderBuilderQuestions();
+                showAlert("تم مسح النموذج بالكامل.", "info");
+            }
         }
 
         function renderBuilderQuestions() {
@@ -1834,33 +2101,43 @@
             builderQuestions.forEach((q, idx) => {
                 const div = document.createElement('div');
                 div.className = 'question-card';
+                div.setAttribute('data-id', q.id);
+                div.setAttribute('data-type', q.type);
 
                 let html = `<div style="display:flex; justify-content:space-between; align-items:center;">
                     <strong>سؤال ${idx + 1} (${q.type === 'mcq' ? 'اختر من متعدد' : 'مقالي'})</strong>
-                    <button type="button" class="btn btn-danger" style="width:auto; padding:2px 8px;" onclick="removeBuilderQuestion(${idx})">حذف</button>
+                    <button type="button" class="btn btn-danger" style="width:auto; padding:2px 8px;" onclick="removeBuilderQuestion(${idx})">حذف السؤال</button>
                 </div>`;
 
                 html += `
                     <div class="form-group" style="margin-top:8px;">
                         <label>نص السؤال</label>
-                        <input type="text" id="b_text_${q.id}" required placeholder="اكتب السؤال هنا">
+                        <input type="text" id="b_text_${q.id}" value="${q.text || ''}" required placeholder="اكتب السؤال هنا" oninput="saveExamDraftToLocalStorage()">
                     </div>
                     <div class="form-group">
                         <label>الدرجة</label>
-                        <input type="number" id="b_points_${q.id}" value="1" min="1" required style="width:100px;">
+                        <input type="number" id="b_points_${q.id}" value="${q.points || 1}" min="1" required style="width:100px;" oninput="saveExamDraftToLocalStorage()">
                     </div>
                 `;
 
                 if (q.type === 'mcq') {
+                    const opts = q.options || ['', '', '', ''];
+                    const correct = q.correctOption !== undefined ? q.correctOption : 0;
                     html += `
                         <div class="form-group">
-                            <label>الاختيارات (حدد الخيار الصحيح)</label>
-                            <div style="display:flex; flex-direction:column; gap:6px;">
-                                <div><input type="radio" name="b_correct_${q.id}" value="0" checked> <input type="text" id="b_opt_${q.id}_0" required placeholder="الاختيار الأول"></div>
-                                <div><input type="radio" name="b_correct_${q.id}" value="1"> <input type="text" id="b_opt_${q.id}_1" required placeholder="الاختيار الثاني"></div>
-                                <div><input type="radio" name="b_correct_${q.id}" value="2"> <input type="text" id="b_opt_${q.id}_2" placeholder="الاختيار الثالث (اختياري)"></div>
-                                <div><input type="radio" name="b_correct_${q.id}" value="3"> <input type="text" id="b_opt_${q.id}_3" placeholder="الاختيار الرابع (اختياري)"></div>
+                            <label>الاختيارات (حدد الخيار الصحيح ليتم تعليمه وتصحيحه تلقائياً)</label>
+                            <div style="display:flex; flex-direction:column; gap:8px;">
+                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="0" ${correct === 0 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_0" value="" required placeholder="الاختيار الأول" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
+                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="1" ${correct === 1 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_1" value="" required placeholder="الاختيار الثاني" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
+                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="2" ${correct === 2 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_2" value="" placeholder="الاختيار الثالث (اختياري)" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
+                                <div style="display:flex; align-items:center; gap:8px; background:var(--card-bg); padding:10px; border-radius:10px; border:1px solid var(--border-color);"><input type="radio" name="b_correct_${q.id}" value="3" ${correct === 3 ? 'checked' : ''} onchange="saveExamDraftToLocalStorage()"><input type="text" id="b_opt_${q.id}_3" value="" placeholder="الاختيار الرابع (اختياري)" oninput="saveExamDraftToLocalStorage()" style="border:none; background:transparent;"></div>
                             </div>
+                        </div>
+                    `;
+                } else if (q.type === 'essay') {
+                    html += `
+                        <div style="background: var(--card-bg); border: 1px solid var(--border-color); padding: 12px; border-radius: 10px; color: var(--text-muted); font-size: 0.85rem;">
+                            📝 <strong>سؤال مقالي:</strong> سيظهر هذا السؤال للمستر في كتابة الأسئلة، وسيتاح للطالب الإجابة إما بالكيبورد أو برفع صورة الإجابة مباشرة.
                         </div>
                     `;
                 }
@@ -1870,33 +2147,45 @@
             });
         }
 
-        function generateAIQuestions() {
-            alert("تم إضافة نموذج أسئلة افتراضي لمساعدتك.");
-            
-            const q1_id = 'q_' + Date.now() + '_1';
-            const q2_id = 'q_' + Date.now() + '_2';
+        function generateAIQuestionsByCount() {
+            const mcqCount = parseInt(document.getElementById('genMcqCount').value) || 0;
+            const essayCount = parseInt(document.getElementById('genEssayCount').value) || 0;
 
-            builderQuestions.push({ id: q1_id, type: 'mcq' });
-            builderQuestions.push({ id: q2_id, type: 'essay' });
+            if (mcqCount <= 0 && essayCount <= 0) {
+                showAlert("يرجى تحديد عدد أكبر من الصفر للأسئلة!", "warning");
+                return;
+            }
+
+            for (let i = 0; i < mcqCount; i++) {
+                const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                builderQuestions.push({
+                    id: qId,
+                    type: 'mcq',
+                    text: '',
+                    points: 1,
+                    options: ['', '', '', ''],
+                    correctOption: 0
+                });
+            }
+
+            for (let i = 0; i < essayCount; i++) {
+                const qId = 'q_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+                builderQuestions.push({
+                    id: qId,
+                    type: 'essay',
+                    text: '',
+                    points: 2
+                });
+            }
 
             renderBuilderQuestions();
-
-            setTimeout(() => {
-                if (document.getElementById(`b_text_${q1_id}`)) {
-                    document.getElementById(`b_text_${q1_id}`).value = "Choose the correct word: She _____ to school every day.";
-                    document.getElementById(`b_opt_${q1_id}_0`).value = "goes";
-                    document.getElementById(`b_opt_${q1_id}_1`).value = "go";
-                    document.getElementById(`b_opt_${q1_id}_2`).value = "went";
-                    document.getElementById(`b_opt_${q1_id}_3`).value = "going";
-                }
-                if (document.getElementById(`b_text_${q2_id}`)) {
-                    document.getElementById(`b_text_${q2_id}`).value = "Write a paragraph of FIVE lines about your favorite hobby.";
-                }
-            }, 50);
+            saveExamDraftToLocalStorage();
+            showAlert(`تم توليد ${mcqCount} سؤال اختر و ${essayCount} سؤال مقالي فارغة بنجاح! ✅`, "success");
         }
 
         async function handleCreateExam(e) {
             e.preventDefault();
+            saveExamDraftToLocalStorage();
 
             if (builderQuestions.length === 0) {
                 showAlert("يجب إضافة سؤال واحد على الأقل!", "danger");
@@ -1909,39 +2198,6 @@
             const endTime = document.getElementById('examEndTime').value;
             const duration = parseInt(document.getElementById('examDurationMinutes').value);
 
-            const finalQuestions = [];
-
-            for (let q of builderQuestions) {
-                const text = document.getElementById(`b_text_${q.id}`).value.trim();
-                const points = parseInt(document.getElementById(`b_points_${q.id}`).value) || 1;
-
-                if (q.type === 'mcq') {
-                    const opts = [];
-                    for (let i = 0; i < 4; i++) {
-                        const optVal = document.getElementById(`b_opt_${q.id}_${i}`).value.trim();
-                        if (optVal) opts.push(optVal);
-                    }
-                    const correctRadio = document.querySelector(`input[name="b_correct_${q.id}"]:checked`);
-                    const correctOption = correctRadio ? parseInt(correctRadio.value) : 0;
-
-                    finalQuestions.push({
-                        id: q.id,
-                        type: 'mcq',
-                        text: text,
-                        points: points,
-                        options: opts,
-                        correctOption: correctOption
-                    });
-                } else {
-                    finalQuestions.push({
-                        id: q.id,
-                        type: 'essay',
-                        text: text,
-                        points: points
-                    });
-                }
-            }
-
             const examId = 'ex_' + Date.now();
             const newExam = {
                 id: examId,
@@ -1950,7 +2206,7 @@
                 startTime: startTime,
                 endTime: endTime,
                 duration: duration,
-                questions: finalQuestions
+                questions: builderQuestions
             };
 
             try {
@@ -1959,6 +2215,7 @@
                 showAlert("تم إنشاء الامتحان بنجاح ونشره على السحاب للطلاب!", "success");
                 document.getElementById('createExamForm').reset();
                 builderQuestions = [];
+                localStorage.removeItem('admin_builder_questions_draft');
                 renderBuilderQuestions();
                 renderAdminExamsList();
             } catch (err) {
@@ -2001,7 +2258,6 @@
                     const docKey = firestoreId || examId;
                     await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", docKey));
 
-                    // حذف النتائج المرتبطة
                     const relatedRes = dbResults.filter(r => r.examId === examId);
                     for (let r of relatedRes) {
                         if (r.firestoreId) {
@@ -2037,18 +2293,44 @@
                         <strong>الطالب: ${r.studentName} (${r.grade})</strong>
                         <div style="font-size:0.85rem; margin-top:4px;">الامتحان: ${r.examTitle}</div>
                         <div style="margin:8px 0; font-weight:600;">س: ${q.questionText}</div>
-                        <p><strong>إجابة الطالب النصية:</strong> ${q.studentText || 'لا توجد'}</p>
-                        ${q.studentImg ? `<img src="${q.studentImg}" style="max-width:250px; border-radius:8px; display:block; margin:8px 0;">` : ''}
+                        <p><strong>إجابة الطالب النصية:</strong> ${q.studentText || 'لا توجد إجابة بالكيبورد'}</p>
+                        ${q.studentImg ? `
+                            <div style="margin-top: 10px;">
+                                <p style="font-size: 0.8rem; color: var(--text-muted); margin-bottom: 4px;">صورة إجابة الطالب (اضغط عليها لتظهر في إطار منبثق للتكبير والتصحيح):</p>
+                                <img src="${q.studentImg}" style="max-width: 140px; border-radius: 8px; border: 2px solid var(--primary-color); cursor: pointer;" onclick="openImageModal('${q.studentImg}')" title="اضغط للتكبير في إطار منبثق">
+                            </div>
+                        ` : ''}
                         
-                        <div style="display:flex; gap:10px; align-items:center; margin-top:10px;">
+                        <div style="display:flex; gap:10px; align-items:center; margin-top:14px;">
                             <label>الدرجة المستحقة من (${q.points}):</label>
-                            <input type="number" id="grade_val_${r.id}_${q.questionId}" min="0" max="${q.points}" value="${q.points}" style="width:80px; padding:4px;">
-                            <button class="btn btn-success" style="width:auto; padding:4px 12px;" onclick="saveEssayGrade('${r.id}', '${q.questionId}', '${r.firestoreId}')">حفظ التصحيح</button>
+                            <input type="number" id="grade_val_${r.id}_${q.questionId}" min="0" max="${q.points}" value="${q.points}" style="width:80px; padding:6px;">
+                            <button class="btn btn-success" style="width:auto; padding:6px 16px;" onclick="saveEssayGrade('${r.id}', '${q.questionId}', '${r.firestoreId}')">حفظ وتعليم التصحيح</button>
                         </div>
                     `;
                     list.appendChild(card);
                 });
             });
+        }
+
+        function openImageModal(imgSrc) {
+            document.getElementById('modalZoomedImg').src = imgSrc;
+            document.getElementById('imageModal').classList.remove('hidden');
+        }
+
+        function closeImageModal(e) {
+            if (!e || e.target.id === 'imageModal' || e.target.classList.contains('modal-close-x')) {
+                document.getElementById('imageModal').classList.add('hidden');
+            }
+        }
+
+        function toggleZoomImg(img) {
+            if (img.style.transform === 'scale(1.6)') {
+                img.style.transform = 'scale(1)';
+                img.style.cursor = 'zoom-in';
+            } else {
+                img.style.transform = 'scale(1.6)';
+                img.style.cursor = 'zoom-out';
+            }
         }
 
         async function saveEssayGrade(resultId, questionId, firestoreId) {
@@ -2181,7 +2463,7 @@
                 div.style.borderBottom = '1px solid var(--border-color)';
                 div.style.display = 'flex';
                 div.style.justifyContent = 'space-between';
-                div.style.alignItems = 'center';
+                div.style.alignItems.center;
                 div.innerHTML = `
                     <div>
                         <strong>${a.title} (${a.gradeTarget})</strong>
@@ -2193,40 +2475,35 @@
             });
         }
 
-        async function deleteAssignment(id, firestoreId) {
-            if (confirm("هل تريد حذف هذا الملف؟")) {
+        async function deleteAssignment(fileId, firestoreId) {
+            if (confirm("هل أنت متأكد من حذف هذا الملف؟")) {
                 try {
-                    const docKey = firestoreId || id;
+                    const docKey = firestoreId || fileId;
                     await window.FB.deleteDoc(window.FB.doc(window.FB.db, "assignments", docKey));
+                    dbAssignments = dbAssignments.filter(a => a.id !== fileId && a.firestoreId !== firestoreId);
                     renderAdminFilesList();
-                    showAlert("تم حذف الملف بنجاح من السحاب.", "info");
+                    showAlert("تم حذف الملف بنجاح.", "info");
                 } catch (err) {
                     console.error(err);
-                    showAlert("حدث خطأ أثناء الحذف.", "danger");
+                    showAlert("حدث خطأ أثناء حذف الملف.", "danger");
                 }
             }
         }
 
         async function handleChangeAdminPassword(e) {
             e.preventDefault();
-            const currentInput = document.getElementById('currentAdminPass').value.trim();
-            const newInput = document.getElementById('newAdminPass').value.trim();
+            const currentPass = document.getElementById('currentAdminPass').value.trim();
+            const newPass = document.getElementById('newAdminPass').value.trim();
 
-            if (currentInput !== ADMIN_PASS) {
+            if (currentPass !== ADMIN_PASS) {
                 showAlert("كلمة المرور الحالية غير صحيحة!", "danger");
                 return;
             }
 
-            if (newInput.length < 6) {
-                showAlert("كلمة المرور الجديدة يجب ألا تقل عن 6 أحرف أو أرقام.", "danger");
-                return;
-            }
-
-            ADMIN_PASS = newInput;
-
             try {
-                await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newInput });
-                showAlert("تم تغيير كلمة مرور الآدمن رسمياً على السحاب بنجاح! ✅", "success");
+                await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newPass });
+                ADMIN_PASS = newPass;
+                showAlert("تم تغيير كلمة مرور الآدمن بنجاح رسمياً على السحاب!", "success");
                 document.getElementById('changeAdminPassForm').reset();
             } catch (err) {
                 console.error(err);
