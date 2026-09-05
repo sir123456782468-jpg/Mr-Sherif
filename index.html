@@ -656,6 +656,7 @@
                 <button class="tab-btn active" onclick="switchStudentTab('studentTabExams', this)"><i class="fa-solid fa-file-pen"></i> الامتحانات المتاحة</button>
                 <button class="tab-btn" onclick="switchStudentTab('studentTabResults', this)"><i class="fa-solid fa-chart-line"></i> نتائجي</button>
                 <button class="tab-btn" onclick="switchStudentTab('studentTabMistakes', this)"><i class="fa-solid fa-triangle-exclamation"></i> امتحان من أخطائي</button>
+                <button class="tab-btn" onclick="switchStudentTab('studentTabMyMistakes', this)"><i class="fa-solid fa-book-skull"></i> اخطائي</button>
                 <button class="tab-btn" onclick="switchStudentTab('studentTabAssignments', this)"><i class="fa-solid fa-folder-open"></i> المرفقات والواجبات</button>
             </div>
 
@@ -699,6 +700,22 @@
                     </div>
                     <div id="mistakesSelectionExamsList" style="margin-bottom: 20px;"></div>
                     <button class="btn btn-success" onclick="startMistakesExam()"><i class="fa-solid fa-wand-magic-sparkles"></i> ابدأ امتحان أخطاء الامتحانات المحددة</button>
+                </div>
+            </div>
+
+            <!-- خانة أخطائي الجديدة بشكل شيك وفيه أشكال لكل امتحان -->
+            <div id="studentTabMyMistakes" class="student-tab-content hidden">
+                <div class="card" style="background: linear-gradient(135deg, rgba(239, 68, 68, 0.03), rgba(217, 119, 6, 0.03)); border: 1.5px solid rgba(239, 68, 68, 0.2);">
+                    <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px;">
+                        <div style="background: linear-gradient(135deg, #dc2626, #b91c1c); color: white; width: 50px; height: 50px; border-radius: 16px; display: flex; align-items: center; justify-content: center; font-size: 1.4rem; box-shadow: 0 8px 20px rgba(220, 38, 38, 0.35);">
+                            <i class="fa-solid fa-book-skull"></i>
+                        </div>
+                        <div>
+                            <h3 style="font-size: 1.5rem; font-weight: 900; color: var(--text-color);">سجل أخطائي في الامتحانات</h3>
+                            <p style="font-size: 0.92rem; color: var(--text-muted); font-weight: 700;">اضغط على أي امتحان أدناه لعرض أخطائك فيه، حيث يظهر كل خطأ في كشكول أو شكل مستقل ومنسق:</p>
+                        </div>
+                    </div>
+                    <div id="studentMyMistakesContainer"></div>
                 </div>
             </div>
 
@@ -1292,7 +1309,106 @@
 
             if (tabId === 'studentTabMistakes') {
                 renderMistakesSelectionList();
+            } else if (tabId === 'studentTabMyMistakes') {
+                renderStudentMyMistakes();
             }
+        }
+
+        function renderStudentMyMistakes() {
+            const container = document.getElementById('studentMyMistakesContainer');
+            container.innerHTML = '';
+
+            const myResults = dbResults.filter(r => r.studentId === currentUser.studentId);
+            if (myResults.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--text-muted);">
+                        <i class="fa-solid fa-face-smile" style="font-size: 3rem; margin-bottom: 10px; color: var(--success-color);"></i>
+                        <p style="font-weight: 800; font-size: 1.1rem;">لا توجد امتحانات مكتملة أو أخطاء مسجلة لك حتى الآن. استمر في التقدم!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            // تصفية الامتحانات التي بها أخطاء فعلياً
+            let examsWithMistakes = [];
+            myResults.forEach(r => {
+                let mistakesList = [];
+                if (r.answersBreakdown) {
+                    r.answersBreakdown.forEach(q => {
+                        if (q.type === 'mcq' && !q.isCorrect) {
+                            mistakesList.push(q);
+                        } else if (q.type === 'essay' && q.pointsGiven < q.points) {
+                            mistakesList.push(q);
+                        }
+                    });
+                }
+                if (mistakesList.length > 0) {
+                    examsWithMistakes.push({ exam: r, mistakes: mistakesList });
+                }
+            });
+
+            if (examsWithMistakes.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align: center; padding: 30px; color: var(--success-color);">
+                        <i class="fa-solid fa-trophy" style="font-size: 3rem; margin-bottom: 10px;"></i>
+                        <p style="font-weight: 800; font-size: 1.1rem;">رائع جداً! لا توجد لديك أي أخطاء في الامتحانات التي أديتها.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            examsWithMistakes.forEach(item => {
+                const examCard = document.createElement('div');
+                examCard.style.background = 'var(--input-bg)';
+                examCard.style.border = '1.5px solid var(--border-color)';
+                examCard.style.borderRadius = '18px';
+                examCard.style.padding = '20px';
+                examCard.style.marginBottom = '20px';
+                examCard.style.boxShadow = '0 8px 20px rgba(0,0,0,0.03)';
+
+                let mistakesHtml = '';
+                item.mistakes.forEach((m, mIdx) => {
+                    let studentAnsText = m.type === 'mcq' ? (m.studentAns !== null && m.options[m.studentAns] !== undefined ? m.options[m.studentAns] : 'لم يُجب') : (m.studentText || 'لا توجد إجابة');
+                    let correctAnsText = m.type === 'mcq' ? m.options[m.correctOption] : 'تم التصحيح مقالياً';
+
+                    mistakesHtml += `
+                        <div style="background: var(--card-bg); border: 2px dashed rgba(239, 68, 68, 0.4); border-radius: 14px; padding: 18px; margin-bottom: 14px; position: relative;">
+                            <div style="position: absolute; top: -12px; right: 20px; background: var(--danger-color); color: white; padding: 2px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 900;">
+                                خطأ رقم (${mIdx + 1})
+                            </div>
+                            <div style="font-weight: 900; font-size: 1.05rem; margin-bottom: 12px; direction: ltr; text-align: right; color: var(--text-color);">
+                                ${m.questionText}
+                            </div>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 10px; font-size: 0.9rem;">
+                                <div style="background: rgba(220, 38, 38, 0.08); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(220, 38, 38, 0.2);">
+                                    <span style="color: var(--danger-color); font-weight: 800; display: block; margin-bottom: 2px;">إجابتك الخاطئة:</span>
+                                    <span style="font-weight: 700; color: var(--text-color);">${studentAnsText}</span>
+                                </div>
+                                <div style="background: rgba(16, 185, 129, 0.08); padding: 10px 14px; border-radius: 10px; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                    <span style="color: var(--success-color); font-weight: 800; display: block; margin-bottom: 2px;">الإجابة النموذجية الصحيحة:</span>
+                                    <span style="font-weight: 700; color: var(--text-color);">${correctAnsText}</span>
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                });
+
+                examCard.innerHTML = `
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 10px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px;">
+                        <div style="display: flex; align-items: center; gap: 10px;">
+                            <div style="background: rgba(239, 68, 68, 0.15); color: var(--danger-color); width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 1.1rem;">
+                                <i class="fa-solid fa-file-circle-exclamation"></i>
+                            </div>
+                            <h4 style="font-size: 1.2rem; font-weight: 900; color: var(--text-color);">${item.exam.examTitle}</h4>
+                        </div>
+                        <span class="badge badge-rejected">عدد أخطائك: ${item.mistakes.length}</span>
+                    </div>
+                    <div style="display: flex; flex-direction: column; gap: 10px;">
+                        ${mistakesHtml}
+                    </div>
+                `;
+                container.appendChild(examCard);
+            });
         }
 
         async function renderStudentView() {
@@ -1704,7 +1820,7 @@
             localStorage.setItem(savedStateKey, JSON.stringify(saveData));
             if (activeExamTimerInterval) clearInterval(activeExamTimerInterval);
 
-            showAlert("تم حفظ تقدمك مؤقتاً، يمكنك العودة للاستكمال لاحقاً.", "info");
+            showAlert("تم حفظ تقدمك مؤقتاً، يمكنك العودة للاستكمال لاحقا.", "info");
             document.getElementById('examInterface').classList.add('hidden');
             showLoggedInState();
         }
@@ -2175,13 +2291,11 @@
         async function deleteStudentResultRecord(resultId, studentId) {
             if (!confirm("هل أنت متأكد من حذف سجل هذه النتيجة نهائياً؟")) return;
             try {
-                // البحث عن المستند باستخدام الـ firestoreId أو الـ id العادي لحذفه بدقة من فايرستور
                 const resDoc = dbResults.find(r => r.id === resultId);
                 const docKey = resDoc && resDoc.firestoreId ? resDoc.firestoreId : resultId;
                 
                 await window.FB.deleteDoc(window.FB.doc(window.FB.db, "results", docKey));
                 
-                // تحديث مصفوفة النتائج محلياً
                 dbResults = dbResults.filter(r => r.id !== resultId);
                 
                 showAlert("تم حذف النتيجة من عند المستر وعند الطالب تماماً بنجاح.", "success");
@@ -2266,136 +2380,18 @@
             });
         }
 
-        function generateEmptyQuestionsTemplate() {
-            const mcqCount = parseInt(document.getElementById('genCountMcq').value) || 0;
-            const essayCount = parseInt(document.getElementById('genCountEssay').value) || 0;
-            
-            builderQuestions = [];
-
-            for (let i = 0; i < mcqCount; i++) {
-                builderQuestions.push({
-                    id: 'q_' + Math.random(),
-                    type: 'mcq',
-                    text: '',
-                    options: ['', '', '', ''],
-                    correctOption: 0,
-                    points: 1
-                });
-            }
-
-            for (let i = 0; i < essayCount; i++) {
-                builderQuestions.push({
-                    id: 'q_' + Math.random(),
-                    type: 'essay',
-                    text: '',
-                    points: 5
-                });
-            }
-
-            renderBuilderQuestionsArea();
-        }
-
-        function addQuestionToBuilder(type) {
-            if (type === 'mcq') {
-                builderQuestions.push({
-                    id: 'q_' + Math.random(),
-                    type: 'mcq',
-                    text: '',
-                    options: ['', '', '', ''],
-                    correctOption: 0,
-                    points: 1
-                });
-            } else {
-                builderQuestions.push({
-                    id: 'q_' + Math.random(),
-                    type: 'essay',
-                    text: '',
-                    points: 5
-                });
-            }
-            renderBuilderQuestionsArea();
-        }
-
-        function removeBuilderQuestion(idx) {
-            builderQuestions.splice(idx, 1);
-            renderBuilderQuestionsArea();
-        }
-
-        function renderBuilderQuestionsArea() {
-            const area = document.getElementById('builderQuestionsArea');
-            area.innerHTML = '';
-
-            builderQuestions.forEach((q, idx) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.style.background = 'var(--card-bg)';
-
-                let headerHtml = `
-                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
-                        <strong style="color:var(--primary-color);">السؤال رقم ${idx + 1} (${q.type === 'mcq' ? 'اختر من متعدد' : 'مقالي'})</strong>
-                        <button type="button" class="btn btn-danger" style="width:auto; padding:4px 10px; font-size:0.8rem;" onclick="removeBuilderQuestion(${idx})">حذف السؤال</button>
-                    </div>
-                    <div class="form-group">
-                        <label>نص السؤال</label>
-                        <input type="text" value="${q.text}" oninput="builderQuestions[${idx}].text = this.value" required placeholder="اكتب نص السؤال هنا">
-                    </div>
-                    <div class="form-group">
-                        <label>درجة السؤال</label>
-                        <input type="number" value="${q.points}" min="1" oninput="builderQuestions[${idx}].points = parseInt(this.value) || 1" required>
-                    </div>
-                `;
-
-                if (q.type === 'mcq') {
-                    headerHtml += `<label style="display:block; margin-bottom:8px; font-weight:700;">الاختيارات (اختر الإجابة الصحيحة بالضغط على الزر بجانبها):</label>`;
-                    q.options.forEach((opt, oIdx) => {
-                        headerHtml += `
-                            <div style="display:flex; gap:10px; align-items:center; margin-bottom:10px;">
-                                <input type="radio" name="correct_opt_${idx}" ${q.correctOption === oIdx ? 'checked' : ''} onchange="builderQuestions[${idx}].correctOption = ${oIdx}" style="transform:scale(1.3);">
-                                <input type="text" value="${opt}" oninput="builderQuestions[${idx}].options[${oIdx}] = this.value" required placeholder="الاختيار رقم ${oIdx+1}" style="flex:1;">
-                            </div>
-                        `;
-                    });
-                }
-
-                card.innerHTML = headerHtml;
-                area.appendChild(card);
-            });
-        }
-
-        async function handleCreateExam(e) {
-            e.preventDefault();
-            if (builderQuestions.length === 0) {
-                showAlert("يجب إضافة سؤال واحد على الأقل لإنشاء الامتحان!", "danger");
-                return;
-            }
-
-            const title = document.getElementById('examTitle').value.trim();
-            const gradeTarget = document.getElementById('examGradeTarget').value;
-            const allowedAttempts = parseInt(document.getElementById('examAllowedAttempts').value) || 1;
-            const startTime = document.getElementById('examStartTime').value;
-            const endTime = document.getElementById('examEndTime').value;
-            const duration = parseInt(document.getElementById('examDurationMinutes').value) || 30;
-            const editingId = document.getElementById('editingExamId').value;
-
-            const examObj = {
-                id: editingId || ('ex_' + Date.now()),
-                title: title,
-                gradeTarget: gradeTarget,
-                allowedAttempts: allowedAttempts,
-                startTime: startTime,
-                endTime: endTime,
-                duration: duration,
-                questions: builderQuestions
-            };
-
+        async function deleteExam(examId) {
+            if (!confirm("هل أنت متأكد من حذف هذا الامتحان نهائياً؟")) return;
             try {
-                await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", examObj.id), examObj);
-                showAlert(editingId ? "تم تعديل الامتحان بنجاح على السحاب." : "تم إنشاء ونشر الامتحان بنجاح على السحاب.", "success");
-                cancelExamEdit();
+                const exDoc = dbExams.find(e => e.id === examId);
+                const docKey = exDoc && exDoc.firestoreId ? exDoc.firestoreId : examId;
+                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", docKey));
+                dbExams = dbExams.filter(e => e.id !== examId);
                 renderAdminView();
+                showAlert("تم حذف الامتحان بنجاح.", "success");
             } catch (err) {
                 console.error(err);
-                showAlert("حدث خطأ أثناء حفظ الامتحان.", "danger");
+                showAlert("حدث خطأ أثناء حذف الامتحان.", "danger");
             }
         }
 
@@ -2412,11 +2408,12 @@
             document.getElementById('examDurationMinutes').value = ex.duration;
 
             builderQuestions = JSON.parse(JSON.stringify(ex.questions));
-            renderBuilderQuestionsArea();
+            renderBuilderQuestions();
 
-            document.getElementById('examFormTitleText').innerText = "تعديل امتحان / كويز";
-            document.getElementById('saveExamBtnUI').innerText = "حفظ التعديلات";
+            document.getElementById('examFormTitleText').innerText = "تعديل امتحان / كويز حالي";
+            document.getElementById('saveExamBtnUI').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> تحديث وحفظ التعديلات';
             document.getElementById('cancelEditExamBtn').classList.remove('hidden');
+
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2424,22 +2421,167 @@
             document.getElementById('createExamForm').reset();
             document.getElementById('editingExamId').value = '';
             builderQuestions = [];
-            renderBuilderQuestionsArea();
+            renderBuilderQuestions();
             document.getElementById('examFormTitleText').innerText = "إنشاء امتحان / كويز جديد";
-            document.getElementById('saveExamBtnUI').innerText = "حفظ ونشر الامتحان";
+            document.getElementById('saveExamBtnUI').innerHTML = '<i class="fa-solid fa-cloud-arrow-up"></i> حفظ ونشر الامتحان';
             document.getElementById('cancelEditExamBtn').classList.add('hidden');
         }
 
-        async function deleteExam(examId) {
-            if (!confirm("هل أنت متأكد من حذف هذا الامتحان نهائياً؟")) return;
+        function generateEmptyQuestionsTemplate() {
+            const mcqCount = parseInt(document.getElementById('genCountMcq').value) || 0;
+            const essayCount = parseInt(document.getElementById('genCountEssay').value) || 0;
+
+            for (let i = 0; i < mcqCount; i++) {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    text: '',
+                    type: 'mcq',
+                    options: ['', '', '', ''],
+                    correctOption: 0,
+                    points: 1
+                });
+            }
+
+            for (let i = 0; i < essayCount; i++) {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    text: '',
+                    type: 'essay',
+                    points: 5
+                });
+            }
+
+            renderBuilderQuestions();
+        }
+
+        function addQuestionToBuilder(type) {
+            if (type === 'mcq') {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    text: '',
+                    type: 'mcq',
+                    options: ['', '', '', ''],
+                    correctOption: 0,
+                    points: 1
+                });
+            } else {
+                builderQuestions.push({
+                    id: 'q_' + Math.random(),
+                    text: '',
+                    type: 'essay',
+                    points: 5
+                });
+            }
+            renderBuilderQuestions();
+        }
+
+        function removeBuilderQuestion(idx) {
+            builderQuestions.splice(idx, 1);
+            renderBuilderQuestions();
+        }
+
+        function renderBuilderQuestions() {
+            const area = document.getElementById('builderQuestionsArea');
+            area.innerHTML = '';
+
+            if (builderQuestions.length === 0) {
+                area.innerHTML = '<p style="color:var(--text-muted); margin-bottom:20px;">لم يتم إضافة أي أسئلة بعد.</p>';
+                return;
+            }
+
+            builderQuestions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.style.background = 'var(--card-bg)';
+                card.style.marginBottom = '16px';
+
+                let html = `
+                    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:12px;">
+                        <strong>السؤال رقم (${idx + 1}) - ${q.type === 'mcq' ? 'اختر من متعدد' : 'مقالي'}</strong>
+                        <button type="button" class="btn btn-danger" style="width:auto; padding:4px 12px; font-size:0.8rem;" onclick="removeBuilderQuestion(${idx})">حذف</button>
+                    </div>
+                    <div class="form-group">
+                        <label>نص السؤال</label>
+                        <textarea rows="2" oninput="updateBuilderQProp(${idx}, 'text', this.value)" placeholder="اكتب السؤال هنا...">${q.text}</textarea>
+                    </div>
+                    <div class="form-group" style="max-width:200px;">
+                        <label>درجة السؤال</label>
+                        <input type="number" min="1" value="${q.points}" oninput="updateBuilderQProp(${idx}, 'points', parseInt(this.value) || 1)">
+                    </div>
+                `;
+
+                if (q.type === 'mcq') {
+                    html += `<label style="display:block; margin-bottom:8px; font-weight:700;">الاختيارات والإجابة الصحيحة:</label><div style="display:flex; flex-direction:column; gap:10px; margin-bottom:12px;">`;
+                    q.options.forEach((opt, oIdx) => {
+                        html += `
+                            <div style="display:flex; align-items:center; gap:10px;">
+                                <input type="radio" name="correct_opt_${idx}" ${q.correctOption === oIdx ? 'checked' : ''} onchange="updateBuilderQProp(${idx}, 'correctOption', ${oIdx})" style="transform:scale(1.3);">
+                                <input type="text" value="${opt}" oninput="updateBuilderOptionText(${idx}, ${oIdx}, this.value)" placeholder="الاختيار ${oIdx + 1}">
+                            </div>
+                        `;
+                    });
+                    html += `</div>`;
+                }
+
+                card.innerHTML = html;
+                area.appendChild(card);
+            });
+        }
+
+        function updateBuilderQProp(idx, prop, val) {
+            builderQuestions[idx][prop] = val;
+        }
+
+        function updateBuilderOptionText(qIdx, oIdx, val) {
+            builderQuestions[qIdx].options[oIdx] = val;
+        }
+
+        async function handleCreateExam(e) {
+            e.preventDefault();
+            const editingId = document.getElementById('editingExamId').value;
+            const title = document.getElementById('examTitle').value.trim();
+            const gradeTarget = document.getElementById('examGradeTarget').value;
+            const allowedAttempts = parseInt(document.getElementById('examAllowedAttempts').value) || 1;
+            const startTime = document.getElementById('examStartTime').value;
+            const endTime = document.getElementById('examEndTime').value;
+            const duration = parseInt(document.getElementById('examDurationMinutes').value) || 30;
+
+            if (builderQuestions.length === 0) {
+                showAlert("يجب إضافة سؤال واحد على الأقل للامتحان!", "danger");
+                return;
+            }
+
+            const examObj = {
+                id: editingId ? editingId : 'exam_' + Date.now(),
+                title: title,
+                gradeTarget: gradeTarget,
+                allowedAttempts: allowedAttempts,
+                startTime: startTime,
+                endTime: endTime,
+                duration: duration,
+                questions: builderQuestions
+            };
+
             try {
-                await window.FB.deleteDoc(window.FB.doc(window.FB.db, "exams", examId));
-                dbExams = dbExams.filter(e => e.id !== examId);
+                if (editingId) {
+                    const exDoc = dbExams.find(e => e.id === editingId);
+                    const docKey = exDoc && exDoc.firestoreId ? exDoc.firestoreId : editingId;
+                    await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", docKey), examObj);
+                    dbExams = dbExams.map(e => e.id === editingId ? { firestoreId: docKey, ...examObj } : e);
+                    showAlert("تم تحديث الامتحان بنجاح على السحاب.", "success");
+                    cancelExamEdit();
+                } else {
+                    const docRef = await window.FB.setDoc(window.FB.doc(window.FB.db, "exams", examObj.id), examObj);
+                    dbExams.push({ firestoreId: examObj.id, ...examObj });
+                    showAlert("تم إنشاء ونشر الامتحان بنجاح على السحاب.", "success");
+                    document.getElementById('createExamForm').reset();
+                    builderQuestions = [];
+                    renderBuilderQuestions();
+                }
                 renderAdminView();
-                showAlert("تم حذف الامتحان بنجاح.", "success");
             } catch (err) {
                 console.error(err);
-                showAlert("حدث خطأ أثناء الحذف.", "danger");
+                showAlert("حدث خطأ أثناء حفظ الامتحان.", "danger");
             }
         }
 
@@ -2447,61 +2589,66 @@
             const container = document.getElementById('pendingEssayGradingList');
             container.innerHTML = '';
 
-            const pendingResults = dbResults.filter(r => r.needsGrading);
-            if (pendingResults.length === 0) {
-                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد إجابات مقالية تحتاج للتصحيح حالياً.</p>';
+            let needsGradingResults = [];
+            dbResults.forEach(r => {
+                if (r.answersBreakdown) {
+                    r.answersBreakdown.forEach(q => {
+                        if (q.type === 'essay' && !q.isGraded) {
+                            needsGradingResults.push({ resultId: r.id, examTitle: r.examTitle, studentName: r.studentName, question: q });
+                        }
+                    });
+                }
+            });
+
+            if (needsGradingResults.length === 0) {
+                container.innerHTML = '<p style="color: var(--text-muted);">لا توجد إجابات مقالية تنتظر التصحيح حالياً.</p>';
                 return;
             }
 
-            pendingResults.forEach(res => {
-                res.answersBreakdown.forEach((q, qIdx) => {
-                    if (q.type === 'essay' && !q.isGraded) {
-                        const card = document.createElement('div');
-                        card.className = 'card';
-                        card.style.background = 'var(--input-bg)';
-                        card.innerHTML = `
-                            <h4 style="font-size: 1.1rem; font-weight: 900; margin-bottom: 6px;">${res.examTitle} - الطالب: ${res.studentName}</h4>
-                            <p style="font-size: 0.95rem; font-weight: 700; margin-bottom: 10px;">السؤال: ${q.questionText}</p>
-                            <p style="padding: 12px; background: var(--card-bg); border-radius: 10px; margin-bottom: 14px; font-weight: 600;"><strong>إجابة الطالب:</strong> ${q.studentText || 'لا توجد إجابة'}</p>
-                            <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                                <input type="number" id="grade_input_${res.id}_${qIdx}" min="0" max="${q.points}" placeholder="الدرجة (من ${q.points})" style="max-width: 180px;">
-                                <button class="btn btn-success" style="width: auto; padding: 10px 20px; font-size: 0.9rem;" onclick="submitEssayGrade('${res.id}', ${qIdx})">اعتماد الدرجة</button>
-                            </div>
-                        `;
-                        container.appendChild(card);
-                    }
-                });
+            needsGradingResults.forEach((item, idx) => {
+                const card = document.createElement('div');
+                card.className = 'card';
+                card.style.background = 'var(--input-bg)';
+                card.style.marginBottom = '16px';
+                card.innerHTML = `
+                    <h4 style="font-size:1.1rem; font-weight:900; margin-bottom:8px;"><i class="fa-solid fa-file-pen"></i> ${item.examTitle} - الطالب: ${item.studentName}</h4>
+                    <p style="font-weight:800; margin-bottom:6px; direction:ltr; text-align:right;">السؤال: ${item.question.questionText}</p>
+                    <p style="color:var(--text-muted); font-weight:700; margin-bottom:12px;">إجابة الطالب: <strong>${item.question.studentText || 'لا توجد إجابة'}</strong></p>
+                    <div style="display:flex; gap:10px; align-items:center;">
+                        <input type="number" id="grade_input_${idx}" min="0" max="${item.question.points}" value="${item.question.points}" style="max-width:120px;" placeholder="الدرجة">
+                        <button class="btn btn-success" style="width:auto; padding:10px 20px;" onclick="submitEssayGrade('${item.resultId}', '${item.question.questionId}', ${idx})">اعتماد وتصحيح</button>
+                    </div>
+                `;
+                container.appendChild(card);
             });
         }
 
-        async function submitEssayGrade(resultId, qIdx) {
-            const inputVal = document.getElementById(`grade_input_${resultId}_${qIdx}`).value;
-            const givenPoints = parseFloat(inputVal);
-
-            if (isNaN(givenPoints)) {
-                showAlert("يرجى إدخال درجة صحيحة!", "danger");
-                return;
-            }
-
+        async function submitEssayGrade(resultId, qId, inputIdx) {
+            const inputVal = parseFloat(document.getElementById(`grade_input_${inputIdx}`).value) || 0;
             const res = dbResults.find(r => r.id === resultId);
             if (!res) return;
 
-            res.answersBreakdown[qIdx].pointsGiven = givenPoints;
-            res.answersBreakdown[qIdx].isGraded = true;
-
-            let newScore = 0;
-            let allGraded = true;
-            res.answersBreakdown.forEach(item => {
-                if (item.pointsGiven) newScore += item.pointsGiven;
-                if (item.type === 'essay' && !item.isGraded) allGraded = false;
+            let diffPoints = 0;
+            res.answersBreakdown.forEach(q => {
+                if (q.questionId === qId && q.type === 'essay') {
+                    diffPoints = inputVal - q.pointsGiven;
+                    q.pointsGiven = inputVal;
+                    q.isGraded = true;
+                }
             });
 
-            res.score = newScore;
-            res.percentage = Math.round((newScore / res.totalScore) * 100);
+            res.score += diffPoints;
+            if (res.score < 0) res.score = 0;
+            res.percentage = Math.round((res.score / res.totalScore) * 100);
+
+            let allGraded = true;
+            res.answersBreakdown.forEach(q => {
+                if (q.type === 'essay' && !q.isGraded) allGraded = false;
+            });
             if (allGraded) res.needsGrading = false;
 
             try {
-                const docKey = res.firestoreId || res.id;
+                const docKey = res.firestoreId ? res.firestoreId : resultId;
                 await window.FB.updateDoc(window.FB.doc(window.FB.db, "results", docKey), {
                     score: res.score,
                     percentage: res.percentage,
@@ -2509,10 +2656,10 @@
                     answersBreakdown: res.answersBreakdown
                 });
                 renderAdminView();
-                showAlert("تم اعتماد وتحديث درجة السؤال المقالي بنجاح.", "success");
+                showAlert("تم اعتماد الدرجة بنجاح للطالب.", "success");
             } catch (err) {
                 console.error(err);
-                showAlert("حدث خطأ أثناء حفظ التحديث.", "danger");
+                showAlert("حدث خطأ أثناء حفظ درجة المقالي.", "danger");
             }
         }
 
@@ -2534,7 +2681,7 @@
             reader.onload = async function(event) {
                 const base64Data = event.target.result;
                 const assignObj = {
-                    id: 'file_' + Date.now(),
+                    id: 'assign_' + Date.now(),
                     title: title,
                     gradeTarget: gradeTarget,
                     fileName: file.name,
@@ -2543,14 +2690,14 @@
                 };
 
                 try {
-                    const docRef = await window.FB.addDoc(window.FB.collection(window.FB.db, "assignments"), assignObj);
-                    dbAssignments.push({ firestoreId: docRef.id, ...assignObj });
-                    showAlert("تم رفع الملف بنجاح على السحاب وتوفيره للطلاب.", "success");
+                    await window.FB.setDoc(window.FB.doc(window.FB.db, "assignments", assignObj.id), assignObj);
+                    dbAssignments.push({ firestoreId: assignObj.id, ...assignObj });
+                    showAlert("تم رفع الملف بنجاح على السحاب.", "success");
                     document.getElementById('uploadFileForm').reset();
                     renderAdminView();
                 } catch (err) {
                     console.error(err);
-                    showAlert("حدث خطأ أثناء رفع الملف.", "danger");
+                    showAlert("حدث خطأ أثناء رفع الملف للسحاب.", "danger");
                 }
             };
             reader.readAsDataURL(file);
@@ -2579,8 +2726,8 @@
                 div.style.gap = '10px';
                 div.innerHTML = `
                     <div>
-                        <strong style="font-size:1.05rem;"><i class="fa-solid fa-file-pdf"></i> ${a.title}</strong>
-                        <div style="font-size:0.85rem; color:var(--text-muted); margin-top:2px;">الصف: ${a.gradeTarget} | اسم الملف: ${a.fileName}</div>
+                        <strong style="font-size:1.05rem;">${a.title}</strong>
+                        <div style="font-size:0.8rem; color:var(--text-muted); margin-top:2px;">الصف: ${a.gradeTarget} | الملف: ${a.fileName}</div>
                     </div>
                     <button class="btn btn-danger" style="width:auto; padding:6px 14px; font-size:0.85rem;" onclick="deleteAssignment('${a.id}')">حذف الملف</button>
                 `;
@@ -2589,11 +2736,10 @@
         }
 
         async function deleteAssignment(assignId) {
-            if (!confirm("هل أنت متأكد من حذف هذا الملف نهائياً؟")) return;
-            const assign = dbAssignments.find(a => a.id === assignId);
-            const docKey = assign && assign.firestoreId ? assign.firestoreId : assignId;
-
+            if (!confirm("هل أنت متأكد من حذف هذا الملف؟")) return;
             try {
+                const aDoc = dbAssignments.find(a => a.id === assignId);
+                const docKey = aDoc && aDoc.firestoreId ? aDoc.firestoreId : assignId;
                 await window.FB.deleteDoc(window.FB.doc(window.FB.db, "assignments", docKey));
                 dbAssignments = dbAssignments.filter(a => a.id !== assignId);
                 renderAdminView();
@@ -2606,10 +2752,10 @@
 
         async function handleChangeAdminPassword(e) {
             e.preventDefault();
-            const currPass = document.getElementById('currentAdminPass').value.trim();
+            const currentPass = document.getElementById('currentAdminPass').value.trim();
             const newPass = document.getElementById('newAdminPass').value.trim();
 
-            if (currPass !== ADMIN_PASS) {
+            if (currentPass !== ADMIN_PASS) {
                 showAlert("كلمة المرور الحالية غير صحيحة!", "danger");
                 return;
             }
@@ -2620,11 +2766,11 @@
                 adminUser.password = newPass;
                 try {
                     await window.FB.updateDoc(window.FB.doc(window.FB.db, "users", ADMIN_PHONE), { password: newPass });
-                    showAlert("تم تحديث كلمة مرور الآدمن بنجاح رسمياً على السحاب.", "success");
+                    showAlert("تم تحديث كلمة مرور الآدمن بنجاح على السحاب.", "success");
                     document.getElementById('changeAdminPassForm').reset();
                 } catch (err) {
                     console.error(err);
-                    showAlert("حدث خطأ أثناء التحديث.", "danger");
+                    showAlert("حدث خطأ أثناء تحديث كلمة المرور.", "danger");
                 }
             }
         }
